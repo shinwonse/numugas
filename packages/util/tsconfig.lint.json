@@ -1,5 +1,5 @@
 {
-  "extends": "@numugas/typescript-config/react-library.json",
+  "extends": "@numugas/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist"
   },

@@ -1,0 +1,21 @@
+{
+  "name": "@numugas/util",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    "./crawler": "./src/crawler.ts"
+  },
+  "dependencies": {
+    "axios": "^1.6.5",
+    "cheerio": "1.0.0-rc.12",
+    "crawler": "^1.5.0"
+  },
+  "devDependencies": {
+    "@numugas/eslint-config": "workspace:*",
+    "@numugas/typescript-config": "workspace:*",
+    "@types/crawler": "^1.2.6",
+    "eslint": "^8.56.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
