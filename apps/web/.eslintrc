@@ -1,0 +1,6 @@
+{
+  "extends": ["@numugas/eslint-config/next.js"],
+  "parserOptions": {
+    "project": true
+  }
+}
