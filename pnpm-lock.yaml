@@ -160,6 +160,15 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2
 
+  packages/tailwind-config:
+    devDependencies:
+      '@numugas/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      tailwindcss:
+        specifier: ^3.4.1
+        version: 3.4.1
+
   packages/typescript-config: {}
 
   packages/ui:
