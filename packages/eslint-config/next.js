@@ -1,6 +1,6 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["@wonse/eslint-config", "eslint-config-turbo", "prettier"],
+  extends: ["next/core-web-vitals", "@wonse/eslint-config", "eslint-config-turbo", "prettier"],
   ignorePatterns: [".eslintrc"],
   rules: {
     "no-restricted-exports": "off",
@@ -9,6 +9,12 @@ module.exports = {
   settings: {
     "tailwindcss": {
       "callees": ["cn"]
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {}
     }
   }
 };

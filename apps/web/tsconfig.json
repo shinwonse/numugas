@@ -1,4 +1,3 @@
 {
   "extends": "@numugas/typescript-config/nextjs.json",
-  "compilerOptions": { "paths": { "@/*": ["./src/*"] } }
 }
