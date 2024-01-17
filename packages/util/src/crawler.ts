@@ -37,10 +37,10 @@ const truncateToThreeDecimalPlaces = (input: string): string => {
     .join(""); // Join the array back into a string
 };
 
-const getStats = async (season: string): Promise<PlayerInfo[]> => {
+const getStats = async (season: string = "2023"): Promise<PlayerInfo[]> => {
   const playerInfoArray: PlayerInfo[] = [];
   try {
-    const html = await axios.get(`${GAME_ONE_URL}&kind=season=${season}`);
+    const html = await axios.get(`${GAME_ONE_URL}&kind=&season=${season}`);
     const $ = cheerio.load(html.data);
     /* eslint-disable sort-keys-fix/sort-keys-fix */
     $(".ranking_table tbody tr").each((i, elem) => {
@@ -83,6 +83,8 @@ const getStats = async (season: string): Promise<PlayerInfo[]> => {
   return playerInfoArray;
 };
 
-getStats(
-  "http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417&kind=&season=2023"
-);
+export default getStats;
+
+// getStats(
+//   "http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417&kind=&season=2023"
+// );
