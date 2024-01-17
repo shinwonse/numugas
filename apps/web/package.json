@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@numugas/ui": "workspace:*",
+    "@numugas/util": "workspace:*",
     "clsx": "^2.1.0",
     "next": "14.0.4",
     "react": "^18",

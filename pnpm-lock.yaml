@@ -26,6 +26,9 @@ importers:
       '@numugas/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@numugas/util':
+        specifier: workspace:*
+        version: link:../../packages/util
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
@@ -81,6 +84,9 @@ importers:
 
   packages/eslint-config:
     devDependencies:
+      '@numugas/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.62.0
         version: 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.56.0)(typescript@5.3.3)
