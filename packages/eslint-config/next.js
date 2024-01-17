@@ -1,20 +1,35 @@
+const { resolve } = require("node:path");
+
+const project = resolve(process.cwd(), "tsconfig.json");
+
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["next/core-web-vitals", "@wonse/eslint-config", "eslint-config-turbo", "prettier"],
-  ignorePatterns: [".eslintrc"],
-  rules: {
-    "no-restricted-exports": "off",
-    "@typescript-eslint/consistent-type-imports": "error"
+  extends: [
+    require.resolve("@wonse/eslint-config"),
+    "eslint-config-turbo",
+  ],
+  globals: {
+    React: true,
+    JSX: true,
   },
+  env: {
+    node: true,
+    browser: true,
+  },
+  plugins: ["only-warn"],
   settings: {
     "tailwindcss": {
       "callees": ["cn"]
     },
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
-    },
     "import/resolver": {
-      "typescript": {}
-    }
-  }
+      typescript: {
+        project,
+      },
+    },
+  },
+  ignorePatterns: [
+    ".*.js",
+    "node_modules/",
+  ],
+  overrides: [{ files: ["*.js?(x)", "*.ts?(x)"] }],
 };

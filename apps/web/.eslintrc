@@ -1,3 +1,0 @@
-{
-  "extends": ["@numugas/eslint-config/next.js"]
-}
