@@ -9,7 +9,7 @@ function SeasonSelector() {
 
   return (
     <label
-      className={cn('flex flex-row w-full gap-3')}
+      className={cn('flex flex-row w-full gap-3 whitespace-nowrap')}
       htmlFor="season-select"
     >
       <div>
