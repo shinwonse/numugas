@@ -84,7 +84,3 @@ const getStats = async (season: string = "2023"): Promise<PlayerInfo[]> => {
 };
 
 export default getStats;
-
-// getStats(
-//   "http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417&kind=&season=2023"
-// );
