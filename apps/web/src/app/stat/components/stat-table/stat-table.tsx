@@ -48,7 +48,7 @@ async function StatTable({ className }: StatTableProps) {
               key={stat.name}
               className={cn('')}
             >
-              <td>{stat.name}</td>
+              <td className={cn('min-w-fit')}>{stat.name}</td>
               <td>{stat.avg.toFixed(3)}</td>
               <td>{stat.obp.toFixed(3)}</td>
               <td>{stat.slg.toFixed(3)}</td>
