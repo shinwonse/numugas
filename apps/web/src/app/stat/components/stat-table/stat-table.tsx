@@ -9,7 +9,7 @@ async function StatTable({ className }: StatTableProps) {
   const allTimeStats = await getAllTimeStats();
 
   return (
-    <div className={cn('overflow-x-scroll')}>
+    <div className={cn('overflow-x-scroll', className)}>
       <table
         className={cn(
           'table overflow-x-scroll table-auto text-nowrap border-separate border-spacing-4',
@@ -40,9 +40,6 @@ async function StatTable({ className }: StatTableProps) {
             <th>사구</th>
             <th>삼진</th>
             <th>병살</th>
-            {/* <th>장타율</th> */}
-            {/* <th>출루율</th> */}
-            {/* <th>OPS</th> */}
           </tr>
         </thead>
         <tbody className={cn('text-center')}>
@@ -73,9 +70,6 @@ async function StatTable({ className }: StatTableProps) {
               <td>{stat.hbp}</td>
               <td>{stat.so}</td>
               <td>{stat.gdp}</td>
-              {/* <td>{stat.slg}</td> */}
-              {/* <td>{stat.obp}</td> */}
-              {/* <td>{stat.ops}</td> */}
             </tr>
           ))}
         </tbody>
