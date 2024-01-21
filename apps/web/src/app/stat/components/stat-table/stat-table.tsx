@@ -42,13 +42,13 @@ async function StatTable({ className }: StatTableProps) {
             <th>병살</th>
           </tr>
         </thead>
-        <tbody className={cn('text-center text-nowrap')}>
+        <tbody className={cn('text-center text-nowrap whitespace-nowrap')}>
           {Array.from(allTimeStats.values()).map((stat) => (
             <tr
               key={stat.name}
               className={cn('')}
             >
-              <td className={cn('min-w-fit')}>{stat.name}</td>
+              <td>{stat.name}</td>
               <td>{stat.avg.toFixed(3)}</td>
               <td>{stat.obp.toFixed(3)}</td>
               <td>{stat.slg.toFixed(3)}</td>
