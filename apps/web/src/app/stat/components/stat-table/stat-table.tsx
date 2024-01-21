@@ -16,7 +16,7 @@ async function StatTable({ className }: StatTableProps) {
           className
         )}
       >
-        <thead className={cn('text-center')}>
+        <thead className={cn('text-center text-nowrap')}>
           <tr>
             <th>이름</th>
             <th>타율</th>
@@ -42,7 +42,7 @@ async function StatTable({ className }: StatTableProps) {
             <th>병살</th>
           </tr>
         </thead>
-        <tbody className={cn('text-center')}>
+        <tbody className={cn('text-center text-nowrap')}>
           {Array.from(allTimeStats.values()).map((stat) => (
             <tr
               key={stat.name}
