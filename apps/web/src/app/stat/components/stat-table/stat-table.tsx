@@ -12,11 +12,11 @@ async function StatTable({ className }: StatTableProps) {
     <div className={cn('overflow-x-scroll', className)}>
       <table
         className={cn(
-          'table overflow-x-scroll table-auto text-nowrap border-separate border-spacing-4',
+          'table overflow-x-scroll table-auto text-nowrap whitespace-nowrap border-separate border-spacing-4',
           className
         )}
       >
-        <thead className={cn('text-center text-nowrap')}>
+        <thead className={cn('text-center text-nowrap whitespace-nowrap')}>
           <tr>
             <th>이름</th>
             <th>타율</th>
