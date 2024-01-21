@@ -1,9 +1,11 @@
+import Link from 'next/link';
+
 import { cn } from '#/utils/cn';
 
 export default function Home() {
   return (
     <main className={cn('flex flex-col')}>
-      <button type="button">기록</button>
+      <Link href="/stat">기록</Link>
     </main>
   );
 }
