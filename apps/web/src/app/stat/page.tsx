@@ -1,11 +1,14 @@
 import SeasonSelector from '#/app/stat/components/season-selector';
 import StatTable from '#/app/stat/components/stat-table';
 
-function StatPage() {
+type Props = { searchParams: { [key: string]: string | string[] | undefined } };
+
+function StatPage({ searchParams }: Props) {
+  const { season } = searchParams;
   return (
     <main>
       <SeasonSelector />
-      <StatTable />
+      <StatTable season={season as string} />
     </main>
   );
 }

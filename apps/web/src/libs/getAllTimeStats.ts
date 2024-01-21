@@ -1,6 +1,6 @@
 import getStats from '@numugas/util/crawler';
 
-const NUMUGAS_SEASONS = ['2024', '2023', '2022', '2021', '2020'];
+import { NUMUGAS_SEASONS } from '#/constants';
 
 export const getAllTimeStats = async () => {
   const data = new Map();
