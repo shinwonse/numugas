@@ -4,7 +4,7 @@ import StatTable from '#/app/stat/components/stat-table';
 function StatPage() {
   return (
     <main>
-      {/* <SeasonSelector /> */}
+      <SeasonSelector />
       <StatTable />
     </main>
   );
