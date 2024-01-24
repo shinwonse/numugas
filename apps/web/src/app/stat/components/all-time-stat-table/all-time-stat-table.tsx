@@ -11,11 +11,15 @@ async function AllTimeStatTable({ className }: Props) {
   return (
     <table
       className={cn(
-        'table overflow-x-scroll table-auto text-nowrap whitespace-nowrap border-separate border-spacing-4',
+        'relative table overflow-x-scroll table-auto text-nowrap whitespace-nowrap border-separate border-spacing-4',
         className
       )}
     >
-      <thead className={cn('text-center text-nowrap whitespace-nowrap')}>
+      <thead
+        className={cn(
+          'sticky top-0 text-center text-nowrap whitespace-nowrap bg-black'
+        )}
+      >
         <tr>
           <th>이름</th>
           <th>타율</th>
