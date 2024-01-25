@@ -8,7 +8,10 @@ import { karla } from '#/styles/font';
 import { cn } from '#/utils/cn';
 
 export const metadata: Metadata = {
-  description: '담장 NUMUGAS 기록 사이트',
+  description: '담장 NUMUGAS',
+  openGraph: {
+    images: './opengraph-image.png',
+  },
   title: '담장 NUMUGAS',
 };
 
