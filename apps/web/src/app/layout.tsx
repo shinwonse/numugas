@@ -10,7 +10,7 @@ import { cn } from '#/utils/cn';
 export const metadata: Metadata = {
   description: '담장 NUMUGAS',
   openGraph: {
-    images: './opengraph-image.png',
+    images: 'opengraph-image.png',
   },
   title: '담장 NUMUGAS',
 };
