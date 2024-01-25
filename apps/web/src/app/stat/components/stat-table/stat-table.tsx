@@ -9,7 +9,7 @@ type StatTableProps = {
 
 async function StatTable({ className, season = 'all-time' }: StatTableProps) {
   return (
-    <div className={cn('overflow-x-scroll', className)}>
+    <div className={cn('overflow-x-auto', className)}>
       {season === 'all-time' && <AllTimeStatTable />}
       {season !== 'all-time' && <SeasonStatTable season={season} />}
     </div>

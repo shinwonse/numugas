@@ -7,7 +7,7 @@ function Loading() {
     <div
       className={cn('flex min-h-screen flex-col items-center justify-center')}
     >
-      <BeatLoader color="#000000" />
+      <BeatLoader color="#ffffff" />
     </div>
   );
 }

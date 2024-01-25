@@ -11,13 +11,11 @@ async function AllTimeStatTable({ className }: Props) {
   return (
     <table
       className={cn(
-        'table overflow-x-scroll table-auto text-nowrap whitespace-nowrap border-separate border-spacing-4',
+        'table table-zebra text-nowrap whitespace-nowrap table-pin-rows',
         className
       )}
     >
-      <thead
-        className={cn('text-center text-nowrap whitespace-nowrap bg-black')}
-      >
+      <thead className={cn('text-center text-nowrap whitespace-nowrap')}>
         <tr>
           <th>이름</th>
           <th>타율</th>

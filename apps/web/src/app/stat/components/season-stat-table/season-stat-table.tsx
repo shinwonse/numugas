@@ -21,7 +21,7 @@ async function SeasonStatTable({ className, season }: Props) {
   return (
     <table
       className={cn(
-        'table overflow-x-scroll table-auto text-nowrap whitespace-nowrap border-separate border-spacing-4',
+        'table table-zebra text-nowrap whitespace-nowrap',
         className
       )}
     >
