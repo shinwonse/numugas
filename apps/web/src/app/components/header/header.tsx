@@ -3,17 +3,20 @@ import Link from 'next/link';
 
 import { cn } from '#/utils/cn';
 
-import LongLogo from '../../../../public/long-logo.png';
+import Logo from '../../../../public/logo.png';
 
 function Header() {
   return (
-    <header className={cn('flex flex-row items-center justify-center pb-4')}>
-      <Link href="/">
-        <Image
-          alt="담장너머가쓰 긴 로고"
-          height={80}
-          src={LongLogo}
-        />
+    <header
+      className={cn(
+        'flex flex-row items-center justify-center py-6 bg-accent rounded-b-2xl md:py-8'
+      )}
+    >
+      <Link
+        className={cn('h-20 w-20 absolute top-0.5 md:w-28 md:h-28')}
+        href="/"
+      >
+        <Image alt="담장 로고" fill src={Logo} />
       </Link>
     </header>
   );

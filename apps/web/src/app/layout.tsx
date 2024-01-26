@@ -25,11 +25,11 @@ export default function RootLayout({ children }: Props) {
       <body
         className={cn(
           karla.variable,
-          'overscroll-none mx-auto max-w-3xl flex flex-col justify-center p-6'
+          'overscroll-none mx-auto max-w-3xl flex flex-col justify-center'
         )}
       >
         <Header />
-        {children}
+        <div className={cn('px-4 pt-12')}>{children}</div>
       </body>
     </html>
   );

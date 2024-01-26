@@ -8,7 +8,7 @@ function StatPage({ searchParams }: Props) {
   const { season } = searchParams;
 
   return (
-    <main>
+    <main className={cn('')}>
       <SeasonSelector />
       <StatTable className={cn('mt-4')} season={season as string} />
     </main>
