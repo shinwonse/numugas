@@ -2,10 +2,8 @@
   "name": "@numugas/prettier-config",
   "version": "1.0.0",
   "private": true,
-  "files": [
-    "index.js"
-  ],
-  "devDependencies": {
+  "main": "index.json",
+  "peerDependencies": {
     "prettier": "^3.2.2"
   }
 }

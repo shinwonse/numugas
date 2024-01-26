@@ -108,6 +108,9 @@ importers:
 
   packages/eslint-config:
     devDependencies:
+      '@numugas/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@numugas/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -185,7 +188,7 @@ importers:
         version: 5.3.3
 
   packages/prettier-config:
-    devDependencies:
+    dependencies:
       prettier:
         specifier: ^3.2.2
         version: 3.2.2
@@ -212,6 +215,9 @@ importers:
       '@numugas/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@numugas/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@numugas/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -255,6 +261,9 @@ importers:
       '@numugas/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@numugas/prettier-config':
+        specifier: workspace:*
+        version: link:../prettier-config
       '@numugas/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -6574,7 +6583,7 @@ packages:
     resolution: {integrity: sha512-HTByuKZzw7utPiDO523Tt2pLtEyK7OibUD9suEJQrPUCYQqrHr74GGX6VidMrovbf/I50mPqr8j/II6oBAuc5A==}
     engines: {node: '>=14'}
     hasBin: true
-    dev: true
+    dev: false
 
   /pretty-format@27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
