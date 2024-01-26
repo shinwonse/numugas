@@ -10,10 +10,7 @@ function StatPage({ searchParams }: Props) {
   return (
     <main>
       <SeasonSelector />
-      <StatTable
-        className={cn('mt-4')}
-        season={season as string}
-      />
+      <StatTable className={cn('mt-4')} season={season as string} />
     </main>
   );
 }
