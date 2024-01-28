@@ -2,11 +2,9 @@ import dynamic from 'next/dynamic';
 
 import { cn } from '#/utils/cn';
 
-const AllTimeStatTable = dynamic(
-  () => import('#/app/stat/components/all-time-stat-table')
-);
+const AllTimeStatTable = dynamic(() => import('../AllTimeStatTable'));
 const SeasonStatTable = dynamic(
-  () => import('#/app/stat/components/season-stat-table/season-stat-table')
+  () => import('#/app/stat/components/SeasonStatTable/SeasonStatTable')
 );
 
 type StatTableProps = {
