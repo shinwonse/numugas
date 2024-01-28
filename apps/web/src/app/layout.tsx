@@ -3,15 +3,13 @@ import './globals.css';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import Footer from '#/app/components/footer';
 import Header from '#/app/components/header';
 import { karla } from '#/styles/font';
 import { cn } from '#/utils/cn';
 
 export const metadata: Metadata = {
   description: '담장 NUMUGAS',
-  openGraph: {
-    images: 'opengraph-image.png',
-  },
   title: '담장 NUMUGAS',
 };
 
@@ -29,7 +27,8 @@ export default function RootLayout({ children }: Props) {
         )}
       >
         <Header />
-        <div className={cn('px-4 pt-12')}>{children}</div>
+        <div className={cn('pt-16')}>{children}</div>
+        <Footer />
       </body>
     </html>
   );

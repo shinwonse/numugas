@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import SeasonSelector from '#/app/stat/components/season-selector';
 import StatTable from '#/app/stat/components/stat-table';
 import { cn } from '#/utils/cn';
@@ -10,7 +12,9 @@ function StatPage({ searchParams }: Props) {
   return (
     <main className={cn('')}>
       <SeasonSelector />
-      <StatTable className={cn('mt-4')} season={season as string} />
+      <Suspense fallback={<div>loading...</div>}>
+        <StatTable className={cn('mt-4')} season={season as string} />
+      </Suspense>
     </main>
   );
 }
