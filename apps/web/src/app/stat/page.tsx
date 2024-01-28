@@ -11,7 +11,7 @@ function StatPage({ searchParams }: Props) {
 
   return (
     <main className={cn('')}>
-      <SeasonSelector />
+      <SeasonSelector className={cn('px-2')} />
       <Suspense fallback={<div>loading...</div>}>
         <StatTable className={cn('mt-4')} season={season as string} />
       </Suspense>

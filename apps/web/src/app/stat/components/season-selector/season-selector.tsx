@@ -6,7 +6,11 @@ import { ChangeEvent, useState } from 'react';
 import { NUMUGAS_SEASONS } from '#/constants';
 import { cn } from '#/utils/cn';
 
-function SeasonSelector() {
+type Props = {
+  className?: string;
+};
+
+function SeasonSelector({ className }: Props) {
   const router = useRouter();
   const [currentSeason, setCurrentSeason] = useState('all-time');
 
@@ -18,7 +22,8 @@ function SeasonSelector() {
   return (
     <label
       className={cn(
-        'flex flex-row items-center w-full gap-3 whitespace-nowrap justify-center'
+        'flex flex-row items-center w-full gap-3 whitespace-nowrap justify-center',
+        className
       )}
       htmlFor="season-select"
     >
@@ -32,10 +37,7 @@ function SeasonSelector() {
       >
         <option value="all-time">통산</option>
         {NUMUGAS_SEASONS.map((season: string) => (
-          <option
-            key={season}
-            value={season}
-          >
+          <option key={season} value={season}>
             {season}
           </option>
         ))}
