@@ -24,9 +24,9 @@ function Header() {
       >
         <Image alt="담장 로고" fill src={Logo} />
       </Link>
-      <button type="button">
+      <Link href="/">
         <HomeIcon color="white" height={24} width={24} />
-      </button>
+      </Link>
     </header>
   );
 }
