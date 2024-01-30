@@ -5,6 +5,7 @@
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 
+import TopBatter from '#/app/components/TopBatter';
 import { cn } from '#/utils/cn';
 
 export default function Home() {
@@ -16,7 +17,8 @@ export default function Home() {
           <h2>타자 기록</h2>
           <ChevronRightIcon height={20} width={20} />
         </Link>
-        <div className={cn('w-full h-[300px] bg-accent rounded-xl')} />
+        <TopBatter />
+        {/* <div className={cn('w-full h-[300px] bg-accent rounded-xl')} /> */}
       </div>
       <div className={cn('flex flex-col gap-2')}>
         <button

@@ -1,10 +1,10 @@
 import './globals.css';
 
-import Footer from 'components/Footer';
-import Header from 'components/Header';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
+import Footer from '#/app/components/Footer';
+import Header from '#/app/components/Header';
 import { karla } from '#/styles/font';
 import { cn } from '#/utils/cn';
 
