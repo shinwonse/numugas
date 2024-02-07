@@ -28,7 +28,7 @@ type PlayerInfo = {
 };
 
 const GAME_ONE_URL =
-  'http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417';
+  'https://www.gameone.kr/club/info/ranking/hitter?club_idx=35417';
 
 const truncateToThreeDecimalPlaces = (input: string): string => {
   return input
