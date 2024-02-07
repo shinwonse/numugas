@@ -13,22 +13,22 @@ async function TopBatter() {
       )}
     >
       <RankerCard
-        playerName={topHitBatter.name.split('(')[0]}
-        playerNumber={topHitBatter.name.split('(')[1].split(')')[0]}
+        playerName={topHitBatter?.name.split('(')[0]}
+        playerNumber={topHitBatter?.name.split('(')[1].split(')')[0]}
         title="안타"
-        value={topHitBatter.hit}
+        value={topHitBatter?.hit}
       />
       <RankerCard
-        playerName={topHrBatter.name.split('(')[0]}
-        playerNumber={topHrBatter.name.split('(')[1].split(')')[0]}
+        playerName={topHrBatter?.name.split('(')[0]}
+        playerNumber={topHrBatter?.name.split('(')[1].split(')')[0]}
         title="홈런"
-        value={topHrBatter.hr}
+        value={topHrBatter?.hr}
       />
       <RankerCard
-        playerName={topRbiBatter.name.split('(')[0]}
-        playerNumber={topRbiBatter.name.split('(')[1].split(')')[0]}
+        playerName={topRbiBatter?.name.split('(')[0]}
+        playerNumber={topRbiBatter?.name.split('(')[1].split(')')[0]}
         title="타점"
-        value={topRbiBatter.rbi}
+        value={topRbiBatter?.rbi}
       />
     </div>
   );
