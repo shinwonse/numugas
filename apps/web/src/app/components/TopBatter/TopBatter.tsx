@@ -1,54 +1,35 @@
+'use client';
+
+import RankerCard from '#/app/components/RankerCard';
+import { fetchTopBatters } from '#/libs/fetchTopBatters';
 import { cn } from '#/utils/cn';
 
-function TopBatter() {
+async function TopBatter() {
+  const { topHitBatter, topHrBatter, topRbiBatter } = await fetchTopBatters();
   return (
     <div
       className={cn(
         'grid md:grid-cols-3 gap-4 text-primary font-bold grid-cols-2'
       )}
     >
-      <div
-        className={cn(
-          'flex flex-col bg-base-content rounded aspect-square p-3'
-        )}
-      >
-        <p className={cn('flex flex-col')}>
-          <h3 className={cn('text-xl')}>타율</h3>
-          <span className={cn('text-2xl text-red-700')}>0.456</span>
-        </p>
-        <p className={cn('flex flex-col text-xl mt-8')}>
-          <span>51</span>
-          <span>홍창기</span>
-        </p>
-      </div>
-      <div
-        className={cn(
-          'flex flex-col bg-base-content rounded aspect-square p-3'
-        )}
-      >
-        <p className={cn('flex flex-col')}>
-          <h3 className={cn('text-xl')}>홈런</h3>
-          <span className={cn('text-2xl text-red-700')}>10</span>
-        </p>
-        <p className={cn('flex flex-col text-xl mt-8')}>
-          <span>51</span>
-          <span>홍창기</span>
-        </p>
-      </div>
-      <div
-        className={cn(
-          'flex flex-col bg-base-content rounded aspect-square p-3'
-        )}
-      >
-        <p className={cn('flex flex-col')}>
-          <h3 className={cn('text-xl')}>타점</h3>
-          <span className={cn('text-2xl text-red-700')}>123</span>
-        </p>
-        <p className={cn('flex flex-col text-xl mt-8')}>
-          <span>51</span>
-          <span>홍창기</span>
-        </p>
-      </div>
+      <RankerCard
+        playerName={topHitBatter.name.split('(')[0]}
+        playerNumber={topHitBatter.name.split('(')[1].split(')')[0]}
+        title="안타"
+        value={topHitBatter.hit}
+      />
+      <RankerCard
+        playerName={topHrBatter.name.split('(')[0]}
+        playerNumber={topHrBatter.name.split('(')[1].split(')')[0]}
+        title="홈런"
+        value={topHrBatter.hr}
+      />
+      <RankerCard
+        playerName={topRbiBatter.name.split('(')[0]}
+        playerNumber={topRbiBatter.name.split('(')[1].split(')')[0]}
+        title="타점"
+        value={topRbiBatter.rbi}
+      />
     </div>
   );
 }

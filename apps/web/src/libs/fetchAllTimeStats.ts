@@ -2,7 +2,7 @@ import getStats from '@numugas/util/crawler';
 
 import { NUMUGAS_SEASONS } from '#/constants';
 
-export const getAllTimeStats = async () => {
+export const fetchAllTimeStats = async () => {
   const data = new Map();
   const allTimeStats = await Promise.all(
     NUMUGAS_SEASONS.map((season) => getStats(season))

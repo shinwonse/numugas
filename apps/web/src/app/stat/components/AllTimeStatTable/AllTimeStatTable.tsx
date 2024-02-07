@@ -1,5 +1,5 @@
 import BatterStatTableBody from '#/app/stat/components/BatterStatTableBody';
-import { getAllTimeStats } from '#/libs/getAllTimeStats';
+import { fetchAllTimeStats } from '#/libs/fetchAllTimeStats';
 import { cn } from '#/utils/cn';
 
 import BatterStatTableHead from '../BatterStatTableHead';
@@ -9,7 +9,7 @@ type Props = {
 };
 
 async function AllTimeStatTable({ className }: Props) {
-  const allTimeStats = await getAllTimeStats();
+  const allTimeStats = await fetchAllTimeStats();
 
   return (
     <table

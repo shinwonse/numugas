@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 
 import Footer from '#/app/components/Footer';
 import Header from '#/app/components/Header';
+import Provider from '#/app/components/Provider';
 import { karla } from '#/styles/font';
 import { cn } from '#/utils/cn';
 
@@ -27,7 +28,9 @@ export default function RootLayout({ children }: Props) {
         )}
       >
         <Header />
-        <div className={cn('pt-16')}>{children}</div>
+        <div className={cn('pt-16')}>
+          <Provider>{children}</Provider>
+        </div>
         <Footer />
       </body>
     </html>
