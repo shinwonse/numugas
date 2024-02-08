@@ -1,18 +1,19 @@
 import SeasonSelector from '#/app/stat/components/SeasonSelector';
-import StatTable from '#/app/stat/components/StatTable';
 import { cn } from '#/utils/cn';
+
+import BatterStatTable from '../components/BatterStatTable';
 
 type Props = { searchParams: { [key: string]: string | string[] | undefined } };
 
-function StatPage({ searchParams }: Props) {
+function BatterStatPage({ searchParams }: Props) {
   const { season } = searchParams;
 
   return (
     <main>
       <SeasonSelector className={cn('px-2')} initialSeason={season as string} />
-      <StatTable className={cn('mt-4')} season={season as string} />
+      <BatterStatTable className={cn('mt-4')} season={season as string} />
     </main>
   );
 }
 
-export default StatPage;
+export default BatterStatPage;

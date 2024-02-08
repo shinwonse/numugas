@@ -1,7 +1,7 @@
-import { fetchAllTimeStats } from '#/libs/fetchAllTimeStats';
+import { fetchAllTimeBatterStats } from '#/libs/fetchAllTimeBatterStats';
 
 export const fetchTopBatters = async () => {
-  const batterAllTimeStats = await fetchAllTimeStats();
+  const batterAllTimeStats = await fetchAllTimeBatterStats();
   const topHitBatter = Array.from(batterAllTimeStats.values())
     .sort((a, b) => {
       return Number(b.hit) - Number(a.hit);

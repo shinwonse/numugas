@@ -2,9 +2,10 @@ import dynamic from 'next/dynamic';
 
 import { cn } from '#/utils/cn';
 
-const AllTimeStatTable = dynamic(() => import('../AllTimeStatTable'));
+const AllTimeStatTable = dynamic(() => import('../BatterAllTimeStatTable'));
 const SeasonStatTable = dynamic(
-  () => import('#/app/stat/components/SeasonStatTable/SeasonStatTable')
+  () =>
+    import('#/app/stat/components/BatterSeasonStatTable/BatterSeasonStatTable')
 );
 
 type StatTableProps = {
@@ -17,7 +18,10 @@ const StatTableView = {
   SEASON: SeasonStatTable,
 };
 
-async function StatTable({ className, season = 'all-time' }: StatTableProps) {
+async function BatterStatTable({
+  className,
+  season = 'all-time',
+}: StatTableProps) {
   const CurrentStatTable =
     StatTableView[season === 'all-time' ? 'AllTIME' : 'SEASON'];
 
@@ -28,4 +32,4 @@ async function StatTable({ className, season = 'all-time' }: StatTableProps) {
   );
 }
 
-export default StatTable;
+export default BatterStatTable;

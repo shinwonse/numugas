@@ -1,12 +1,12 @@
-import getStats from '@numugas/util/crawler';
+import { getBatterStats } from '@numugas/util/crawler';
 
 import { NUMUGAS_SEASONS } from '#/constants';
 
-export const fetchAllTimeStats = async () => {
+export const fetchAllTimeBatterStats = async () => {
   const data = new Map();
   const allTimeStats = await Promise.all(
     NUMUGAS_SEASONS.map((season) =>
-      getStats(
+      getBatterStats(
         process.env.NODE_ENV === 'development'
           ? 'http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417'
           : 'http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417',

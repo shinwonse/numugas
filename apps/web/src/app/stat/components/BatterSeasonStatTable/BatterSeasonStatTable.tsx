@@ -1,4 +1,4 @@
-import getStats from '@numugas/util/crawler';
+import { getBatterStats } from '@numugas/util/crawler';
 
 import BatterStatTableBody from '#/app/stat/components/BatterStatTableBody';
 import BatterStatTableHead from '#/app/stat/components/BatterStatTableHead';
@@ -9,8 +9,8 @@ type Props = {
   season: string;
 };
 
-async function SeasonStatTable({ className, season }: Props) {
-  const seasonStats = await getStats(season);
+async function BatterSeasonStatTable({ className, season }: Props) {
+  const seasonStats = await getBatterStats(season);
 
   if (seasonStats.length === 0) {
     return (
@@ -33,4 +33,4 @@ async function SeasonStatTable({ className, season }: Props) {
   );
 }
 
-export default SeasonStatTable;
+export default BatterSeasonStatTable;
