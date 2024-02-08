@@ -1,5 +1,3 @@
-'use client';
-
 import RankerCard from '#/app/components/RankerCard';
 import { fetchTopBatters } from '#/libs/fetchTopBatters';
 import { cn } from '#/utils/cn';
