@@ -22,7 +22,7 @@ function Header() {
         )}
         href="/"
       >
-        <Image alt="담장 로고" fill src={Logo} />
+        <Image alt="담장 로고" fill priority src={Logo} />
       </Link>
       <Link href="/">
         <HomeIcon color="white" height={24} width={24} />
