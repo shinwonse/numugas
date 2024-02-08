@@ -9,7 +9,7 @@ export const fetchAllTimeStats = async () => {
       getStats(
         process.env.NODE_ENV === 'development'
           ? 'http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417'
-          : 'https://www.gameone.kr/club/info/ranking/hitter?club_idx=35417',
+          : 'http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417',
         season
       )
     )
