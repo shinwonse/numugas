@@ -3,9 +3,12 @@ import { cn } from '#/utils/cn';
 
 import BatterStatTable from '../components/BatterStatTable';
 
-type Props = { searchParams: { [key: string]: string | string[] | undefined } };
+type Props = {
+  params: { position: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-function BatterStatPage({ searchParams }: Props) {
+function StatPage({ params, searchParams }: Props) {
   const { season } = searchParams;
 
   return (
@@ -16,4 +19,4 @@ function BatterStatPage({ searchParams }: Props) {
   );
 }
 
-export default BatterStatPage;
+export default StatPage;
