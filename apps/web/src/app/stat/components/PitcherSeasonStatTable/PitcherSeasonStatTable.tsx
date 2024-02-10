@@ -1,4 +1,4 @@
-import { getPitcherStats } from '@numugas/util/src/crawlStatFromGameOne';
+import { getPitcherStats } from '@numugas/util/crawlStatFromGameOne';
 
 import PitcherStatTableBody from '#/app/stat/components/PitcherStatTableBody';
 import PitcherStatTableHead from '#/app/stat/components/PitcherStatTableHead';

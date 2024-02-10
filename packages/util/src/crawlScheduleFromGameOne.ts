@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 export const getSchedules = async () => {
-  const gameScheduleArray = [];
+  const gameScheduleArray: any[] = [];
   try {
     const html = await axios.get('http://www.gameone.kr/club/?club_idx=35417');
     const $ = cheerio.load(html.data);

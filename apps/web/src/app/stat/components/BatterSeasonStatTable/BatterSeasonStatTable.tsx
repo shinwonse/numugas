@@ -1,4 +1,4 @@
-import { getBatterStats } from '@numugas/util/src/crawlStatFromGameOne';
+import { getBatterStats } from '@numugas/util/crawlStatFromGameOne';
 
 import BatterStatTableBody from '#/app/stat/components/BatterStatTableBody';
 import BatterStatTableHead from '#/app/stat/components/BatterStatTableHead';
