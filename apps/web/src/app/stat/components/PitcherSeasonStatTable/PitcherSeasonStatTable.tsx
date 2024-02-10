@@ -11,7 +11,6 @@ type Props = {
 
 async function PitcherSeasonStatTable({ className, season }: Props) {
   const seasonStats = await getPitcherStats(season);
-  console.log(seasonStats);
 
   if (seasonStats.length === 0) {
     return (
