@@ -5,7 +5,6 @@ type Props = {
 };
 
 function PitcherStatTableBody({ stats }: Props) {
-  console.log(stats);
   return (
     <tbody className={cn('text-center text-nowrap whitespace-nowrap')}>
       {Array.from(stats.values()).map((stat: any) => (
