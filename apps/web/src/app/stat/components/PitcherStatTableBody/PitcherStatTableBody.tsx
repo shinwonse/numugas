@@ -5,18 +5,21 @@ type Props = {
 };
 
 function PitcherStatTableBody({ stats }: Props) {
+  console.log(stats);
   return (
     <tbody className={cn('text-center text-nowrap whitespace-nowrap')}>
       {Array.from(stats.values()).map((stat: any) => (
         <tr key={stat.name}>
           <td>{stat.name}</td>
-          <td>{stat.era.toFixed(2)}</td>
+          <td>{!Number.isNaN(stat.era) ? stat.era.toFixed(2) : '99.99'}</td>
           <td>{stat.games}</td>
           <td>{stat.win}</td>
           <td>{stat.lose}</td>
           <td>{stat.save}</td>
           <td>{stat.hold}</td>
-          <td>{stat.winRate.toFixed(3)}</td>
+          <td>
+            {!Number.isNaN(stat.winRate) ? stat.winRate.toFixed(3) : '0.000'}
+          </td>
           <td>{stat.ab}</td>
           <td>{stat.pitch}</td>
           <td>{stat.inning}</td>
