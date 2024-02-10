@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 const GAME_ONE_BATTER_URL =
-  'http://www.gameone.kr/club/info/ranking/batter?club_idx=35417';
+  'http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417';
 const GAME_ONE_PITCHER_URL =
   'http://www.gameone.kr/club/info/ranking/pitcher?club_idx=35417';
 
