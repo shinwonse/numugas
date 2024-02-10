@@ -1,4 +1,4 @@
-import { getPitcherStats } from '@numugas/util/crawler';
+import { getPitcherStats } from '@numugas/util/src/crawlStatFromGameOne';
 
 import { NUMUGAS_SEASONS } from '#/constants';
 
