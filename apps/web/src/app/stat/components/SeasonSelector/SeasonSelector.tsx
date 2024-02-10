@@ -9,15 +9,20 @@ import { cn } from '#/utils/cn';
 type Props = {
   className?: string;
   initialSeason?: string;
+  position: string;
 };
 
-function SeasonSelector({ className, initialSeason = 'all-time' }: Props) {
+function SeasonSelector({
+  className,
+  initialSeason = 'all-time',
+  position,
+}: Props) {
   const router = useRouter();
   const [currentSeason, setCurrentSeason] = useState(initialSeason);
 
   const handleSeasonChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setCurrentSeason(e.target.value);
-    router.push(`/stat?season=${e.target.value}`);
+    router.push(`/stat/${position}?season=${e.target.value}`);
   };
 
   return (

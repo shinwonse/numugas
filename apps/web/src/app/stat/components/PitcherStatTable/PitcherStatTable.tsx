@@ -2,10 +2,12 @@ import dynamic from 'next/dynamic';
 
 import { cn } from '#/utils/cn';
 
-const AllTimeStatTable = dynamic(() => import('../BatterAllTimeStatTable'));
+const AllTimeStatTable = dynamic(() => import('../PitcherAllTimeStatTable'));
 const SeasonStatTable = dynamic(
   () =>
-    import('#/app/stat/components/BatterSeasonStatTable/BatterSeasonStatTable')
+    import(
+      '#/app/stat/components/PitcherSeasonStatTable/PitcherSeasonStatTable'
+    )
 );
 
 const StatTableView = {
@@ -18,7 +20,7 @@ type StatTableProps = {
   season?: string;
 };
 
-async function BatterStatTable({
+async function PitcherStatTable({
   className,
   season = 'all-time',
 }: StatTableProps) {
@@ -27,9 +29,9 @@ async function BatterStatTable({
 
   return (
     <div className={cn('overflow-x-auto', className)}>
-      <CurrentStatTable season={season as string} />
+      <CurrentStatTable season={season} />
     </div>
   );
 }
 
-export default BatterStatTable;
+export default PitcherStatTable;

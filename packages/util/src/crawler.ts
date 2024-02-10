@@ -1,6 +1,11 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
+const GAME_ONE_BATTER_URL =
+  'http://www.gameone.kr/club/info/ranking/batter?club_idx=35417';
+const GAME_ONE_PITCHER_URL =
+  'http://www.gameone.kr/club/info/ranking/pitcher?club_idx=35417';
+
 type BatterInfo = {
   ab: number;
   avg: number;
@@ -61,12 +66,13 @@ const truncateToThreeDecimalPlaces = (input: string): string => {
 };
 
 export const getBatterStats = async (
-  url: string,
   season: string = '2023'
 ): Promise<BatterInfo[]> => {
   const playerInfoArray: BatterInfo[] = [];
   try {
-    const html = await axios.get(`${url}&kind=&season=${season}`);
+    const html = await axios.get(
+      `${GAME_ONE_BATTER_URL}&kind=&season=${season}`
+    );
     const $ = cheerio.load(html.data);
     /* eslint-disable sort-keys-fix/sort-keys-fix */
     $('.ranking_table tbody tr').each((i, elem) => {
@@ -110,12 +116,13 @@ export const getBatterStats = async (
 };
 
 export const getPitcherStats = async (
-  url: string,
   season: string = '2023'
 ): Promise<PitcherInfo[]> => {
   const playerInfoArray: PitcherInfo[] = [];
   try {
-    const html = await axios.get(`${url}&kind=&season=${season}`);
+    const html = await axios.get(
+      `${GAME_ONE_PITCHER_URL}&kind=&season=${season}`
+    );
     const $ = cheerio.load(html.data);
     /* eslint-disable sort-keys-fix/sort-keys-fix */
     $('.ranking_table tbody tr').each((i, elem) => {

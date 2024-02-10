@@ -5,14 +5,7 @@ import { NUMUGAS_SEASONS } from '#/constants';
 export const fetchAllTimePitcherStats = async () => {
   const data = new Map();
   const allTimeStats = await Promise.all(
-    NUMUGAS_SEASONS.map((season) =>
-      getPitcherStats(
-        process.env.NODE_ENV === 'development'
-          ? 'http://www.gameone.kr/club/info/ranking/pitcher?club_idx=35417'
-          : 'http://www.gameone.kr/club/info/ranking/pitcher?club_idx=35417',
-        season
-      )
-    )
+    NUMUGAS_SEASONS.map((season) => getPitcherStats(season))
   );
   allTimeStats.forEach((season) => {
     season.forEach((player) => {
@@ -25,7 +18,7 @@ export const fetchAllTimePitcherStats = async () => {
         playerData.hold += player.hold;
         playerData.winRate =
           playerData.win / (playerData.win + playerData.lose);
-        playerData.era += player.era;
+        playerData.era = (playerData.earnedRuns / playerData.inning) * 9;
         playerData.hit += player.hit;
         playerData.hr += player.hr;
         playerData.bb += player.bb;
