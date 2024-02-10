@@ -26,6 +26,9 @@ export const fetchAllTimePitcherStats = async () => {
         playerData.runs += player.runs;
         playerData.earnedRuns += player.earnedRuns;
         playerData.whip = (playerData.h + playerData.bb) / playerData.ip;
+        playerData.pitch += player.pitch;
+        playerData.ab += player.ab;
+        playerData.batter += player.batter;
         // Calculate cumulative innings.
         const totalInnings = playerData.inning + player.inning;
         let wholeInnings = Math.floor(totalInnings);

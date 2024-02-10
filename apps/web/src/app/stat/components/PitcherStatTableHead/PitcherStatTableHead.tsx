@@ -13,7 +13,6 @@ function PitcherStatTableHead() {
         <th>홀드</th>
         <th>승률</th>
         <th>타자</th>
-        <th>투구수</th>
         <th>이닝</th>
         <th>피안타</th>
         <th>피홈런</th>

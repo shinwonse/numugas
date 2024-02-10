@@ -19,8 +19,7 @@ function PitcherStatTableBody({ stats }: Props) {
           <td>
             {!Number.isNaN(stat.winRate) ? stat.winRate.toFixed(3) : '0.000'}
           </td>
-          <td>{stat.ab}</td>
-          <td>{stat.pitch}</td>
+          <td>{stat.batter}</td>
           <td>{stat.inning}</td>
           <td>{stat.hit}</td>
           <td>{stat.hr}</td>
