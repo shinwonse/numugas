@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "exports": {
-    "./crawler": "./src/crawler.ts"
+    "./crawlStatFromGameOne": "./src/crawlStatFromGameOne.ts",
+    "./crawlScheduleFromGameOne": "./src/crawlScheduleFromGameOne.ts"
   },
   "dependencies": {
     "axios": "^1.6.5",
