@@ -1,8 +1,22 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-export const getSchedules = async () => {
-  const gameScheduleArray: any[] = [];
+type Schedule = {
+  awayTeam: {
+    emblem: string;
+    name: string;
+  };
+  date: string;
+  homeTeam: {
+    emblem: string;
+    name: string;
+  };
+  leagueName: string;
+  stadium: string;
+};
+
+export const getSchedules = async (): Promise<Schedule[]> => {
+  const gameScheduleArray: Schedule[] = [];
   try {
     const html = await axios.get('http://www.gameone.kr/club/?club_idx=35417');
     const $ = cheerio.load(html.data);
@@ -21,15 +35,21 @@ export const getSchedules = async () => {
       const awayTeamName = $(elem)
         .find('.team:nth-child(3) .team_info dt')
         .text();
+      const leagueName = $(elem).find('.game_info dt').text();
+      const stadium = $(elem).find('.game_info .ground_name').text();
+      const date = $(elem).find('.game_info strong').text();
       const gameInfo = {
         awayTeam: {
           emblem: awayTeamEmblem,
           name: awayTeamName,
         },
+        date,
         homeTeam: {
           emblem: homeTeamEmblem,
           name: homeTeamName,
         },
+        leagueName,
+        stadium,
       };
       gameScheduleArray.push(gameInfo);
     });
