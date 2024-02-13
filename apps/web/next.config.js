@@ -4,7 +4,12 @@ const nextConfig = {
     ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
   images: {
-    domains: ['file.clubone.kr'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '*.clubone.kr',
+      }
+    ]
   },
 }
 
