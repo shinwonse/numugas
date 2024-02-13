@@ -10,10 +10,10 @@ import { karla } from '#/styles/font';
 import { cn } from '#/utils/cn';
 
 export const metadata: Metadata = {
-  description: '담장 NUMUGAS',
+  description: '담장 NUMUGAS 홈페이지입니다.',
   metadataBase: new URL('https://numugas.vercel.app'),
   openGraph: {
-    description: '담장 NUMUGAS',
+    description: '담장 NUMUGAS 홈페이지입니다.',
     images: [
       {
         alt: '담장 NUMUGAS',
@@ -22,11 +22,11 @@ export const metadata: Metadata = {
         width: 1200,
       },
     ],
-    title: '담장 NUMUGAS 홈페이지입니다.',
+    title: '담장 NUMUGAS',
     type: 'website',
     url: 'https://numugas.vercel.app',
   },
-  title: '담장 NUMUGAS 홈페이지입니다.',
+  title: '담장 NUMUGAS',
 };
 
 type Props = {
