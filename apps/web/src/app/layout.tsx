@@ -11,7 +11,13 @@ import { cn } from '#/utils/cn';
 
 export const metadata: Metadata = {
   description: '담장 NUMUGAS',
-  title: '담장 NUMUGAS',
+  openGraph: {
+    description: '담장 NUMUGAS',
+    title: '담장 NUMUGAS 홈페이지입니다.',
+    type: 'website',
+    url: 'https://numugas.vercel.app',
+  },
+  title: '담장 NUMUGAS 홈페이지입니다.',
 };
 
 type Props = {
