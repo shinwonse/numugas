@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 
 import { cn } from '#/utils/cn';
 
@@ -27,7 +28,9 @@ async function BatterStatTable({
 
   return (
     <div className={cn('overflow-x-auto', className)}>
-      <CurrentStatTable season={season as string} />
+      <Suspense fallback={<div>loading</div>}>
+        <CurrentStatTable season={season as string} />
+      </Suspense>
     </div>
   );
 }
