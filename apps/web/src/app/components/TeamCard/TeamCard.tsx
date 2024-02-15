@@ -9,10 +9,10 @@ type Props = {
 
 function TeamCard({ emblem = '', name = '' }: Props) {
   return (
-    <div className={cn('flex flex-col items-center justify-center')}>
+    <div className={cn('flex flex-col items-center justify-center gap-2')}>
       <Image
         alt={name}
-        className={cn('rounded-full')}
+        className={cn('rounded-full aspect-square')}
         height={100}
         src={emblem}
         width={100}
