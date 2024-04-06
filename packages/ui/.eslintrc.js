@@ -1,3 +1,4 @@
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["@numugas/eslint-config/react-internal.js", "plugin:storybook/recommended"],
+  extends: ["@numugas/eslint-config/react.js"],
 };
