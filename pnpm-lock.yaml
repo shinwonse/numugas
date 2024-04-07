@@ -240,9 +240,15 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.24
         version: 18.2.24
+      postcss:
+        specifier: ^8.4.38
+        version: 8.4.38
+      tailwindcss:
+        specifier: ^3.4.3
+        version: 3.4.3
       tsup:
         specifier: ^8.0.2
-        version: 8.0.2
+        version: 8.0.2(postcss@8.4.38)
 
   packages/util:
     dependencies:
@@ -8518,7 +8524,7 @@ packages:
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
-  /tsup@8.0.2:
+  /tsup@8.0.2(postcss@8.4.38):
     resolution: {integrity: sha512-NY8xtQXdH7hDUAZwcQdY/Vzlw9johQsaqf7iwZ6g1DOUlFYQ5/AtVAjTvihhEyeRlGo4dLRVHtrRaL35M1daqQ==}
     engines: {node: '>=18'}
     hasBin: true
@@ -8545,6 +8551,7 @@ packages:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
+      postcss: 8.4.38
       postcss-load-config: 4.0.2(postcss@8.4.38)
       resolve-from: 5.0.0
       rollup: 4.14.0

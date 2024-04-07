@@ -3,10 +3,23 @@
   "version": "1.0.0",
   "sideEffects": false,
   "license": "MIT",
+  "files": [
+    "dist/*"
+  ],
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "exports": {
+    "./styles.css": "./dist/styles.css",
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "dev": "tsup --watch && pnpm tailwind --watch",
+    "build": "tsup && pnpm tailwind --minify -o ./dist/styles.css",
+    "tailwind": "pnpm tailwindcss -i src/styles.css -o ./dist/styles.css",
+    "clean": "rm -rf .turbo && rm -rf dist"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -18,6 +31,8 @@
     "@numugas/typescript-config": "workspace:*",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.24",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
     "tsup": "^8.0.2"
   },
   "publishConfig": {
