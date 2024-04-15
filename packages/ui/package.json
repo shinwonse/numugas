@@ -3,17 +3,15 @@
   "version": "1.0.0",
   "sideEffects": false,
   "license": "MIT",
-  "files": [
-    "dist/*"
-  ],
+  "files": ["dist/*"],
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "exports": {
-    "./styles.css": "./dist/styles.css",
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./styles.css": "./dist/styles.css"
   },
   "scripts": {
     "dev": "tsup --watch && pnpm tailwind --watch",
