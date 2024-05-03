@@ -1,0 +1,69 @@
+.dark, .dark-theme {
+  --red-1: #170f0e;
+  --red-2: #201312;
+  --red-3: #3b1311;
+  --red-4: #510f0f;
+  --red-5: #621616;
+  --red-6: #732422;
+  --red-7: #8c3430;
+  --red-8: #b64540;
+  --red-9: #dd3c3c;
+  --red-10: #ba4944;
+  --red-11: #ff8e85;
+  --red-12: #ffd2cd;
+
+  --red-a1: #ec000007;
+  --red-a2: #f22f2011;
+  --red-a3: #ff1d112d;
+  --red-a4: #fe0a0a45;
+  --red-a5: #ff202057;
+  --red-a6: #ff403b69;
+  --red-a7: #ff554d84;
+  --red-a8: #ff5c55b1;
+  --red-a9: #ff4444db;
+  --red-a10: #fe5f58b6;
+  --red-a11: #ff8e85;
+  --red-a12: #ffd2cd;
+
+  --red-contrast: #fff;
+  --red-surface: #2f151380;
+  --red-indicator: #dd3c3c;
+  --red-track: #dd3c3c;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+  @media (color-gamut: p3) {
+    .dark, .dark-theme {
+      --red-1: oklch(17.8% 0.013 25.52);
+      --red-2: oklch(20.3% 0.021 25.52);
+      --red-3: oklch(25% 0.064 25.52);
+      --red-4: oklch(28.9% 0.097 25.52);
+      --red-5: oklch(33.1% 0.108 25.52);
+      --red-6: oklch(38.2% 0.112 25.52);
+      --red-7: oklch(45% 0.121 25.52);
+      --red-8: oklch(54.3% 0.148 25.52);
+      --red-9: oklch(59.8% 0.198 25.52);
+      --red-10: oklch(55.5% 0.148 25.52);
+      --red-11: oklch(78.4% 0.166 25.52);
+      --red-12: oklch(90.2% 0.053 25.52);
+
+      --red-a1: color(display-p3 0.961 0 0 / 0.022);
+      --red-a2: color(display-p3 0.996 0.282 0.141 / 0.055);
+      --red-a3: color(display-p3 1 0.169 0.118 / 0.156);
+      --red-a4: color(display-p3 1 0.133 0.086 / 0.24);
+      --red-a5: color(display-p3 1 0.208 0.169 / 0.307);
+      --red-a6: color(display-p3 1 0.329 0.275 / 0.374);
+      --red-a7: color(display-p3 1 0.408 0.357 / 0.475);
+      --red-a8: color(display-p3 1 0.431 0.388 / 0.639);
+      --red-a9: color(display-p3 1 0.349 0.314 / 0.786);
+      --red-a10: color(display-p3 1 0.443 0.4 / 0.656);
+      --red-a11: color(display-p3 1 0.616 0.569 / 0.937);
+      --red-a12: color(display-p3 1 0.855 0.831 / 0.971);
+
+      --red-contrast: #fff;
+      --red-surface: color(display-p3 0.165 0.086 0.071 / 0.5);
+      --red-indicator: oklch(59.8% 0.198 25.52);
+      --red-track: oklch(59.8% 0.198 25.52);
+    }
+  }
+}

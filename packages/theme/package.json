@@ -1,0 +1,10 @@
+{
+  "name": "theme",
+  "version": "1.0.0",
+  "license": "ISC",
+  "exports": {
+    "accent.css": "./accent.css",
+    "background.css": "./background.css",
+    "gray.css": "./gray.css"
+  }
+}
