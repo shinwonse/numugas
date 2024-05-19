@@ -1,4 +1,3 @@
-import '@numugas/ui/styles.css';
 import './globals.css';
 
 import type { Metadata } from 'next';

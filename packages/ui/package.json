@@ -20,6 +20,8 @@
     "clean": "rm -rf .turbo && rm -rf dist"
   },
   "dependencies": {
+    "@numugas/theme": "workspace:*",
+    "@numugas/util": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -27,6 +29,7 @@
     "@numugas/eslint-config": "workspace:*",
     "@numugas/prettier-config": "workspace:*",
     "@numugas/typescript-config": "workspace:*",
+    "@numugas/tailwind-config": "workspace:*",
     "@types/react": "^18.2.74",
     "@types/react-dom": "^18.2.24",
     "postcss": "^8.4.38",
