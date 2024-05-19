@@ -1,8 +1,9 @@
-import { getSchedules } from '@numugas/util/crawlScheduleFromGameOne';
-import Image from 'next/image';
+import { crawlScheduleFromGameOne } from '@numugas/util';
 
 import TeamCard from '#/app/components/TeamCard';
 import { cn } from '#/utils/cn';
+
+const { getSchedules } = crawlScheduleFromGameOne;
 
 async function Schedule() {
   const schedules = await getSchedules();

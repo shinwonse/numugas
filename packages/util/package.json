@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "exports": {
-    "./crawlStatFromGameOne": "./src/crawlStatFromGameOne.ts",
-    "./crawlScheduleFromGameOne": "./src/crawlScheduleFromGameOne.ts"
+    ".": "./src/index.ts"
   },
   "dependencies": {
     "axios": "^1.6.5",
@@ -16,7 +15,9 @@
     "@numugas/prettier-config": "workspace:*",
     "@numugas/typescript-config": "workspace:*",
     "@types/crawler": "^1.2.6",
+    "clsx": "^2.1.0",
     "eslint": "^8.56.0",
+    "tailwind-merge": "^2.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

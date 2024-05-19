@@ -1,6 +1,8 @@
-import { getBatterStats } from '@numugas/util/crawlStatFromGameOne';
+import { crawlStatFromGameOne } from '@numugas/util';
 
 import { NUMUGAS_SEASONS } from '#/constants';
+
+const { getBatterStats } = crawlStatFromGameOne;
 
 export const fetchAllTimeBatterStats = async () => {
   const data = new Map();

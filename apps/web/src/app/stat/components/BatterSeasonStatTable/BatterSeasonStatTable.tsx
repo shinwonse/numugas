@@ -1,8 +1,10 @@
-import { getBatterStats } from '@numugas/util/crawlStatFromGameOne';
+import { crawlStatFromGameOne } from '@numugas/util';
 
 import BatterStatTableBody from '#/app/stat/components/BatterStatTableBody';
 import BatterStatTableHead from '#/app/stat/components/BatterStatTableHead';
 import { cn } from '#/utils/cn';
+
+const { getBatterStats } = crawlStatFromGameOne;
 
 type Props = {
   className?: string;

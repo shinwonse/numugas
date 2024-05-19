@@ -1,7 +1,6 @@
 import type { Config } from 'tailwindcss';
 import tailwindScrollbar from 'tailwind-scrollbar';
 import daisyui from 'daisyui';
-import commonTailwindConfig from '@numugas/tailwind-config';
 
 const config: Omit<Config, "content"> = {
   darkMode: 'class',
@@ -15,7 +14,6 @@ const config: Omit<Config, "content"> = {
       }
     }
   },
-  extend: commonTailwindConfig
 };
 
 export default config;
