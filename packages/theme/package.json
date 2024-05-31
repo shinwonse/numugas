@@ -1,8 +1,0 @@
-{
-  "name": "@numugas/theme",
-  "version": "1.0.0",
-  "license": "ISC",
-  "exports": {
-    ".": "./index.css"
-  }
-}
