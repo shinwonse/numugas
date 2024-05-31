@@ -1,5 +1,5 @@
 {
   "extends": "@numugas/typescript-config/base.json",
-  "include": ".",
+  "include": ["."],
   "exclude": ["dist", "build", "node_modules"]
 }
