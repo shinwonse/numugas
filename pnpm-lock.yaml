@@ -277,9 +277,6 @@ importers:
 
   packages/tailwind-config:
     devDependencies:
-      '@numugas/theme':
-        specifier: workspace:*
-        version: link:../theme
       '@numugas/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -293,15 +290,10 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1(ts-node@10.9.2(@types/node@20.12.5)(typescript@5.4.4))
 
-  packages/theme: {}
-
   packages/typescript-config: {}
 
   packages/ui:
     dependencies:
-      '@numugas/theme':
-        specifier: workspace:*
-        version: link:../theme
       '@numugas/util':
         specifier: workspace:*
         version: link:../util

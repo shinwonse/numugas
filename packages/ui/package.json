@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "sideEffects": false,
   "license": "MIT",
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "exports": {
@@ -17,7 +19,6 @@
     "clean": "rm -rf .turbo && rm -rf dist"
   },
   "dependencies": {
-    "@numugas/theme": "workspace:*",
     "@numugas/util": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
