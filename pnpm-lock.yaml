@@ -81,6 +81,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.2.1
         version: 4.2.1(vite@5.2.8(@types/node@20.12.5))
+      daisyui:
+        specifier: ^4.11.1
+        version: 4.11.1(postcss@8.4.38)
       happy-dom:
         specifier: ^14.7.1
         version: 14.7.1
@@ -3146,6 +3149,10 @@ packages:
 
   daisyui@4.10.1:
     resolution: {integrity: sha512-Ds0Z0Fv+Xf6ZEqV4Q5JIOeKfg83xxnww0Lzid0V94vPtlQ0yYmucEa33zSctsX2VEgBALtmk5zVEqd59pnUbuQ==}
+    engines: {node: '>=16.9.0'}
+
+  daisyui@4.11.1:
+    resolution: {integrity: sha512-obT9CUbQdW6eoHwSeT5VwaRrWlwrM4OT5qlfdJ0oQlSIEYhwnEl2+L2fwu5PioLbitwuMdYC2X8I1cyy8Pf6LQ==}
     engines: {node: '>=16.9.0'}
 
   daisyui@4.6.0:
@@ -10447,6 +10454,15 @@ snapshots:
   culori@3.3.0: {}
 
   daisyui@4.10.1(postcss@8.4.38):
+    dependencies:
+      css-selector-tokenizer: 0.8.0
+      culori: 3.3.0
+      picocolors: 1.0.0
+      postcss-js: 4.0.1(postcss@8.4.38)
+    transitivePeerDependencies:
+      - postcss
+
+  daisyui@4.11.1(postcss@8.4.38):
     dependencies:
       css-selector-tokenizer: 0.8.0
       culori: 3.3.0

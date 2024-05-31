@@ -1,3 +1,3 @@
-import Button from './Button';
+import '../styles.css';
 
-export { Button };
+export { default as Button } from './Button';

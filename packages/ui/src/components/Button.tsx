@@ -2,7 +2,7 @@ import { cn } from '@numugas/util';
 
 function Button() {
   return (
-    <button className={cn('btn btn-primary')} type="button">
+    <button className={cn('btn btn-info')} type="button">
       This is Button
     </button>
   );

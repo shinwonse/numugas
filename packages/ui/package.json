@@ -13,9 +13,9 @@
     "./styles.css": "./dist/styles.css"
   },
   "scripts": {
-    "dev": "tsup --watch && pnpm tailwind --watch",
-    "build": "tsup && pnpm tailwind --minify -o ./dist/styles.css",
-    "tailwind": "pnpm tailwindcss -i src/styles.css -o ./dist/styles.css",
+    "dev": "tsup --watch & pnpm tailwind --watch",
+    "build": "tsup && pnpm run tailwind --minify -o ./dist/styles.css",
+    "tailwind": "tailwindcss -i src/styles.css -o ./dist/styles.css",
     "clean": "rm -rf .turbo && rm -rf dist"
   },
   "dependencies": {
