@@ -32,4 +32,13 @@ module.exports = {
     "node_modules/",
   ],
   overrides: [{ files: ["*.js?(x)", "*.ts?(x)"] }],
+  rules: {
+    "react/function-component-definition":[
+        2, 
+        { "namedComponents": [
+          "arrow-function", 
+          "function-declaration"
+        ] }
+      ],
+  }
 };
