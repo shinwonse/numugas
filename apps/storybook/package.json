@@ -7,10 +7,15 @@
   },
   "dependencies": {
     "@numugas/ui": "workspace:*",
+    "@numugas/util": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@numugas/eslint-config": "workspace:*",
+    "@numugas/prettier-config": "workspace:*",
+    "@numugas/tailwind-config": "workspace:*",
+    "@numugas/typescript-config": "workspace:*",
     "@chromatic-com/storybook": "^1.3.2",
     "@storybook/addon-essentials": "^8.0.6",
     "@storybook/addon-interactions": "^8.0.6",
