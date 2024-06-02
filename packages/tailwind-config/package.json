@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "exports": {
-    ".": "./tailwind.config.ts"
+    "./postcss.config": "./postcss.config.js",
+    "./tailwind.config": "./tailwind.config.ts"
   },
   "devDependencies": {
     "@numugas/typescript-config": "workspace:*",

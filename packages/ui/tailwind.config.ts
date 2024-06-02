@@ -1,9 +1,10 @@
-import commonTailwindConfig from '@numugas/tailwind-config';
+import sharedConfig from '@numugas/tailwind-config/tailwind.config';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: ['./src/components/**/*.{js,ts,jsx,tsx,mdx}'],
-  presets: [commonTailwindConfig],
+  content: ['./src/**/*.tsx'],
+  prefix: 'ui-',
+  presets: [sharedConfig],
 };
 
 export default config;

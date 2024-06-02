@@ -1,4 +1,4 @@
-import "@numugas/ui/styles.css";
+import '@numugas/ui/styles.css';
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
