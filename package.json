@@ -9,9 +9,9 @@
   },
   "devDependencies": {
     "@numugas/eslint-config": "workspace:*",
-    "@numugas/typescript-config": "workspace:*",
     "@numugas/prettier-config": "workspace:*",
-    "turbo": "latest"
+    "@numugas/typescript-config": "workspace:*",
+    "turbo": "^1.11.3"
   },
   "packageManager": "pnpm@9.0.6",
   "engines": {
