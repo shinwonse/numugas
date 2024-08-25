@@ -11,8 +11,6 @@
     "crawler": "^1.5.0"
   },
   "devDependencies": {
-    "@numugas/eslint-config": "workspace:*",
-    "@numugas/prettier-config": "workspace:*",
     "@numugas/typescript-config": "workspace:*",
     "@types/crawler": "^1.2.6",
     "clsx": "^2.1.0",

@@ -1,9 +1,0 @@
-{
-  "name": "@numugas/prettier-config",
-  "version": "1.0.0",
-  "private": true,
-  "main": "index.json",
-  "peerDependencies": {
-    "prettier": "^3.2.2"
-  }
-}
