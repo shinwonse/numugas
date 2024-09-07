@@ -6,9 +6,7 @@ const { getBatterStats } = crawlStatFromGameOne;
 
 export const fetchAllTimeBatterStats = async () => {
   const data = new Map();
-  const allTimeStats = await Promise.all(
-    NUMUGAS_SEASONS.map((season) => getBatterStats(season))
-  );
+  const allTimeStats = await Promise.all(NUMUGAS_SEASONS.map((season) => getBatterStats(season)));
   allTimeStats.forEach((season) => {
     season.forEach((player) => {
       if (data.has(player.name)) {

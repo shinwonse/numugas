@@ -5,11 +5,7 @@ import { cn } from '#/utils/cn';
 async function TopBatter() {
   const { topHitBatter, topHrBatter, topRbiBatter } = await fetchTopBatters();
   return (
-    <div
-      className={cn(
-        'grid md:grid-cols-3 gap-4 text-primary font-bold grid-cols-2'
-      )}
-    >
+    <div className={cn('grid grid-cols-2 gap-4 font-bold text-primary md:grid-cols-3')}>
       <RankerCard
         playerName={topHitBatter?.name.split('(')[0]}
         playerNumber={topHitBatter?.name.split('(')[1].split(')')[0]}

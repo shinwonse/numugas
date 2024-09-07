@@ -6,7 +6,7 @@ type Props = {
 
 function PitcherStatTableBody({ stats }: Props) {
   return (
-    <tbody className={cn('text-center text-nowrap whitespace-nowrap')}>
+    <tbody className={cn('whitespace-nowrap text-nowrap text-center')}>
       {Array.from(stats.values()).map((stat: any) => (
         <tr key={stat.name}>
           <td>{stat.name}</td>
@@ -16,9 +16,7 @@ function PitcherStatTableBody({ stats }: Props) {
           <td>{stat.lose}</td>
           <td>{stat.save}</td>
           <td>{stat.hold}</td>
-          <td>
-            {!Number.isNaN(stat.winRate) ? stat.winRate.toFixed(3) : '0.000'}
-          </td>
+          <td>{!Number.isNaN(stat.winRate) ? stat.winRate.toFixed(3) : '0.000'}</td>
           <td>{stat.batter}</td>
           <td>{stat.inning}</td>
           <td>{stat.hit}</td>

@@ -6,9 +6,7 @@ const { getPitcherStats } = crawlStatFromGameOne;
 
 export const fetchAllTimePitcherStats = async () => {
   const data = new Map();
-  const allTimeStats = await Promise.all(
-    NUMUGAS_SEASONS.map((season) => getPitcherStats(season))
-  );
+  const allTimeStats = await Promise.all(NUMUGAS_SEASONS.map((season) => getPitcherStats(season)));
   allTimeStats.forEach((season) => {
     season.forEach((player) => {
       if (data.has(player.name)) {
@@ -18,8 +16,7 @@ export const fetchAllTimePitcherStats = async () => {
         playerData.lose += player.lose;
         playerData.save += player.save;
         playerData.hold += player.hold;
-        playerData.winRate =
-          playerData.win / (playerData.win + playerData.lose);
+        playerData.winRate = playerData.win / (playerData.win + playerData.lose);
         playerData.era = (playerData.earnedRuns / playerData.inning) * 9;
         playerData.hit += player.hit;
         playerData.hr += player.hr;

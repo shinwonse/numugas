@@ -6,7 +6,7 @@ type Props = {
 
 function BatterStatTableBody({ stats }: Props) {
   return (
-    <tbody className={cn('text-center text-nowrap whitespace-nowrap')}>
+    <tbody className={cn('whitespace-nowrap text-nowrap text-center')}>
       {Array.from(stats.values()).map((stat: any) => (
         <tr key={stat.name}>
           <td>{stat.name}</td>

@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, useState } from 'react';
+import type { ChangeEvent } from 'react';
+import { useState } from 'react';
 
 import { NUMUGAS_SEASONS } from '#/constants';
 import { cn } from '#/utils/cn';
@@ -12,11 +13,7 @@ type Props = {
   position: string;
 };
 
-function SeasonSelector({
-  className,
-  initialSeason = 'all-time',
-  position,
-}: Props) {
+function SeasonSelector({ className, initialSeason = 'all-time', position }: Props) {
   const router = useRouter();
   const [currentSeason, setCurrentSeason] = useState(initialSeason);
 
@@ -28,8 +25,8 @@ function SeasonSelector({
   return (
     <label
       className={cn(
-        'flex flex-row items-center w-full gap-3 whitespace-nowrap justify-center',
-        className
+        'flex w-full flex-row items-center justify-center gap-3 whitespace-nowrap',
+        className,
       )}
       htmlFor="season-select"
     >
@@ -37,7 +34,7 @@ function SeasonSelector({
         <span className={cn('text-nowrap')}>시즌</span>
       </div>
       <select
-        className={cn('flex w-full bg-neutral-600 rounded py-1 px-1')}
+        className={cn('flex w-full rounded bg-neutral-600 p-1')}
         onChange={handleSeasonChange}
         value={currentSeason}
       >

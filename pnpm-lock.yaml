@@ -233,6 +233,15 @@ importers:
       '@wonse/eslint-plugin':
         specifier: ^1.0.7
         version: 1.0.7(eslint@8.57.0)(react@18.2.0)(typescript@5.4.4)
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      eslint-config-next:
+        specifier: 14.0.4
+        version: 14.0.4(eslint@8.57.0)(typescript@5.4.4)
+      eslint-plugin-tailwindcss:
+        specifier: ^3.17.4
+        version: 3.17.4(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.12.5)(typescript@5.4.4)))
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.2
@@ -255,12 +264,6 @@ importers:
       daisyui:
         specifier: ^4.10.1
         version: 4.10.1(postcss@8.4.38)
-      eslint:
-        specifier: ^8.57.0
-        version: 8.57.0
-      eslint-config-next:
-        specifier: 14.0.4
-        version: 14.0.4(eslint@8.57.0)(typescript@5.4.4)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.12.5)(ts-node@10.9.2(@types/node@20.12.5)(typescript@5.4.4))
@@ -4269,6 +4272,12 @@ packages:
     resolution: {integrity: sha512-bXgJQ+lqhtQBCuWY/FUWdB27j4+lqcvXv5rUARkzbeWLwea+S5eBZEQrhnO+WgX3ZoJHVj0cn943iyXwByHHQw==}
     peerDependencies:
       eslint: '>=5.0.0'
+
+  eslint-plugin-tailwindcss@3.17.4:
+    resolution: {integrity: sha512-gJAEHmCq2XFfUP/+vwEfEJ9igrPeZFg+skeMtsxquSQdxba9XRk5bn0Bp9jxG1VV9/wwPKi1g3ZjItu6MIjhNg==}
+    engines: {node: '>=18.12.0'}
+    peerDependencies:
+      tailwindcss: ^3.4.0
 
   eslint-scope@5.1.1:
     resolution: {integrity: sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==}
@@ -10188,7 +10197,7 @@ snapshots:
 
   '@jridgewell/trace-mapping@0.3.9':
     dependencies:
-      '@jridgewell/resolve-uri': 3.1.1
+      '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
 
   '@mdx-js/react@3.0.1(@types/react@18.2.74)(react@18.2.0)':
@@ -10208,6 +10217,7 @@ snapshots:
   '@next/eslint-plugin-next@14.0.4':
     dependencies:
       glob: 7.1.7
+    optional: true
 
   '@next/swc-darwin-arm64@14.1.0':
     optional: true
@@ -10746,7 +10756,8 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.14.0':
     optional: true
 
-  '@rushstack/eslint-patch@1.10.1': {}
+  '@rushstack/eslint-patch@1.10.1':
+    optional: true
 
   '@segment/loosely-validate-event@2.0.0':
     dependencies:
@@ -11692,6 +11703,7 @@ snapshots:
       typescript: 5.4.4
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@typescript-eslint/scope-manager@5.62.0':
     dependencies:
@@ -11702,6 +11714,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/visitor-keys': 6.21.0
+    optional: true
 
   '@typescript-eslint/type-utils@5.62.0(eslint@8.57.0)(typescript@5.4.4)':
     dependencies:
@@ -11717,7 +11730,8 @@ snapshots:
 
   '@typescript-eslint/types@5.62.0': {}
 
-  '@typescript-eslint/types@6.21.0': {}
+  '@typescript-eslint/types@6.21.0':
+    optional: true
 
   '@typescript-eslint/typescript-estree@5.62.0(typescript@5.4.4)':
     dependencies:
@@ -11747,6 +11761,7 @@ snapshots:
       typescript: 5.4.4
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@typescript-eslint/utils@5.62.0(eslint@8.57.0)(typescript@5.4.4)':
     dependencies:
@@ -11772,6 +11787,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 6.21.0
       eslint-visitor-keys: 3.4.3
+    optional: true
 
   '@ungap/structured-clone@1.2.0': {}
 
@@ -12095,6 +12111,7 @@ snapshots:
       define-properties: 1.2.1
       es-abstract: 1.23.3
       es-shim-unscopables: 1.0.2
+    optional: true
 
   array.prototype.tosorted@1.1.3:
     dependencies:
@@ -12103,6 +12120,7 @@ snapshots:
       es-abstract: 1.23.3
       es-errors: 1.3.0
       es-shim-unscopables: 1.0.2
+    optional: true
 
   array.prototype.tosorted@1.1.4:
     dependencies:
@@ -12193,7 +12211,8 @@ snapshots:
 
   axe-core@4.10.0: {}
 
-  axe-core@4.7.0: {}
+  axe-core@4.7.0:
+    optional: true
 
   axios@1.6.5:
     dependencies:
@@ -12210,6 +12229,7 @@ snapshots:
   axobject-query@3.2.1:
     dependencies:
       dequal: 2.0.3
+    optional: true
 
   babel-core@7.0.0-bridge.0(@babel/core@7.24.4):
     dependencies:
@@ -13186,6 +13206,7 @@ snapshots:
     dependencies:
       graceful-fs: 4.2.11
       tapable: 2.2.1
+    optional: true
 
   entities@1.1.2: {}
 
@@ -13335,6 +13356,7 @@ snapshots:
       internal-slot: 1.0.7
       iterator.prototype: 1.1.2
       safe-array-concat: 1.1.2
+    optional: true
 
   es-iterator-helpers@1.0.19:
     dependencies:
@@ -13477,6 +13499,7 @@ snapshots:
     transitivePeerDependencies:
       - eslint-import-resolver-webpack
       - supports-color
+    optional: true
 
   eslint-config-prettier@9.1.0(eslint@8.57.0):
     dependencies:
@@ -13506,6 +13529,7 @@ snapshots:
       - eslint-import-resolver-node
       - eslint-import-resolver-webpack
       - supports-color
+    optional: true
 
   eslint-module-utils@2.8.0(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.4.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.4.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
@@ -13517,6 +13541,7 @@ snapshots:
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.4.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   eslint-module-utils@2.8.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.4.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
     dependencies:
@@ -13588,6 +13613,7 @@ snapshots:
       minimatch: 3.1.2
       object.entries: 1.1.8
       object.fromentries: 2.0.8
+    optional: true
 
   eslint-plugin-jsx-a11y@6.9.0(eslint@8.57.0):
     dependencies:
@@ -13643,6 +13669,7 @@ snapshots:
       resolve: 2.0.0-next.5
       semver: 6.3.1
       string.prototype.matchall: 4.0.11
+    optional: true
 
   eslint-plugin-react@7.35.0(eslint@8.57.0):
     dependencies:
@@ -13669,6 +13696,13 @@ snapshots:
   eslint-plugin-simple-import-sort@8.0.0(eslint@8.57.0):
     dependencies:
       eslint: 8.57.0
+
+  eslint-plugin-tailwindcss@3.17.4(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.12.5)(typescript@5.4.4))):
+    dependencies:
+      fast-glob: 3.3.2
+      postcss: 8.4.38
+      tailwindcss: 3.4.3(ts-node@10.9.2(@types/node@20.12.5)(typescript@5.4.4))
+    optional: true
 
   eslint-scope@5.1.1:
     dependencies:
@@ -14310,6 +14344,7 @@ snapshots:
   get-tsconfig@4.7.2:
     dependencies:
       resolve-pkg-maps: 1.0.0
+    optional: true
 
   getenv@1.0.0: {}
 
@@ -14381,6 +14416,7 @@ snapshots:
       minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
+    optional: true
 
   glob@7.2.3:
     dependencies:
@@ -16003,6 +16039,7 @@ snapshots:
   minimatch@9.0.3:
     dependencies:
       brace-expansion: 2.0.1
+    optional: true
 
   minimatch@9.0.4:
     dependencies:
@@ -16242,6 +16279,7 @@ snapshots:
       define-properties: 1.2.1
       es-abstract: 1.23.3
       es-object-atoms: 1.0.0
+    optional: true
 
   object.values@1.1.7:
     dependencies:
@@ -17044,7 +17082,8 @@ snapshots:
 
   resolve-from@5.0.0: {}
 
-  resolve-pkg-maps@1.0.0: {}
+  resolve-pkg-maps@1.0.0:
+    optional: true
 
   resolve.exports@2.0.2: {}
 
@@ -17713,7 +17752,8 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  tapable@2.2.1: {}
+  tapable@2.2.1:
+    optional: true
 
   tar-fs@2.1.1:
     dependencies:
@@ -17867,6 +17907,7 @@ snapshots:
   ts-api-utils@1.3.0(typescript@5.4.4):
     dependencies:
       typescript: 5.4.4
+    optional: true
 
   ts-dedent@2.2.0: {}
 

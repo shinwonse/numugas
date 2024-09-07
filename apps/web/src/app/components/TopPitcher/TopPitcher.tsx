@@ -3,14 +3,9 @@ import { fetchTopPitchers } from '#/libs/fetchTopPitchers';
 import { cn } from '#/utils/cn';
 
 async function TopPitcher() {
-  const { topInningPitcher, topSoPitcher, topWinPitcher } =
-    await fetchTopPitchers();
+  const { topInningPitcher, topSoPitcher, topWinPitcher } = await fetchTopPitchers();
   return (
-    <div
-      className={cn(
-        'grid md:grid-cols-3 gap-4 text-primary font-bold grid-cols-2'
-      )}
-    >
+    <div className={cn('grid grid-cols-2 gap-4 font-bold text-primary md:grid-cols-3')}>
       <RankerCard
         playerName={topInningPitcher?.name.split('(')[0]}
         playerNumber={topInningPitcher?.name.split('(')[1].split(')')[0]}

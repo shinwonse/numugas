@@ -8,18 +8,12 @@ import Logo from '../../../../public/logo.png';
 
 function Header() {
   return (
-    <header
-      className={cn(
-        'flex flex-row justify-between py-4 bg-accent rounded-b-2xl px-4'
-      )}
-    >
+    <header className={cn('flex flex-row justify-between rounded-b-2xl bg-accent p-4')}>
       <button type="button">
         <HamburgerMenuIcon color="white" height={24} width={24} />
       </button>
       <Link
-        className={cn(
-          'left-1/2 transform -translate-x-1/2 h-20 w-20 absolute top-0.5 md:w-28 md:h-28'
-        )}
+        className={cn('absolute left-1/2 top-0.5 size-20 -translate-x-1/2 md:size-28')}
         href="/"
       >
         <Image alt="담장 로고" fill priority src={Logo} />

@@ -39,7 +39,7 @@ export default function RootLayout({ children }: Props) {
       <body
         className={cn(
           karla.variable,
-          'overscroll-none mx-auto max-w-3xl flex flex-col justify-center'
+          'mx-auto flex max-w-3xl flex-col justify-center overscroll-none',
         )}
       >
         <Header />

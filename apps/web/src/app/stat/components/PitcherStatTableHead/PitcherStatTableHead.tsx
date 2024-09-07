@@ -2,7 +2,7 @@ import { cn } from '#/utils/cn';
 
 function PitcherStatTableHead() {
   return (
-    <thead className={cn('text-center text-nowrap whitespace-nowrap')}>
+    <thead className={cn('whitespace-nowrap text-nowrap text-center')}>
       <tr>
         <th>이름</th>
         <th>방어율</th>

@@ -12,7 +12,7 @@ function TeamCard({ emblem = '', name = '' }: Props) {
     <div className={cn('flex flex-col items-center justify-center gap-2')}>
       <Image
         alt={name}
-        className={cn('rounded-full aspect-square')}
+        className={cn('aspect-square rounded-full')}
         height={100}
         src={emblem}
         width={100}

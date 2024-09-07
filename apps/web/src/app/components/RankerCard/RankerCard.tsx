@@ -12,28 +12,22 @@ type Props = {
   value: string | number;
 };
 
-function RankerCard({
-  className,
-  playerName,
-  playerNumber,
-  title,
-  value,
-}: Props) {
+function RankerCard({ className, playerName, playerNumber, title, value }: Props) {
   return (
     <div
       className={cn(
-        'relative flex flex-col bg-base-content rounded aspect-square p-3 overflow-hidden',
-        className
+        'relative flex aspect-square flex-col overflow-hidden rounded bg-base-content p-3',
+        className,
       )}
     >
-      <div className={cn('absolute w-[90%] h-[90%] -bottom-10 -right-10')}>
+      <div className={cn('absolute -bottom-10 -right-10 size-[90%]')}>
         <Image alt="background" className={cn('opacity-50')} fill src={Logo} />
       </div>
       <p className={cn('flex flex-col')}>
         <span className={cn('text-xl')}>{title}</span>
         <span className={cn('text-2xl text-red-700')}>{value}</span>
       </p>
-      <p className={cn('flex flex-col text-xl mt-8')}>
+      <p className={cn('mt-8 flex flex-col text-xl')}>
         <span>{playerNumber}</span>
         <span>{playerName}</span>
       </p>

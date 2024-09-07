@@ -21,11 +21,7 @@ function StatPage({ params, searchParams }: Props) {
 
   return (
     <main>
-      <SeasonSelector
-        className={cn('px-2')}
-        initialSeason={season as string}
-        position={position}
-      />
+      <SeasonSelector className={cn('px-2')} initialSeason={season as string} position={position} />
       <StatTable className={cn('mt-4')} season={season as string} />
     </main>
   );

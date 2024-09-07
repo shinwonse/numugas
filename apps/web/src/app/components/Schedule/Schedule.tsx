@@ -12,20 +12,14 @@ async function Schedule() {
   return (
     <div
       className={cn(
-        'w-full h-[300px] rounded-xl bg-base-content px-10 py-6 text-primary font-bold justify-center flex flex-col items-center gap-4'
+        'flex h-[300px] w-full flex-col items-center justify-center gap-4 rounded-xl bg-base-content px-10 py-6 font-bold text-primary',
       )}
     >
       <h2 className={cn('text-center')}>NEXT GAME</h2>
-      <div className={cn('w-full flex flex-row justify-between items-center')}>
-        <TeamCard
-          emblem={recentGame?.homeTeam?.emblem}
-          name={recentGame?.homeTeam?.name}
-        />
+      <div className={cn('flex w-full flex-row items-center justify-between')}>
+        <TeamCard emblem={recentGame?.homeTeam?.emblem} name={recentGame?.homeTeam?.name} />
         <span>VS</span>
-        <TeamCard
-          emblem={recentGame?.awayTeam?.emblem}
-          name={recentGame?.awayTeam?.name}
-        />
+        <TeamCard emblem={recentGame?.awayTeam?.emblem} name={recentGame?.awayTeam?.name} />
       </div>
       <div className={cn('flex flex-col gap-2 text-center')}>
         <span>{recentGame?.date}</span>

@@ -13,10 +13,7 @@ async function BatterAllTimeStatTable({ className }: Props) {
 
   return (
     <table
-      className={cn(
-        'table table-zebra text-nowrap whitespace-nowrap table-pin-rows',
-        className
-      )}
+      className={cn('table table-zebra table-pin-rows whitespace-nowrap text-nowrap', className)}
     >
       <BatterStatTableHead />
       <BatterStatTableBody stats={allTimeStats} />

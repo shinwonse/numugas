@@ -4,10 +4,7 @@ import { cn } from '#/utils/cn';
 
 const AllTimeStatTable = dynamic(() => import('../PitcherAllTimeStatTable'));
 const SeasonStatTable = dynamic(
-  () =>
-    import(
-      '#/app/stat/components/PitcherSeasonStatTable/PitcherSeasonStatTable'
-    )
+  () => import('#/app/stat/components/PitcherSeasonStatTable/PitcherSeasonStatTable'),
 );
 
 const StatTableView = {
@@ -20,12 +17,8 @@ type StatTableProps = {
   season?: string;
 };
 
-async function PitcherStatTable({
-  className,
-  season = 'all-time',
-}: StatTableProps) {
-  const CurrentStatTable =
-    StatTableView[season === 'all-time' ? 'AllTIME' : 'SEASON'];
+async function PitcherStatTable({ className, season = 'all-time' }: StatTableProps) {
+  const CurrentStatTable = StatTableView[season === 'all-time' ? 'AllTIME' : 'SEASON'];
 
   return (
     <div className={cn('overflow-x-auto', className)}>
