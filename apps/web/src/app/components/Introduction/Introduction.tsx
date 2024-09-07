@@ -18,7 +18,7 @@ const Introduction = () => {
           duration: 2,
           x: { duration: 1 },
         }}
-        className={cn('flex flex-col items-center')}
+        className={cn('flex flex-col items-center px-4 md:px-16')}
       >
         <Image src={Logo} alt="담장NUMUGAS 로고" width={300} height={300} />
       </motion.div>
@@ -33,7 +33,9 @@ const Introduction = () => {
         }}
         className={cn('flex flex-col gap-10')}
       >
-        <h2 className={cn('text-3xl font-semibold md:text-5xl')}>풍부한 우승 경험</h2>
+        <header className={cn('px-4 md:px-16')}>
+          <h2 className={cn('text-3xl font-semibold md:text-5xl')}>풍부한 우승 경험</h2>
+        </header>
         <div className={cn('carousel gap-10')}>
           <div className={cn('carousel-item h-72 w-80 rounded-2xl bg-white p-2')}>
             <h3>
@@ -76,7 +78,9 @@ const Introduction = () => {
         }}
         className={cn('flex flex-col')}
       >
-        <h2 className={cn('text-3xl font-semibold md:text-5xl')}>압도적인 공격력</h2>
+        <header className={cn('px-4 md:px-16')}>
+          <h2 className={cn('text-3xl font-semibold md:text-5xl')}>압도적인 공격력</h2>
+        </header>
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: 50 }}
@@ -89,7 +93,9 @@ const Introduction = () => {
         }}
         className={cn('flex flex-col')}
       >
-        <h2 className={cn('text-3xl font-semibold md:text-5xl')}>강력한 투수진</h2>
+        <header className={cn('px-4 md:px-16')}>
+          <h2 className={cn('text-3xl font-semibold md:text-5xl')}>강력한 투수진</h2>
+        </header>
       </motion.div>
     </div>
   );
