@@ -36,7 +36,7 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="ko">
-      <body className={cn(karla.variable, 'mx-auto flex flex-col justify-center overscroll-none')}>
+      <body className={cn(karla.variable, 'flex flex-col justify-center overscroll-none')}>
         {/*<Header />*/}
         <div className={cn('pt-16')}>
           <Provider>{children}</Provider>

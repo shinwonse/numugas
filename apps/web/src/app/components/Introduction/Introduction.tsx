@@ -4,6 +4,8 @@ import { cn } from '@numugas/util';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
+import BatterIntro from '#/app/components/BatterIntro';
+
 import ChampLogo from '../../../../public/champ.jpg';
 import Logo from '../../../../public/logo.png';
 import NowonLogo from '../../../../public/nowon.png';
@@ -125,26 +127,22 @@ const Introduction = () => {
           </div>
         </div>
       </motion.div>
-      <motion.div
-        initial={{ opacity: 0, x: -50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: false }}
-        transition={{
-          ease: 'easeInOut',
-          duration: 2,
-          x: { duration: 1 },
-        }}
-        className={cn('flex flex-col gap-5 md:gap-10')}
-      >
-        <header className={cn('px-4 md:px-16')}>
-          <h2 className={cn('text-3xl font-semibold md:text-4xl')}>압도적인 공격력</h2>
-        </header>
-        <div
-          className={cn(
-            'flex h-40 flex-col justify-center rounded-xl bg-white text-center text-3xl font-bold',
-          )}
+      <motion.div className={cn('flex flex-col gap-5 md:gap-10')}>
+        <motion.header
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false }}
+          transition={{
+            ease: 'easeInOut',
+            duration: 2,
+            x: { duration: 1 },
+          }}
+          className={cn('px-4 md:px-16')}
         >
-          준비 중입니다.
+          <h2 className={cn('text-3xl font-semibold md:text-4xl')}>압도적인 공격력</h2>
+        </motion.header>
+        <div className={cn('flex flex-col text-center text-3xl font-bold')}>
+          <BatterIntro />
         </div>
       </motion.div>
       <motion.div
