@@ -7,7 +7,7 @@ import 정종현 from '../../../../public/정종현.png';
 
 const BatterIntro = () => {
   return (
-    <div className={cn('flex flex-col px-4')}>
+    <div className={cn('flex max-w-full flex-col px-4')}>
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         whileInView={{ opacity: 1, x: 0 }}
