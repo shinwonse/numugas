@@ -2,10 +2,10 @@ import { cn } from '@numugas/util';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-import 김관휘 from '../../../../public/김관휘.png';
-import 정종현 from '../../../../public/정종현.png';
+import 김선호 from '../../../../public/김선호.png';
+import 양형석 from '../../../../public/양형석.png';
 
-const BatterIntro = () => {
+const PitcherIntro = () => {
   return (
     <div className={cn('flex max-w-full flex-col px-4')}>
       <motion.div
@@ -18,7 +18,7 @@ const BatterIntro = () => {
           x: { duration: 1 },
         }}
       >
-        <Image src={정종현} alt="정종현" className={cn('w-[300px] md:w-[450px]')} />
+        <Image src={김선호} alt="김선호" className={cn('w-[350px] md:w-[500px]')} />
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: 50 }}
@@ -31,10 +31,10 @@ const BatterIntro = () => {
         }}
         className={cn('flex flex-row justify-end')}
       >
-        <Image src={김관휘} alt="김관휘" className={cn('w-[200px] md:w-[300px]')} />
+        <Image src={양형석} alt="양형석" className={cn('w-[250px] md:w-[350px]')} />
       </motion.div>
     </div>
   );
 };
 
-export default BatterIntro;
+export default PitcherIntro;

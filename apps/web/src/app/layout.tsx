@@ -38,7 +38,7 @@ export default function RootLayout({ children }: Props) {
     <html lang="ko">
       <body className={cn(karla.variable, 'flex flex-col justify-center overflow-x-hidden')}>
         {/*<Header />*/}
-        <div className={cn('pt-16')}>
+        <div className={cn('overflow-x-hidden pt-16')}>
           <Provider>{children}</Provider>
         </div>
         <Footer />
