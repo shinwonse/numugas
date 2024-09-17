@@ -4,9 +4,6 @@ import { cn } from '@numugas/util';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-import BatterIntro from '#/app/components/BatterIntro';
-import PitcherIntro from '#/app/components/PitcherIntro';
-
 import ChampLogo from '../../../../public/champ.jpg';
 import Logo from '../../../../public/logo.png';
 import NowonLogo from '../../../../public/nowon.png';
@@ -31,8 +28,8 @@ const Introduction = () => {
         <header className={cn('px-4 md:px-16')}>
           <h2 className={cn('text-2xl font-semibold md:text-3xl')}>풍부한 우승 경험</h2>
         </header>
-        <div className={cn('carousel gap-4 md:gap-8')}>
-          <div
+        <ul className={cn('carousel scroll-pl-16 gap-4 pl-16 md:gap-8')}>
+          <li
             className={cn(
               'carousel-item flex h-[180px] w-[200px] flex-col items-center rounded-2xl bg-white p-4 md:h-72 md:w-80',
             )}
@@ -52,8 +49,8 @@ const Introduction = () => {
               </div>
               <span>통합 우승</span>
             </h3>
-          </div>
-          <div
+          </li>
+          <li
             className={cn(
               'carousel-item flex h-[180px] w-[200px] flex-col items-center rounded-2xl bg-white p-4 md:h-72 md:w-80',
             )}
@@ -73,8 +70,8 @@ const Introduction = () => {
               </div>
               <span>전승 통합 우승</span>
             </h3>
-          </div>
-          <div
+          </li>
+          <li
             className={cn(
               'carousel-item flex h-[180px] w-[200px] flex-col items-center rounded-2xl bg-white p-4 md:h-72 md:w-80',
             )}
@@ -94,8 +91,8 @@ const Introduction = () => {
               </div>
               <span>준우승</span>
             </h3>
-          </div>
-          <div
+          </li>
+          <li
             className={cn(
               'carousel-item flex h-[180px] w-[200px] flex-col items-center rounded-2xl bg-white p-4 md:h-72 md:w-80',
             )}
@@ -115,43 +112,9 @@ const Introduction = () => {
               </div>
               <span>진행중</span>
             </h3>
-          </div>
-        </div>
+          </li>
+        </ul>
       </motion.div>
-      <div className={cn('flex flex-col gap-5 md:gap-10')}>
-        <motion.header
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false }}
-          transition={{
-            ease: 'easeInOut',
-            duration: 2,
-            x: { duration: 1 },
-          }}
-          className={cn('px-4 md:px-16')}
-        >
-          <h2 className={cn('text-2xl font-semibold md:text-3xl')}>압도적인 공격력</h2>
-        </motion.header>
-        <div className={cn('flex flex-col text-center text-3xl font-bold')}>
-          <BatterIntro />
-        </div>
-      </div>
-      <div className={cn('flex flex-col gap-5 md:gap-10')}>
-        <motion.header
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false }}
-          transition={{
-            ease: 'easeInOut',
-            duration: 2,
-            x: { duration: 1 },
-          }}
-          className={cn('px-4 md:px-16')}
-        >
-          <h2 className={cn('text-2xl font-semibold md:text-3xl')}>강력한 투수진</h2>
-        </motion.header>
-        <PitcherIntro />
-      </div>
     </div>
   );
 };
