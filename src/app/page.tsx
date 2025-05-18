@@ -1,11 +1,11 @@
-import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section"
-import { StatsSection } from "@/components/stats-section"
-import { PlayerStatsSection } from "@/components/player-stats-section"
-import { ScheduleSection } from "@/components/schedule-section"
-import { NewsSection } from "@/components/news-section"
-import { Footer } from "@/components/footer"
-import { AnimatedBackground } from "@/components/animated-background"
+import { AnimatedBackground } from '@/components/animated-background';
+import { Footer } from '@/components/footer';
+import { Header } from '@/components/header';
+import { HeroSection } from '@/components/hero-section';
+import { NewsSection } from '@/components/news-section';
+import { PlayerStatsSection } from '@/components/player-stats-section';
+import { ScheduleSection } from '@/components/schedule-section';
+import { StatsSection } from '@/components/stats-section';
 
 export default function Home() {
   return (
@@ -19,5 +19,5 @@ export default function Home() {
       <NewsSection />
       <Footer />
     </main>
-  )
+  );
 }

@@ -15,7 +15,7 @@ export function Header() {
     }
 
     window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    return () => { window.removeEventListener("scroll", handleScroll); }
   }, [])
 
   return (
@@ -38,7 +38,7 @@ export function Header() {
           ))}
         </nav>
 
-        <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button className="md:hidden text-white" onClick={() => { setIsMenuOpen(!isMenuOpen); }}>
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -51,7 +51,7 @@ export function Header() {
               key={item}
               href={`#${item}`}
               className="text-xl text-gray-300 hover:text-red-500 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => { setIsMenuOpen(false); }}
             >
               {item}
             </Link>
