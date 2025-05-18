@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useTeamCareerStats } from '@/hooks/use-team-career-stats';
 import { useTeamTotalStats } from '@/hooks/use-team-total-stats';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
@@ -15,6 +16,11 @@ export function StatsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const { data, error } = useTeamTotalStats();
+  const {
+    data: careerStats,
+    error: careerError,
+    isLoading: careerLoading,
+  } = useTeamCareerStats();
 
   const teamStats = data
     ? [
@@ -42,6 +48,34 @@ export function StatsSection() {
           description: '',
           icon: '⚪️',
         },
+        ...(careerStats
+          ? [
+              {
+                name: '팀통산홈런',
+                value: careerStats.homeruns,
+                description: '',
+                icon: '💣',
+              },
+              {
+                name: '팀통산루타',
+                value: careerStats.totalbases,
+                description: '',
+                icon: '🦶',
+              },
+              {
+                name: '팀통산안타',
+                value: careerStats.hits,
+                description: '',
+                icon: '🥎',
+              },
+              {
+                name: '팀통산탈삼진',
+                value: careerStats.strikeouts,
+                description: '',
+                icon: '🔥',
+              },
+            ]
+          : []),
       ]
     : [];
 
@@ -74,10 +108,12 @@ export function StatsSection() {
           </motion.p>
         </div>
 
-        {error || !data ? (
+        {error || !data || careerError ? (
           <div className="text-center py-24 text-red-500">
             팀 성적을 불러올 수 없습니다.
           </div>
+        ) : careerLoading ? (
+          <div className="text-center py-24 text-gray-400">불러오는 중...</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {teamStats.map((stat, index) => (
