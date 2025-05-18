@@ -1,24 +1,32 @@
-"use client"
+'use client';
 
-import { useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
+import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 
 export function HeroSection() {
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.playbackRate = 0.7
+      videoRef.current.playbackRate = 0.7;
     }
-  }, [])
+  }, []);
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Video background with overlay */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/70 z-10"></div>
-        <video ref={videoRef} autoPlay loop muted playsInline className="w-full h-full object-cover">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
           <source src="/baseball-bg.mp4" type="video/mp4" />
         </video>
       </div>
@@ -31,14 +39,14 @@ export function HeroSection() {
           transition={{ duration: 0.8 }}
           className="flex flex-col items-center gap-6"
         >
-          <h1 className="text-4xl md:text-7xl font-bold tracking-tight font-display">
-            <span className="text-red-600">RED</span> DRAGONS
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto">
-            승리를 향한 열정, 불꽃같은 투혼으로 그라운드를 지배하는 팀
-          </p>
+          <div className="flex items-center justify-center">
+            <Image src="title.png" alt="title" width={500} height={100} />
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Button variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6">
+            <Button
+              variant="outline"
+              className="border-white text-white hover:bg-white/10 text-lg px-8 py-6"
+            >
               팀 소개
             </Button>
           </div>
@@ -65,5 +73,5 @@ export function HeroSection() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }
