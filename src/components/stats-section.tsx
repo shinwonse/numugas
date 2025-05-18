@@ -7,39 +7,52 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useTeamTotalStats } from '@/hooks/use-team-total-stats';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-
-const teamStats = [
-  {
-    name: '승률',
-    value: 0.625,
-    description: '리그 2위',
-    icon: '🏆',
-  },
-  {
-    name: '홈런',
-    value: 87,
-    description: '리그 1위',
-    icon: '💪',
-  },
-  {
-    name: '도루',
-    value: 112,
-    description: '리그 3위',
-    icon: '🏃',
-  },
-  {
-    name: '평균자책점',
-    value: 3.42,
-    description: '리그 4위',
-    icon: '⚾',
-  },
-];
 
 export function StatsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const { data, isLoading, error } = useTeamTotalStats();
+
+  if (isLoading) {
+    return <div className="text-center py-24">로딩 중...</div>;
+  }
+  if (error || !data) {
+    return (
+      <div className="text-center py-24 text-red-500">
+        팀 성적을 불러올 수 없습니다.
+      </div>
+    );
+  }
+
+  const teamStats = [
+    {
+      name: '승률',
+      value: data.win_rate,
+      description: `총 ${data.total_games}경기`,
+      icon: '🏆',
+    },
+    {
+      name: '승',
+      value: data.win,
+      description: '',
+      icon: '🟢',
+    },
+    {
+      name: '패',
+      value: data.lose,
+      description: '',
+      icon: '🔴',
+    },
+    {
+      name: '무',
+      value: data.draw,
+      description: '',
+      icon: '⚪️',
+    },
+  ];
 
   return (
     <motion.section
