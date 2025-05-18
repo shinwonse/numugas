@@ -102,9 +102,17 @@ export function StatsSection() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-4xl font-bold text-red-500">
-                      {typeof stat.value === 'number' && stat.value % 1 === 0
-                        ? stat.value
-                        : stat.value.toFixed(3)}
+                      {stat.name === '승률'
+                        ? `${
+                            typeof stat.value === 'number'
+                              ? stat.value % 1 === 0
+                                ? stat.value
+                                : stat.value.toFixed(1)
+                              : stat.value
+                          }%`
+                        : typeof stat.value === 'number' && stat.value % 1 === 0
+                          ? stat.value
+                          : stat.value.toFixed(1)}
                     </p>
                   </CardContent>
                 </Card>
