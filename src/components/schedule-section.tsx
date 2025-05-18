@@ -1,53 +1,65 @@
-"use client"
+'use client';
 
-import { useRef } from "react"
-import { useInView } from "framer-motion"
-import { motion } from "framer-motion"
-import { Calendar, Clock, MapPin } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { motion, useInView } from 'framer-motion';
+import { Calendar, Clock, MapPin } from 'lucide-react';
+import { useRef } from 'react';
 
 const upcomingGames = [
   {
     id: 1,
-    opponent: "블루 타이거즈",
-    date: "2023년 8월 15일",
-    time: "오후 6:30",
-    location: "레드 드래곤즈 스타디움",
+    opponent: '블루 타이거즈',
+    date: '2023년 8월 15일',
+    time: '오후 6:30',
+    location: '레드 드래곤즈 스타디움',
     isHome: true,
   },
   {
     id: 2,
-    opponent: "그린 이글스",
-    date: "2023년 8월 18일",
-    time: "오후 5:00",
-    location: "이글스 파크",
+    opponent: '그린 이글스',
+    date: '2023년 8월 18일',
+    time: '오후 5:00',
+    location: '이글스 파크',
     isHome: false,
   },
   {
     id: 3,
-    opponent: "골든 라이온즈",
-    date: "2023년 8월 20일",
-    time: "오후 2:00",
-    location: "라이온즈 필드",
+    opponent: '골든 라이온즈',
+    date: '2023년 8월 20일',
+    time: '오후 2:00',
+    location: '라이온즈 필드',
     isHome: false,
   },
   {
     id: 4,
-    opponent: "퍼플 팬서스",
-    date: "2023년 8월 23일",
-    time: "오후 6:30",
-    location: "레드 드래곤즈 스타디움",
+    opponent: '퍼플 팬서스',
+    date: '2023년 8월 23일',
+    time: '오후 6:30',
+    location: '레드 드래곤즈 스타디움',
     isHome: true,
   },
-]
+];
 
 export function ScheduleSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
-    <section id="경기일정" className="py-24 bg-gradient-to-b from-black to-gray-900" ref={ref}>
+    <motion.section
+      id="경기일정"
+      ref={ref}
+      initial={{ opacity: 0, y: 80 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, ease: 'easeOut' }}
+      className="py-24"
+    >
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <motion.h2
@@ -67,27 +79,37 @@ export function ScheduleSection() {
             레드 드래곤즈의 다가오는 경기 일정을 확인하세요.
           </motion.p>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {upcomingGames.map((game, index) => (
             <motion.div
               key={game.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 0.7,
+                delay: index * 0.12,
+                ease: 'backOut',
+              }}
+              viewport={{ once: true, amount: 0.2 }}
             >
               <Card
                 className={`${
-                  game.isHome ? "border-l-4 border-l-red-600" : "border-l-4 border-l-gray-600"
-                } bg-gray-900 border-gray-800 hover:shadow-lg hover:shadow-red-900/20 transition-all duration-300`}
+                  game.isHome
+                    ? 'border-l-4 border-l-red-600'
+                    : 'border-l-4 border-l-gray-600'
+                } bg-black/60 border-white/10 hover:shadow-lg hover:shadow-red-400/20 transition-all duration-300`}
               >
                 <CardHeader>
                   <CardTitle className="flex justify-between items-center">
                     <span>vs {game.opponent}</span>
                     {game.isHome ? (
-                      <span className="text-xs bg-red-600 text-white px-2 py-1 rounded">홈</span>
+                      <span className="text-xs bg-red-600 text-white px-2 py-1 rounded">
+                        홈
+                      </span>
                     ) : (
-                      <span className="text-xs bg-gray-700 text-white px-2 py-1 rounded">원정</span>
+                      <span className="text-xs bg-gray-700 text-white px-2 py-1 rounded">
+                        원정
+                      </span>
                     )}
                   </CardTitle>
                   <CardDescription>
@@ -107,25 +129,27 @@ export function ScheduleSection() {
                 </CardHeader>
                 <CardFooter>
                   <div className="w-full text-center text-sm text-gray-400">
-                    {game.isHome ? "홈 경기" : "원정 경기"}
+                    {game.isHome ? '홈 경기' : '원정 경기'}
                   </div>
                 </CardFooter>
               </Card>
             </motion.div>
           ))}
         </div>
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-center mt-12"
         >
-          <Button variant="outline" className="border-white text-white hover:bg-white/10">
+          <Button
+            variant="outline"
+            className="border-white text-white hover:bg-white/10"
+          >
             전체 일정 보기
           </Button>
         </motion.div>
       </div>
-    </section>
-  )
+    </motion.section>
+  );
 }

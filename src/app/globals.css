@@ -72,7 +72,35 @@
   }
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+    background: linear-gradient(
+      120deg,
+      #ff6e7f,
+      #bfe9ff,
+      #43cea2,
+      #185a9d,
+      #ff6e7f
+    );
+    background-size: 200% 200%;
+    animation: gradientBG 15s ease infinite;
   }
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+section {
+  background: none !important;
+  backdrop-filter: blur(0.5px) saturate(120%);
 }
 
 html {
