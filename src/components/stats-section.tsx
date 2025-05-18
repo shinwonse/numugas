@@ -14,12 +14,8 @@ import { useRef } from 'react';
 export function StatsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
-  const { data, isLoading, error } = useTeamTotalStats();
-  console.log(data);
+  const { data, error } = useTeamTotalStats();
 
-  if (isLoading) {
-    return <div className="text-center py-24">로딩 중...</div>;
-  }
   if (error || !data) {
     return (
       <div className="text-center py-24 text-red-500">
@@ -32,7 +28,7 @@ export function StatsSection() {
     {
       name: '승률',
       value: data.win_rate,
-      description: `총 ${data.total_games}경기`,
+      description: '',
       icon: '🏆',
     },
     {
