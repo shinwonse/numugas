@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
@@ -42,14 +41,14 @@ export function HeroSection() {
           <div className="flex items-center justify-center">
             <Image src="title.png" alt="title" width={500} height={100} />
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+          {/* <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Button
               variant="outline"
               className="border-white text-white hover:bg-white/10 text-lg px-8 py-6"
             >
               팀 소개
             </Button>
-          </div>
+          </div> */}
         </motion.div>
       </div>
 
