@@ -15,6 +15,7 @@ export function StatsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const { data, isLoading, error } = useTeamTotalStats();
+  console.log(data);
 
   if (isLoading) {
     return <div className="text-center py-24">로딩 중...</div>;

@@ -9,7 +9,7 @@ export type TeamTotalStats = {
 };
 
 async function fetchTeamTotalStats(): Promise<TeamTotalStats> {
-  const res = await fetch('/api/crawl-team', { method: 'POST' });
+  const res = await fetch('/api/crawl-team/total');
   if (!res.ok) throw new Error('Failed to fetch team stats');
   return res.json();
 }
