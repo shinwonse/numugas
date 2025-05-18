@@ -1,4 +1,3 @@
-import { AnimatedBackground } from '@/components/animated-background';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { HeroSection } from '@/components/hero-section';
@@ -10,7 +9,6 @@ import { StatsSection } from '@/components/stats-section';
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
-      <AnimatedBackground />
       <Header />
       <HeroSection />
       <StatsSection />
