@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBattingStats2025 } from '@/hooks/use-batting-stats';
 import { usePitchingStats2025 } from '@/hooks/use-pitching-stats';
 import { motion, useInView } from 'framer-motion';
-import { Trophy } from 'lucide-react';
 import { useRef } from 'react';
 
 // 타자 기록 데이터 제거
@@ -219,21 +218,6 @@ export function PlayerStatsSection() {
               )}
             </TabsContent>
           </Tabs>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-12 text-center"
-        >
-          <div className="inline-flex items-center gap-2 bg-red-600/20 px-4 py-2 rounded-full text-red-400 border border-red-600/30">
-            <Trophy size={18} />
-            <span>
-              RED DRAGONS 소속 선수들이 다수의 기록에서 상위권을 차지하고
-              있습니다!
-            </span>
-          </div>
         </motion.div>
       </div>
     </motion.section>
