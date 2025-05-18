@@ -16,40 +16,34 @@ export function StatsSection() {
   const isInView = useInView(ref, { once: true, amount: 0.2 });
   const { data, error } = useTeamTotalStats();
 
-  if (error || !data) {
-    return (
-      <div className="text-center py-24 text-red-500">
-        팀 성적을 불러올 수 없습니다.
-      </div>
-    );
-  }
-
-  const teamStats = [
-    {
-      name: '승률',
-      value: data.win_rate,
-      description: '',
-      icon: '🏆',
-    },
-    {
-      name: '승',
-      value: data.win,
-      description: '',
-      icon: '🟢',
-    },
-    {
-      name: '패',
-      value: data.lose,
-      description: '',
-      icon: '🔴',
-    },
-    {
-      name: '무',
-      value: data.draw,
-      description: '',
-      icon: '⚪️',
-    },
-  ];
+  const teamStats = data
+    ? [
+        {
+          name: '승률',
+          value: data.win_rate,
+          description: '',
+          icon: '🏆',
+        },
+        {
+          name: '승',
+          value: data.win,
+          description: '',
+          icon: '🟢',
+        },
+        {
+          name: '패',
+          value: data.lose,
+          description: '',
+          icon: '🔴',
+        },
+        {
+          name: '무',
+          value: data.draw,
+          description: '',
+          icon: '⚪️',
+        },
+      ]
+    : [];
 
   return (
     <motion.section
@@ -80,38 +74,44 @@ export function StatsSection() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {teamStats.map((stat, index) => (
-            <motion.div
-              key={stat.name}
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{
-                duration: 0.7,
-                delay: index * 0.12,
-                ease: 'backOut',
-              }}
-              viewport={{ once: true, amount: 0.2 }}
-            >
-              <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <span className="text-3xl">{stat.icon}</span>
-                    {stat.name}
-                  </CardTitle>
-                  <CardDescription>{stat.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-4xl font-bold text-red-500">
-                    {typeof stat.value === 'number' && stat.value % 1 === 0
-                      ? stat.value
-                      : stat.value.toFixed(3)}
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        {error || !data ? (
+          <div className="text-center py-24 text-red-500">
+            팀 성적을 불러올 수 없습니다.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {teamStats.map((stat, index) => (
+              <motion.div
+                key={stat.name}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{
+                  duration: 0.7,
+                  delay: index * 0.12,
+                  ease: 'backOut',
+                }}
+                viewport={{ once: true, amount: 0.2 }}
+              >
+                <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-2xl flex items-center gap-2">
+                      <span className="text-3xl">{stat.icon}</span>
+                      {stat.name}
+                    </CardTitle>
+                    <CardDescription>{stat.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-4xl font-bold text-red-500">
+                      {typeof stat.value === 'number' && stat.value % 1 === 0
+                        ? stat.value
+                        : stat.value.toFixed(3)}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </motion.section>
   );
