@@ -1,3 +1,4 @@
+import { supabase } from '@/lib/supabase';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
@@ -16,7 +17,7 @@ export async function GET() {
           headers: { 'User-Agent': 'Mozilla/5.0' },
         });
         const $ = cheerio.load(html);
-        const rows = $('table tr').slice(1);
+        const rows = $('#require .ranking_table tbody tr');
         const players: any[] = [];
         rows.each((_, row) => {
           const cols = $(row)
@@ -25,41 +26,48 @@ export async function GET() {
             .get();
           if (cols.length === 0) return;
           players.push({
-            rank: cols[0],
+            season,
             name: cols[1],
             avg: cols[2],
             games: cols[3],
-            plateAppearances: cols[4],
-            atBats: cols[5],
+            plateappearances: cols[4],
+            atbats: cols[5],
             runs: cols[6],
             hits: cols[7],
             singles: cols[8],
             doubles: cols[9],
             triples: cols[10],
-            homeRuns: cols[11],
-            totalBases: cols[12],
+            homeruns: cols[11],
+            totalbases: cols[12],
             rbi: cols[13],
-            stolenBases: cols[14],
-            caughtStealing: cols[15],
-            sacrificeHits: cols[16],
-            sacrificeFlies: cols[17],
+            stolenbases: cols[14],
+            caughtstealing: cols[15],
+            sacrificehits: cols[16],
+            sacrificeflies: cols[17],
             walks: cols[18],
-            intentionalWalks: cols[19],
-            hitByPitch: cols[20],
+            intentionalwalks: cols[19],
+            hitbypitch: cols[20],
             strikeouts: cols[21],
-            doublePlays: cols[22],
-            sluggingPercentage: cols[23],
-            onBasePercentage: cols[24],
-            // 필요시 추가 컬럼 매핑
+            doubleplays: cols[22],
+            sluggingpercentage: cols[23],
+            onbasepercentage: cols[24],
           });
         });
+        if (players.length > 0) {
+          const { error } = await supabase.from('hitter_stats').insert(players);
+          if (error) {
+            throw new Error(
+              `Supabase insert error (season ${season}): ${error.message}`,
+            );
+          }
+        }
         return { season, players };
       }),
     );
     return NextResponse.json({ results });
   } catch (e) {
     return NextResponse.json(
-      { error: '크롤링 실패', detail: String(e) },
+      { error: '크롤링 또는 저장 실패', detail: String(e) },
       { status: 500 },
     );
   }
