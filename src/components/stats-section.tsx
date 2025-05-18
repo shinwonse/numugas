@@ -58,7 +58,7 @@ export function StatsSection() {
             transition={{ duration: 0.6 }}
             className="text-3xl md:text-5xl font-bold mb-4 font-display"
           >
-            <span className="text-red-600">팀</span> 통계
+            <span className="text-red-600">팀 통산</span> 성적
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -66,7 +66,7 @@ export function StatsSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            레드 드래곤즈의 이번 시즌 주요 통계 데이터입니다.
+            담장NUMUGAS의 통산 주요 성적입니다.
           </motion.p>
         </div>
 
