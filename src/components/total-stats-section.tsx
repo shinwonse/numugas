@@ -47,7 +47,7 @@ export function TotalStatsSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            통산 지표별 상위 선수들의 기록을 확인하세요.
+            통산 주요 지표별 상위 선수들의 기록을 확인하세요.
           </motion.p>
         </div>
         <motion.div
