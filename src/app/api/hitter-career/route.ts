@@ -1,7 +1,24 @@
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const playerName = searchParams.get('name');
+
+  // 시즌별 기록 조회 API: /api/hitter-career/season?name=...
+  if (playerName) {
+    // 해당 선수의 시즌별 기록 조회
+    const { data, error } = await supabase
+      .from('hitter_stats')
+      .select('*')
+      .eq('name', playerName)
+      .order('season', { ascending: true });
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ seasonStats: data });
+  }
+
   // 1. 모든 시즌 데이터 조회
   const { data, error } = await supabase.from('hitter_stats').select('*');
   if (error) {
