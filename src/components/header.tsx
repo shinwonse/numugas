@@ -33,7 +33,7 @@ export function Header() {
           href="/"
           className="text-2xl font-bold flex items-center gap-2 text-white font-display"
         >
-          <Image src="logo.png" alt="title" width={50} height={10} />
+          <Image src="/logo.png" alt="title" width={50} height={10} />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">

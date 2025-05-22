@@ -137,7 +137,7 @@ export default function BatterStatsPage() {
         <CardContent>
           <div
             className="overflow-x-auto"
-            style={{ minWidth: '900px', width: '100%' }}
+            style={{ minWidth: '600px', width: '100%' }}
           >
             <Table>
               <TableHeader>
@@ -179,9 +179,6 @@ export default function BatterStatsPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-          <div className="mt-2 text-sm text-muted-foreground">
-            총 {filtered.length}명의 선수 기록
           </div>
         </CardContent>
       </Card>
