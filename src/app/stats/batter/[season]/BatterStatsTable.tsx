@@ -18,6 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useBattingStatsBySeason } from '@/hooks/use-batting-stats-by-season';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 const SEASONS = ['통산', '2025', '2024', '2023', '2022', '2021', '2020'];
@@ -49,39 +50,15 @@ const COLUMNS = [
   { value: 'onbasepercentage', label: '출루율' },
 ];
 
-export default function BatterStatsPage() {
-  const [season, setSeason] = useState(SEASONS[0]);
-  const [search, setSearch] = useState('');
-  const { data } = useBattingStatsBySeason(
+export default function BatterStatsTable({ season }: { season: string }) {
+  const { data, isLoading, error } = useBattingStatsBySeason(
     season === '통산' ? undefined : season,
   );
-
-  // 정렬 상태 관리
+  const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'games' | string>('games');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const router = useRouter();
 
-  // 정렬 함수
-  const sortData = (rows: any[], sortBy: string, sortOrder: 'asc' | 'desc') => {
-    return [...rows].sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
-      // 숫자/문자 구분
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
-      }
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortOrder === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-      // undefined/null 등은 뒤로
-      if (aValue == null) return 1;
-      if (bValue == null) return -1;
-      return 0;
-    });
-  };
-
-  // 필터 + 정렬
   const filtered = useMemo(() => {
     let rows = data ?? [];
     if (search) {
@@ -94,17 +71,33 @@ export default function BatterStatsPage() {
     return sortData(rows, sortBy, sortOrder);
   }, [data, search, sortBy, sortOrder]);
 
-  // 헤더 클릭 핸들러
+  function sortData(rows: any[], sortBy: string, sortOrder: 'asc' | 'desc') {
+    return [...rows].sort((a, b) => {
+      const aValue = a[sortBy];
+      const bValue = b[sortBy];
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortOrder === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+      if (aValue == null) return 1;
+      if (bValue == null) return -1;
+      return 0;
+    });
+  }
+
   const handleHeaderClick = (colValue: string) => {
     if (sortBy === colValue) {
       setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortBy(colValue);
-      setSortOrder('desc'); // 기본 내림차순
+      setSortOrder('desc');
     }
   };
 
-  // 정렬 아이콘
   const getSortIcon = (colValue: string) => {
     if (sortBy !== colValue) return null;
     return sortOrder === 'asc' ? '▲' : '▼';
@@ -116,7 +109,10 @@ export default function BatterStatsPage() {
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <CardTitle className="text-2xl">시즌별 타자 기록</CardTitle>
           <div className="flex gap-2 w-full md:w-auto">
-            <Select value={season} onValueChange={setSeason}>
+            <Select
+              value={season}
+              onValueChange={(value) => router.push(`/stats/batter/${value}`)}
+            >
               <SelectTrigger className="w-28">
                 <SelectValue />
               </SelectTrigger>
@@ -141,46 +137,57 @@ export default function BatterStatsPage() {
             className="overflow-x-auto"
             style={{ minWidth: '600px', width: '100%' }}
           >
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {COLUMNS.map((col) => (
-                    <TableHead
-                      key={col.value}
-                      className="whitespace-nowrap text-center cursor-pointer select-none"
-                      onClick={() => handleHeaderClick(col.value)}
-                    >
-                      {col.label}
-                      <span style={{ marginLeft: 4 }}>
-                        {getSortIcon(col.value)}
-                      </span>
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.length === 0 ? (
+            {isLoading ? (
+              <div className="text-center py-12">불러오는 중...</div>
+            ) : error ? (
+              <div className="text-center py-12 text-red-500">
+                {error.message}
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={COLUMNS.length} className="text-center">
-                      검색 결과가 없습니다.
-                    </TableCell>
+                    {COLUMNS.map((col) => (
+                      <TableHead
+                        key={col.value}
+                        className="whitespace-nowrap text-center cursor-pointer select-none"
+                        onClick={() => handleHeaderClick(col.value)}
+                      >
+                        {col.label}
+                        <span style={{ marginLeft: 4 }}>
+                          {getSortIcon(col.value)}
+                        </span>
+                      </TableHead>
+                    ))}
                   </TableRow>
-                ) : (
-                  filtered.map((row: any, i: number) => (
-                    <TableRow key={row.name + row.season + i}>
-                      {COLUMNS.map((col) => (
-                        <TableCell
-                          key={col.value}
-                          className="whitespace-nowrap text-center"
-                        >
-                          {row[col.value]}
-                        </TableCell>
-                      ))}
+                </TableHeader>
+                <TableBody>
+                  {filtered.length === 0 ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={COLUMNS.length}
+                        className="text-center"
+                      >
+                        검색 결과가 없습니다.
+                      </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    filtered.map((row: any, i: number) => (
+                      <TableRow key={row.name + row.season + i}>
+                        {COLUMNS.map((col) => (
+                          <TableCell
+                            key={col.value}
+                            className="whitespace-nowrap text-center"
+                          >
+                            {row[col.value]}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </CardContent>
       </Card>
