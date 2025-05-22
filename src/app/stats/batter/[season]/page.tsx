@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import BatterStatsTable from './BatterStatsTable';
+import BatterStatsTable from './components/BatterStatsTable';
 
 const SEASONS = ['통산', '2025', '2024', '2023', '2022', '2021', '2020'];
 
