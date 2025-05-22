@@ -77,7 +77,7 @@ export async function GET() {
       name,
       ...total,
       innings: totalInnings.toFixed(1),
-      era: era.toFixed(3),
+      era: era.toFixed(2),
       whip: whip.toFixed(3),
       winrate: winrate.toFixed(3),
       opponent_avg: opponent_avg.toFixed(3),
