@@ -15,12 +15,8 @@ import { useRef } from 'react';
 export function StatsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
-  const { data, error } = useTeamTotalStats();
-  const {
-    data: careerStats,
-    error: careerError,
-    isLoading: careerLoading,
-  } = useTeamCareerStats();
+  const { data } = useTeamTotalStats();
+  const { data: careerStats } = useTeamCareerStats();
 
   const teamStats = data
     ? [
