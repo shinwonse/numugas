@@ -66,76 +66,78 @@ export default function BatterStatsPage() {
   }, [data, search]);
 
   return (
-    <Card className="max-w-7xl mx-auto mt-10">
-      <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <CardTitle className="text-2xl">시즌별 타자 기록</CardTitle>
-        <div className="flex gap-2 w-full md:w-auto">
-          <Select value={season} onValueChange={setSeason}>
-            <SelectTrigger className="w-28">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {SEASONS.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {s}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Input
-            className="w-40"
-            placeholder="선수명/팀 검색"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div
-          className="overflow-x-auto"
-          style={{ minWidth: '900px', width: '100%' }}
-        >
-          <Table>
-            <TableHeader>
-              <TableRow>
-                {COLUMNS.map((col) => (
-                  <TableHead
-                    key={col.value}
-                    className="whitespace-nowrap text-center"
-                  >
-                    {col.label}
-                  </TableHead>
+    <div className="pt-24">
+      <Card className="max-w-7xl mx-auto mt-10">
+        <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <CardTitle className="text-2xl">시즌별 타자 기록</CardTitle>
+          <div className="flex gap-2 w-full md:w-auto">
+            <Select value={season} onValueChange={setSeason}>
+              <SelectTrigger className="w-28">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SEASONS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
                 ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.length === 0 ? (
+              </SelectContent>
+            </Select>
+            <Input
+              className="w-40"
+              placeholder="선수명/팀 검색"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div
+            className="overflow-x-auto"
+            style={{ minWidth: '900px', width: '100%' }}
+          >
+            <Table>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={COLUMNS.length} className="text-center">
-                    검색 결과가 없습니다.
-                  </TableCell>
+                  {COLUMNS.map((col) => (
+                    <TableHead
+                      key={col.value}
+                      className="whitespace-nowrap text-center"
+                    >
+                      {col.label}
+                    </TableHead>
+                  ))}
                 </TableRow>
-              ) : (
-                filtered.map((row: any, i: number) => (
-                  <TableRow key={row.name + row.season + i}>
-                    {COLUMNS.map((col) => (
-                      <TableCell
-                        key={col.value}
-                        className="whitespace-nowrap text-center"
-                      >
-                        {row[col.value]}
-                      </TableCell>
-                    ))}
+              </TableHeader>
+              <TableBody>
+                {filtered.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={COLUMNS.length} className="text-center">
+                      검색 결과가 없습니다.
+                    </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="mt-2 text-sm text-muted-foreground">
-          총 {filtered.length}명의 선수 기록
-        </div>
-      </CardContent>
-    </Card>
+                ) : (
+                  filtered.map((row: any, i: number) => (
+                    <TableRow key={row.name + row.season + i}>
+                      {COLUMNS.map((col) => (
+                        <TableCell
+                          key={col.value}
+                          className="whitespace-nowrap text-center"
+                        >
+                          {row[col.value]}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="mt-2 text-sm text-muted-foreground">
+            총 {filtered.length}명의 선수 기록
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
