@@ -20,7 +20,7 @@ import {
 import { useBattingStatsBySeason } from '@/hooks/use-batting-stats-by-season';
 import { useMemo, useState } from 'react';
 
-const SEASONS = ['2025', '2024', '2023', '2022', '2021', '2020'];
+const SEASONS = ['통산', '2025', '2024', '2023', '2022', '2021', '2020'];
 
 const COLUMNS = [
   { value: 'name', label: '선수명' },
@@ -52,7 +52,9 @@ const COLUMNS = [
 export default function BatterStatsPage() {
   const [season, setSeason] = useState(SEASONS[0]);
   const [search, setSearch] = useState('');
-  const { data } = useBattingStatsBySeason(season);
+  const { data } = useBattingStatsBySeason(
+    season === '통산' ? undefined : season,
+  );
 
   // 정렬 상태 관리
   const [sortBy, setSortBy] = useState<'games' | string>('games');

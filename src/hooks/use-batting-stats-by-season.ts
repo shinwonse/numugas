@@ -1,7 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
 const fetchBattingStatsBySeason = async (season?: string) => {
-  if (!season) throw new Error('시즌 정보가 필요합니다.');
+  if (!season) {
+    const res = await fetch(`/api/batter-career`);
+    if (!res.ok) throw new Error('기록을 불러오지 못했습니다.');
+    const { careerStats } = await res.json();
+    return careerStats;
+  }
+
   const res = await fetch(`/api/batter-career/season?season=${season}`);
   if (!res.ok) throw new Error('기록을 불러오지 못했습니다.');
   const { seasonStats } = await res.json();
