@@ -39,9 +39,7 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-8">
           {[
             { label: '홈', href: '/' },
-            { label: '타자 기록', href: '/stats/batter' },
-            { label: '투수 기록', href: '/stats/pitcher' },
-            { label: '라인업', href: '/line-up' },
+            { label: '기록', href: '/stats' },
           ].map((item) => (
             <Link
               key={item.label}
