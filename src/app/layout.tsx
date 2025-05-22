@@ -1,3 +1,4 @@
+import { Header } from '@/components/header';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Montserrat, Orbitron } from 'next/font/google';
@@ -35,6 +36,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Header />
             {children}
           </ThemeProvider>
         </QueryClientProviderWrapper>
