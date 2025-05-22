@@ -5,11 +5,9 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const playerName = searchParams.get('name');
 
-  // 시즌별 기록 조회 API: /api/hitter-career/season?name=...
   if (playerName) {
-    // 해당 선수의 시즌별 기록 조회
     const { data, error } = await supabase
-      .from('hitter_stats')
+      .from('batter_stats')
       .select('*')
       .eq('name', playerName)
       .order('season', { ascending: true });
@@ -20,7 +18,7 @@ export async function GET(req: Request) {
   }
 
   // 1. 모든 시즌 데이터 조회
-  const { data, error } = await supabase.from('hitter_stats').select('*');
+  const { data, error } = await supabase.from('batter_stats').select('*');
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

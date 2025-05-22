@@ -54,7 +54,7 @@ export async function GET() {
           });
         });
         if (players.length > 0) {
-          const { error } = await supabase.from('hitter_stats').insert(players);
+          const { error } = await supabase.from('batter_stats').insert(players);
           if (error) {
             throw new Error(
               `Supabase insert error (season ${season}): ${error.message}`,

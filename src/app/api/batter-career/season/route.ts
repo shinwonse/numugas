@@ -8,7 +8,7 @@ export async function GET(req: Request) {
 
   if (playerName) {
     const { data, error } = await supabase
-      .from('hitter_stats')
+      .from('batter_stats')
       .select('*')
       .eq('name', playerName)
       .order('season', { ascending: true });
@@ -21,7 +21,7 @@ export async function GET(req: Request) {
 
   if (season) {
     const { data, error } = await supabase
-      .from('hitter_stats')
+      .from('batter_stats')
       .select('*')
       .eq('season', season)
       .order('avg', { ascending: false });

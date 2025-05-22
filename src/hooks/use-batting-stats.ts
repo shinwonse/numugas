@@ -22,7 +22,7 @@ export function useBattingStats2025() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('/api/hitter-career/season?season=2025');
+        const res = await fetch('/api/batter-career/season?season=2025');
         if (!res.ok) throw new Error('기록을 불러오지 못했습니다.');
         const { seasonStats } = await res.json();
         if (!Array.isArray(seasonStats))
@@ -111,7 +111,7 @@ export function useBattingCareerStats() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('/api/hitter-career');
+        const res = await fetch('/api/batter-career');
         if (!res.ok) throw new Error('통산 기록을 불러오지 못했습니다.');
         const { careerStats } = await res.json();
         if (!Array.isArray(careerStats))

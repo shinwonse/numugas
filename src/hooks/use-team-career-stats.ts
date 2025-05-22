@@ -9,7 +9,7 @@ export type TeamCareerStats = {
 
 async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
   // Fetch hitter stats
-  const hitterRes = await fetch('/api/hitter-career');
+  const hitterRes = await fetch('/api/batter-career');
   if (!hitterRes.ok) throw new Error('Failed to fetch hitter career stats');
   const { careerStats: hitterStats } = await hitterRes.json();
 
