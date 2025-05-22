@@ -37,13 +37,18 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {['홈', '팀', '경기일정', '통계', '뉴스'].map((item) => (
+          {[
+            { label: '홈', href: '/' },
+            { label: '타자 기록', href: '/stats/batter' },
+            { label: '투수 기록', href: '/stats/pitcher' },
+            { label: '라인업', href: '/line-up' },
+          ].map((item) => (
             <Link
-              key={item}
-              href={`#${item}`}
+              key={item.label}
+              href={item.href}
               className="text-gray-300 hover:text-red-500 transition-colors"
             >
-              {item}
+              {item.label}
             </Link>
           ))}
         </nav>
@@ -61,16 +66,21 @@ export function Header() {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden fixed inset-0 top-16 bg-black/95 z-40 flex flex-col items-center pt-10 gap-6">
-          {['홈', '팀', '경기일정', '통계', '뉴스'].map((item) => (
+          {[
+            { label: '홈', href: '/' },
+            { label: '타자 기록', href: '/stats/batter' },
+            { label: '투수 기록', href: '/stats/pitcher' },
+            { label: '라인업', href: '/line-up' },
+          ].map((item) => (
             <Link
-              key={item}
-              href={`#${item}`}
+              key={item.label}
+              href={item.href}
               className="text-xl text-gray-300 hover:text-red-500 transition-colors"
               onClick={() => {
                 setIsMenuOpen(false);
               }}
             >
-              {item}
+              {item.label}
             </Link>
           ))}
         </div>
