@@ -53,17 +53,60 @@ export default function BatterStatsPage() {
   const [season, setSeason] = useState(SEASONS[0]);
   const [search, setSearch] = useState('');
   const { data } = useBattingStatsBySeason(season);
-  console.log(data);
 
-  // 검색 필터
+  // 정렬 상태 관리
+  const [sortBy, setSortBy] = useState<'games' | string>('games');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // 정렬 함수
+  const sortData = (rows: any[], sortBy: string, sortOrder: 'asc' | 'desc') => {
+    return [...rows].sort((a, b) => {
+      const aValue = a[sortBy];
+      const bValue = b[sortBy];
+      // 숫자/문자 구분
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortOrder === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+      // undefined/null 등은 뒤로
+      if (aValue == null) return 1;
+      if (bValue == null) return -1;
+      return 0;
+    });
+  };
+
+  // 필터 + 정렬
   const filtered = useMemo(() => {
-    if (!search) return data ?? [];
-    return (data ?? []).filter(
-      (row: any) =>
-        row.name?.toLowerCase().includes(search.toLowerCase()) ||
-        row.team?.toLowerCase().includes(search.toLowerCase()),
-    );
-  }, [data, search]);
+    let rows = data ?? [];
+    if (search) {
+      rows = rows.filter(
+        (row: any) =>
+          row.name?.toLowerCase().includes(search.toLowerCase()) ||
+          row.team?.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+    return sortData(rows, sortBy, sortOrder);
+  }, [data, search, sortBy, sortOrder]);
+
+  // 헤더 클릭 핸들러
+  const handleHeaderClick = (colValue: string) => {
+    if (sortBy === colValue) {
+      setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortBy(colValue);
+      setSortOrder('desc'); // 기본 내림차순
+    }
+  };
+
+  // 정렬 아이콘
+  const getSortIcon = (colValue: string) => {
+    if (sortBy !== colValue) return null;
+    return sortOrder === 'asc' ? '▲' : '▼';
+  };
 
   return (
     <div className="pt-24">
@@ -102,9 +145,13 @@ export default function BatterStatsPage() {
                   {COLUMNS.map((col) => (
                     <TableHead
                       key={col.value}
-                      className="whitespace-nowrap text-center"
+                      className="whitespace-nowrap text-center cursor-pointer select-none"
+                      onClick={() => handleHeaderClick(col.value)}
                     >
                       {col.label}
+                      <span style={{ marginLeft: 4 }}>
+                        {getSortIcon(col.value)}
+                      </span>
                     </TableHead>
                   ))}
                 </TableRow>
