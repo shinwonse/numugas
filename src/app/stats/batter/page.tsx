@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useBattingStats } from '@/hooks/use-batting-stats';
+import { useBattingStatsBySeason } from '@/hooks/use-batting-stats-by-season';
 import { useMemo, useState } from 'react';
 
 const SEASONS = ['2025', '2024', '2023', '2022', '2021', '2020'];
@@ -52,7 +52,7 @@ const COLUMNS = [
 export default function BatterStatsPage() {
   const [season, setSeason] = useState(SEASONS[0]);
   const [search, setSearch] = useState('');
-  const { data } = useBattingStats(season);
+  const { data } = useBattingStatsBySeason(season);
   console.log(data);
 
   // 검색 필터

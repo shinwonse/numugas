@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 export interface BattingStatPlayer {
@@ -11,22 +10,6 @@ export interface BattingStatPlayer {
 export interface BattingStatCategory {
   category: string;
   players: BattingStatPlayer[];
-}
-
-export function useBattingStats(season?: string) {
-  return useQuery<any[], Error>({
-    queryKey: ['battingStats', season],
-    queryFn: async () => {
-      if (!season) throw new Error('시즌 정보가 필요합니다.');
-      const res = await fetch(`/api/batter-career/season?season=${season}`);
-      if (!res.ok) throw new Error('기록을 불러오지 못했습니다.');
-      const { seasonStats } = await res.json();
-      if (!Array.isArray(seasonStats))
-        throw new Error('기록 데이터가 올바르지 않습니다.');
-      return seasonStats;
-    },
-    select: (stats) => stats,
-  });
 }
 
 export function useBattingStats2025() {
