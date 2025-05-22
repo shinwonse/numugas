@@ -14,11 +14,8 @@ export default async function BatterStatsPage({
 }) {
   const { season } = await params;
   const decodedSeason = decodeURIComponent(season);
-  console.log(SEASONS.includes(decodedSeason));
-  // '통산'도 허용
 
   if (!SEASONS.includes(decodedSeason)) notFound();
 
-  // 데이터는 클라이언트 컴포넌트에서 useBattingStatsBySeason로 가져오도록 함
   return <BatterStatsTable season={decodedSeason} />;
 }
