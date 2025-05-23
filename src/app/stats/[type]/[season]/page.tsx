@@ -18,7 +18,8 @@ export default function StatsTypeSeasonPage({
 }: {
   params: { type: string; season: string };
 }) {
-  const { type, season } = params;
+  const type = decodeURIComponent(params.type);
+  const season = decodeURIComponent(params.season);
   const typeObj = TYPES.find((t) => t.key === type);
   if (!typeObj || !SEASONS.includes(season)) notFound();
 
@@ -31,7 +32,7 @@ export default function StatsTypeSeasonPage({
             {TYPES.map((t) => (
               <a
                 key={t.key}
-                href={`/stats/${t.key}/${season}`}
+                href={`/stats/${encodeURIComponent(t.key)}/${encodeURIComponent(season)}`}
                 className={`px-4 py-2 rounded-lg font-bold text-base md:text-lg'}`}
                 tabIndex={0}
               >
