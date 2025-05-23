@@ -3,11 +3,11 @@
 import dynamic from 'next/dynamic';
 
 const BatterStatsTable = dynamic(
-  () => import('@/app/stats/(batter)/[season]/components/batter-stats-table'),
+  () => import('@/app/stats/(batter)/batter-stats-table'),
   { ssr: false },
 );
 const PitcherStatsTable = dynamic(
-  () => import('@/app/stats/(pitcher)/[season]/components/pitcher-stats-table'),
+  () => import('@/app/stats/(pitcher)/pitcher-stats-table'),
   { ssr: false },
 );
 

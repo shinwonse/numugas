@@ -126,7 +126,7 @@ export default function BatterStatsTable({ season }: { season: string }) {
             </Select>
             <Input
               className="w-40"
-              placeholder="선수명/팀 검색"
+              placeholder="선수명 검색"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
