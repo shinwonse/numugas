@@ -32,7 +32,7 @@ export default function StatsTypeSeasonPage({
               <a
                 key={t.key}
                 href={`/stats/${t.key}/${season}`}
-                className={`px-4 py-2 rounded-lg font-bold transition-colors text-base md:text-lg focus:outline-none focus:ring-2 focus:ring-red-400/60 ${type === t.key ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
+                className={`px-4 py-2 rounded-lg font-bold text-base md:text-lg'}`}
                 tabIndex={0}
               >
                 {t.label}
