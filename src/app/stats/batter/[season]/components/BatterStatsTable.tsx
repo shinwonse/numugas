@@ -104,8 +104,8 @@ export default function BatterStatsTable({ season }: { season: string }) {
   };
 
   return (
-    <div className="pt-24">
-      <Card className="max-w-7xl mx-auto mt-10">
+    <div>
+      <Card className="max-w-7xl mx-auto">
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <CardTitle className="text-2xl">시즌별 타자 기록</CardTitle>
           <div className="flex gap-2 w-full md:w-auto">

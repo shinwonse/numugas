@@ -107,7 +107,7 @@ export default function PitcherStatsTable({ season }: { season: string }) {
   };
 
   return (
-    <div className="pt-24">
+    <div>
       <Card className="max-w-7xl mx-auto mt-10">
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <CardTitle className="text-2xl">시즌별 투수 기록</CardTitle>

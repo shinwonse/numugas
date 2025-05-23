@@ -24,11 +24,12 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 md:px-12',
         'bg-black/95 shadow-lg border-b border-white/10',
+        'h-20',
       )}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="max-w-7xl mx-auto flex items-center justify-between h-full">
         <Link
           href="/"
           className="text-2xl font-bold flex items-center gap-2 text-white font-display"
@@ -37,10 +38,7 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {[
-            { label: '타자', href: '/stats/batter' },
-            { label: '투수', href: '/stats/pitcher' },
-          ].map((item) => (
+          {[{ label: '기록', href: '/stats' }].map((item) => (
             <Link
               key={item.label}
               href={item.href}
@@ -64,10 +62,7 @@ export function Header() {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden fixed inset-0 top-16 bg-black/95 z-40 flex flex-col items-center pt-10 gap-6">
-          {[
-            { label: '타자', href: '/stats/batter' },
-            { label: '투수', href: '/stats/pitcher' },
-          ].map((item) => (
+          {[{ label: '기록', href: '/stats' }].map((item) => (
             <Link
               key={item.label}
               href={item.href}

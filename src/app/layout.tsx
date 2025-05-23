@@ -1,6 +1,7 @@
 import { Header } from '@/components/header';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
+import { StagewiseToolbar } from '@stagewise/toolbar-next';
 import { Montserrat, Orbitron } from 'next/font/google';
 import type { Metadata } from 'next/types';
 import type React from 'react';
@@ -21,6 +22,10 @@ export const metadata: Metadata = {
   description: '담장NUMUGAS 공식 홈페이지',
 };
 
+const stagewiseConfig = {
+  plugins: [],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,9 +42,12 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Header />
-            {children}
+            <div className="pt-20">{children}</div>
           </ThemeProvider>
         </QueryClientProviderWrapper>
+        {process.env.NODE_ENV === 'development' && (
+          <StagewiseToolbar config={stagewiseConfig} />
+        )}
       </body>
     </html>
   );
