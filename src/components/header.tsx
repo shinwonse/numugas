@@ -38,7 +38,11 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {[{ label: '기록', href: '/stats' }].map((item) => (
+          {[
+            { label: '기록', href: '/stats' },
+            { label: '선수단', href: '/players' },
+            { label: '일정', href: '/schedule' },
+          ].map((item) => (
             <Link
               key={item.label}
               href={item.href}
@@ -62,7 +66,11 @@ export function Header() {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden fixed inset-0 top-16 bg-black/95 z-40 flex flex-col items-center pt-10 gap-6">
-          {[{ label: '기록', href: '/stats' }].map((item) => (
+          {[
+            { label: '기록', href: '/stats' },
+            { label: '선수단', href: '/players' },
+            { label: '일정', href: '/schedule' },
+          ].map((item) => (
             <Link
               key={item.label}
               href={item.href}
