@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import StatsTableClient from './StatsTableClient';
+import StatsTableClient from './stats-table-client';
 
 const SEASONS = ['통산', '2025', '2024', '2023', '2022', '2021', '2020'];
 const TYPES = [

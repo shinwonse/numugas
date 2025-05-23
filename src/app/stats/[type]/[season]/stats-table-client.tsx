@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 
 const BatterStatsTable = dynamic(
-  () => import('@/app/stats/batter/[season]/components/BatterStatsTable'),
+  () => import('@/app/stats/batter/[season]/components/batter-stats-table'),
   { ssr: false },
 );
 const PitcherStatsTable = dynamic(

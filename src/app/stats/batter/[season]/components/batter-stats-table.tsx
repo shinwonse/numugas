@@ -104,7 +104,7 @@ export default function BatterStatsTable({ season }: { season: string }) {
   };
 
   return (
-    <div>
+    <div className="pt-8">
       <Card className="max-w-7xl mx-auto">
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <CardTitle className="text-2xl">시즌별 타자 기록</CardTitle>
@@ -133,10 +133,7 @@ export default function BatterStatsTable({ season }: { season: string }) {
           </div>
         </CardHeader>
         <CardContent>
-          <div
-            className="overflow-x-auto"
-            style={{ minWidth: '600px', width: '100%' }}
-          >
+          <div className="overflow-x-auto w-full">
             {isLoading ? (
               <div className="text-center py-12">불러오는 중...</div>
             ) : error ? (
@@ -144,7 +141,7 @@ export default function BatterStatsTable({ season }: { season: string }) {
                 {error.message}
               </div>
             ) : (
-              <Table>
+              <Table className="min-w-[600px] w-full">
                 <TableHeader>
                   <TableRow>
                     {COLUMNS.map((col) => (
