@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import PlayerPositionTabs from './PlayerPositionTabs';
+import PlayerPositionTabs from './components/player-position-tabs';
 
 export default async function PlayersPage() {
   let players: any[] = [];
