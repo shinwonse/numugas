@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import PlayerPositionTabs from './components/player-position-tabs';
+import PlayerPositionSection from './components/player-position-section';
 
 export default async function PlayersPage() {
   let players: any[] = [];
@@ -32,7 +32,10 @@ export default async function PlayersPage() {
         {error ? (
           <div className="text-center text-red-500 py-12">{error}</div>
         ) : (
-          <PlayerPositionTabs positions={positions} players={mappedPlayers} />
+          <PlayerPositionSection
+            positions={positions}
+            players={mappedPlayers}
+          />
         )}
       </div>
     </main>
