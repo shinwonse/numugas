@@ -1,7 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -25,9 +23,10 @@ export default function PlayerPositionTabs({
   players,
 }: PlayerPositionTabsProps) {
   const [selectedPosition, setSelectedPosition] = useState(positions[0]);
-  const filteredPlayers = players.filter(
-    (p) => p.position === selectedPosition,
-  );
+  const filteredPlayers =
+    selectedPosition === '전체'
+      ? players
+      : players.filter((p) => p.position === selectedPosition);
 
   return (
     <>
@@ -51,44 +50,29 @@ export default function PlayerPositionTabs({
           </div>
         ) : (
           filteredPlayers.map((player) => (
-            <Card
+            <div
               key={player.id}
-              className="bg-black/70 border-white/10 hover:border-red-500 transition-all duration-300 shadow-lg shadow-red-500/10"
+              className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between min-h-[340px]"
             >
-              <CardHeader className="flex flex-col items-center gap-2 bg-transparent pb-2">
-                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-red-600 mb-2">
-                  <Image
-                    src={player.photo}
-                    alt={player.name}
-                    width={96}
-                    height={96}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <CardTitle className="text-xl text-center">
+              <div className="w-full aspect-square relative">
+                <Image
+                  src={player.photo}
+                  alt={player.name}
+                  fill
+                  className="object-cover w-full h-full"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  priority={true}
+                />
+              </div>
+              <div className="flex items-center justify-between px-6 py-5 bg-white">
+                <span className="text-lg font-semibold text-black">
                   {player.name}
-                </CardTitle>
-                <div className="text-sm text-gray-400">
-                  #{player.number} | {player.position}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableBody>
-                    {Object.entries(player.stats).map(([key, value]) => (
-                      <TableRow key={key}>
-                        <TableCell className="text-gray-400 font-medium">
-                          {key}
-                        </TableCell>
-                        <TableCell className="text-right text-red-500 font-bold">
-                          {typeof value === 'number' ? value : value}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+                </span>
+                <span className="text-3xl font-extrabold text-gray-800">
+                  {player.number}
+                </span>
+              </div>
+            </div>
           ))
         )}
       </div>
