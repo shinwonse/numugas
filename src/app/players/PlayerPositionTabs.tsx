@@ -31,7 +31,6 @@ export default function PlayerPositionTabs({
   const tabList = positions.map((pos) => ({
     key: pos,
     label: pos,
-    href: '#',
   }));
 
   return (

@@ -14,17 +14,13 @@ export default async function PlayersPage() {
     error = e.message;
   }
 
-  // 포지션 목록 동적 생성 ("전체" + 중복 제거)
-  const positions = [
-    '전체',
-    ...Array.from(new Set(players.map((p) => p.position))),
-  ];
+  const positions = ['전체', '투수', '포수', '내/외야수'];
 
-  // PlayerPositionTabs에 맞게 photo 필드 매핑
-  const mappedPlayers = players.map((p) => ({
+  const sortedPlayers = [...players].sort((a, b) => a.number - b.number);
+  const mappedPlayers = sortedPlayers.map((p) => ({
     ...p,
     photo: p.photo_url,
-    stats: {}, // stats는 API에 없으므로 빈 객체 전달
+    stats: {},
   }));
 
   return (
