@@ -1,6 +1,6 @@
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import StatsTabs from '@/components/StatsTabs';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -28,21 +28,20 @@ export default function PlayerPositionTabs({
       ? players
       : players.filter((p) => p.position === selectedPosition);
 
+  const tabList = positions.map((pos) => ({
+    key: pos,
+    label: pos,
+    href: '#',
+  }));
+
   return (
     <>
-      <Tabs
-        value={selectedPosition}
-        onValueChange={setSelectedPosition}
-        className="mb-10 flex flex-col items-center"
-      >
-        <TabsList className="grid grid-cols-4 w-full max-w-md mb-2">
-          {positions.map((pos) => (
-            <TabsTrigger key={pos} value={pos} className="text-lg py-2">
-              {pos}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+      <StatsTabs
+        tabs={tabList}
+        current={selectedPosition}
+        className="mb-10"
+        onTabClick={setSelectedPosition}
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-16">
         {filteredPlayers.length === 0 ? (
           <div className="col-span-full text-center text-gray-400 py-12">

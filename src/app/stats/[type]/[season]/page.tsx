@@ -1,3 +1,4 @@
+import StatsTabs from '@/components/StatsTabs';
 import { notFound } from 'next/navigation';
 import StatsTableClient from './stats-table-client';
 
@@ -13,7 +14,7 @@ export async function generateStaticParams() {
   );
 }
 
-export default function StatsTypeSeasonPage({
+export default async function StatsTypeSeasonPage({
   params,
 }: {
   params: { type: string; season: string };
@@ -23,39 +24,16 @@ export default function StatsTypeSeasonPage({
   const typeObj = TYPES.find((t) => t.key === type);
   if (!typeObj || !SEASONS.includes(season)) notFound();
 
+  const tabList = TYPES.map((t) => ({
+    key: t.key,
+    label: t.label,
+    href: `/stats/${encodeURIComponent(t.key)}/${encodeURIComponent(season)}`,
+  }));
+
   return (
     <main className="flex flex-col gap-0 bg-black min-h-screen">
       <div className="w-full flex justify-center">
-        <div
-          className="w-full max-w-md mx-auto grid grid-cols-2 h-12 rounded-xl mb-8 bg-zinc-900 border border-zinc-800 shadow-lg"
-          role="tablist"
-          aria-orientation="horizontal"
-          tabIndex={0}
-          data-orientation="horizontal"
-        >
-          {TYPES.map((t) => {
-            const isActive = t.key === type;
-            return (
-              <a
-                key={t.key}
-                href={`/stats/${encodeURIComponent(t.key)}/${encodeURIComponent(season)}`}
-                className={
-                  `flex items-center justify-center h-full w-full text-center font-bold text-lg transition-all duration-150 select-none ` +
-                  (isActive
-                    ? 'bg-red-600 text-white shadow-md scale-105'
-                    : 'bg-zinc-900 text-zinc-400 hover:text-red-400') +
-                  ' rounded-xl'
-                }
-                style={{ fontFamily: 'inherit' }}
-                tabIndex={isActive ? 0 : -1}
-                aria-selected={isActive}
-                role="tab"
-              >
-                {t.label}
-              </a>
-            );
-          })}
-        </div>
+        <StatsTabs tabs={tabList} current={type} />
       </div>
       <div className="w-full max-w-7xl mx-auto">
         <StatsTableClient type={type} season={season} />
