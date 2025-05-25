@@ -1,3 +1,5 @@
+'use client';
+
 interface StatsTab {
   key: string;
   label: string;
