@@ -56,7 +56,7 @@ export default function PlayerPositionTabs({
             >
               <div className="w-full aspect-square relative">
                 <Image
-                  src={player.photo}
+                  src={player.photo ?? '/logo.png'}
                   alt={player.name}
                   fill
                   className="object-cover w-full h-full"
