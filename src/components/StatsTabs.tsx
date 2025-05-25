@@ -19,14 +19,25 @@ export default function StatsTabs({
   className = '',
   onTabClick,
 }: StatsTabsProps) {
+  // grid-cols-N 동적 Tailwind 문제 해결: 명시적 분기
+  const colClass =
+    tabs.length === 2
+      ? 'grid-cols-2'
+      : tabs.length === 3
+        ? 'grid-cols-3'
+        : tabs.length === 4
+          ? 'grid-cols-4'
+          : tabs.length === 5
+            ? 'grid-cols-5'
+            : tabs.length === 6
+              ? 'grid-cols-6'
+              : tabs.length === 7
+                ? 'grid-cols-7'
+                : '';
+
   return (
     <div
-      className={
-        'w-full max-w-md mx-auto grid grid-cols-' +
-        tabs.length +
-        ' h-12 rounded-xl mb-8 bg-zinc-900 border border-zinc-800 shadow-lg ' +
-        className
-      }
+      className={`w-full max-w-md mx-auto grid ${colClass} h-12 rounded-xl mb-8 bg-zinc-900 border border-zinc-800 shadow-lg ${className}`}
       role="tablist"
       aria-orientation="horizontal"
       tabIndex={0}
