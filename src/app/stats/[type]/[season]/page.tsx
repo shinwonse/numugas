@@ -1,4 +1,4 @@
-import StatsTabs from '@/components/StatsTabs';
+import StatsTabs from '@/components/stats-tabs';
 import { notFound } from 'next/navigation';
 import StatsTableClient from './stats-table-client';
 

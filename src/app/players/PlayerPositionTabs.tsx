@@ -1,6 +1,6 @@
 'use client';
 
-import StatsTabs from '@/components/StatsTabs';
+import StatsTabs from '@/components/stats-tabs';
 import Image from 'next/image';
 import { useState } from 'react';
 
