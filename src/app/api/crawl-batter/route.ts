@@ -54,10 +54,12 @@ export async function GET() {
           });
         });
         if (players.length > 0) {
-          const { error } = await supabase.from('batter_stats').insert(players);
+          const { error } = await supabase
+            .from('batter_stats')
+            .upsert(players, { onConflict: 'season,name' });
           if (error) {
             throw new Error(
-              `Supabase insert error (season ${season}): ${error.message}`,
+              `Supabase upsert error (season ${season}): ${error.message}`,
             );
           }
         }

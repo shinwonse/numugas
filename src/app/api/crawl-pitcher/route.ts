@@ -63,10 +63,10 @@ export async function GET() {
         if (pitchers.length > 0) {
           const { error } = await supabase
             .from('pitcher_stats')
-            .insert(pitchers);
+            .upsert(pitchers, { onConflict: 'season,name' });
           if (error) {
             throw new Error(
-              `Supabase insert error (season ${season}): ${error.message}`,
+              `Supabase upsert error (season ${season}): ${error.message}`,
             );
           }
         }

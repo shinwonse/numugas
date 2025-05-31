@@ -33,10 +33,12 @@ export async function GET() {
         };
 
         // DB 저장
-        const { error } = await supabase.from('team_records').insert([record]);
+        const { error } = await supabase
+          .from('team_records')
+          .upsert([record], { onConflict: 'season' });
         if (error) {
           throw new Error(
-            `Supabase insert error (season ${season}): ${error.message}`,
+            `Supabase upsert error (season ${season}): ${error.message}`,
           );
         }
 
