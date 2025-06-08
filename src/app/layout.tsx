@@ -19,10 +19,10 @@ const orbitron = Orbitron({
 
 export const metadata: Metadata = {
   title: '담장NUMUGAS',
-  description: '담장NUMUGAS 공식 홈페이지',
+  description: '나는 내가 생각한 것보다 훨씬 강하다',
   openGraph: {
     title: '담장NUMUGAS',
-    description: '담장NUMUGAS 공식 홈페이지',
+    description: '나는 내가 생각한 것보다 훨씬 강하다',
     images: [
       {
         url: '/opengraph.png',
