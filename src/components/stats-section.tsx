@@ -126,12 +126,16 @@ export function StatsSection({
             >
               <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
                 <CardHeader className="bg-transparent pb-2">
-                  <CardTitle className="text-xl">{stat.name}</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-2xl">{stat.name}</CardTitle>
+                    <div className="text-2xl">{stat.icon}</div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold">{stat.value}</div>
-                    <div className="text-2xl">{stat.icon}</div>
+                    <div className="text-3xl font-bold text-red-500">
+                      {stat.value}
+                    </div>
                   </div>
                   {stat.description && (
                     <CardDescription className="mt-2">
