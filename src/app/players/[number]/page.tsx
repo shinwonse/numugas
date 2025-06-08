@@ -177,46 +177,106 @@ export default async function PlayerDetailPage({
           </div>
         </div>
       </section>
-      <div className="w-full">
-        {/* Yearly Stats Table */}
-        <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8 mb-8">
+      <div className="w-full space-y-8">
+        {/* Detailed Yearly Stats Table */}
+        <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
           <h2 className="text-2xl font-bold mb-6 text-center text-red-500">
             연도별 기록
           </h2>
           <div className="overflow-x-auto w-full">
-            <table className="w-full text-center">
+            <table className="w-full text-center min-w-[1200px]">
               <thead>
                 <tr className="border-b border-gray-700 text-gray-300">
-                  <th className="py-2 px-4">연도</th>
-                  <th className="py-2 px-4">경기</th>
-                  <th className="py-2 px-4">타율</th>
-                  <th className="py-2 px-4">홈런</th>
-                  <th className="py-2 px-4">타점</th>
-                  <th className="py-2 px-4">도루</th>
+                  <th className="py-3 px-2 text-sm font-semibold sticky left-0 bg-black/80">
+                    연도
+                  </th>
+                  <th className="py-3 px-2 text-sm font-semibold">경기</th>
+                  <th className="py-3 px-2 text-sm font-semibold">타율</th>
+                  <th className="py-3 px-2 text-sm font-semibold">출루율</th>
+                  <th className="py-3 px-2 text-sm font-semibold">장타율</th>
+                  <th className="py-3 px-2 text-sm font-semibold">타석</th>
+                  <th className="py-3 px-2 text-sm font-semibold">타수</th>
+                  <th className="py-3 px-2 text-sm font-semibold">안타</th>
+                  <th className="py-3 px-2 text-sm font-semibold">1루타</th>
+                  <th className="py-3 px-2 text-sm font-semibold">2루타</th>
+                  <th className="py-3 px-2 text-sm font-semibold">3루타</th>
+                  <th className="py-3 px-2 text-sm font-semibold">홈런</th>
+                  <th className="py-3 px-2 text-sm font-semibold">득점</th>
+                  <th className="py-3 px-2 text-sm font-semibold">타점</th>
+                  <th className="py-3 px-2 text-sm font-semibold">루타</th>
+                  <th className="py-3 px-2 text-sm font-semibold">도루</th>
+                  <th className="py-3 px-2 text-sm font-semibold">도루실패</th>
+                  <th className="py-3 px-2 text-sm font-semibold">볼넷</th>
+                  <th className="py-3 px-2 text-sm font-semibold">삼진</th>
                 </tr>
               </thead>
               <tbody>
                 {batterStats && batterStats.seasonStats.length > 0 ? (
-                  batterStats.seasonStats.map((stat) => (
-                    <tr
-                      key={stat.season}
-                      className="border-b border-gray-800 hover:bg-red-950/20 transition-colors"
-                    >
-                      <td className="py-2 px-4 font-bold text-red-400">
-                        {stat.season}
-                      </td>
-                      <td className="py-2 px-4">{stat.games}</td>
-                      <td className="py-2 px-4">
-                        {Number(stat.avg).toFixed(3)}
-                      </td>
-                      <td className="py-2 px-4">{stat.homeruns}</td>
-                      <td className="py-2 px-4">{stat.rbi}</td>
-                      <td className="py-2 px-4">{stat.stolenbases}</td>
-                    </tr>
-                  ))
+                  batterStats.seasonStats.map((stat) => {
+                    const avg = stat.atbats
+                      ? (stat.hits / stat.atbats).toFixed(3)
+                      : '0.000';
+                    const onbase =
+                      stat.atbats +
+                      stat.walks +
+                      stat.hitbypitch +
+                      stat.sacrificeflies;
+                    const onbasePercentage = onbase
+                      ? (
+                          (stat.hits + stat.walks + stat.hitbypitch) /
+                          onbase
+                        ).toFixed(3)
+                      : '0.000';
+                    const sluggingPercentage = stat.atbats
+                      ? (stat.totalbases / stat.atbats).toFixed(3)
+                      : '0.000';
+
+                    return (
+                      <tr
+                        key={stat.season}
+                        className="border-b border-gray-800 hover:bg-red-950/20 transition-colors"
+                      >
+                        <td className="py-3 px-2 font-bold text-red-400 sticky left-0 bg-black/80">
+                          {stat.season}
+                        </td>
+                        <td className="py-3 px-2">{stat.games || 0}</td>
+                        <td className="py-3 px-2 font-semibold">{avg}</td>
+                        <td className="py-3 px-2 font-semibold">
+                          {onbasePercentage}
+                        </td>
+                        <td className="py-3 px-2 font-semibold">
+                          {sluggingPercentage}
+                        </td>
+                        <td className="py-3 px-2">
+                          {stat.plateappearances || 0}
+                        </td>
+                        <td className="py-3 px-2">{stat.atbats || 0}</td>
+                        <td className="py-3 px-2 font-semibold">
+                          {stat.hits || 0}
+                        </td>
+                        <td className="py-3 px-2">{stat.singles || 0}</td>
+                        <td className="py-3 px-2">{stat.doubles || 0}</td>
+                        <td className="py-3 px-2">{stat.triples || 0}</td>
+                        <td className="py-3 px-2 font-semibold">
+                          {stat.homeruns || 0}
+                        </td>
+                        <td className="py-3 px-2">{stat.runs || 0}</td>
+                        <td className="py-3 px-2 font-semibold">
+                          {stat.rbi || 0}
+                        </td>
+                        <td className="py-3 px-2">{stat.totalbases || 0}</td>
+                        <td className="py-3 px-2">{stat.stolenbases || 0}</td>
+                        <td className="py-3 px-2">
+                          {stat.caughtstealing || 0}
+                        </td>
+                        <td className="py-3 px-2">{stat.walks || 0}</td>
+                        <td className="py-3 px-2">{stat.strikeouts || 0}</td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
-                    <td colSpan={6} className="py-8 text-gray-400">
+                    <td colSpan={19} className="py-8 text-gray-400">
                       연도별 기록이 없습니다.
                     </td>
                   </tr>
@@ -225,55 +285,76 @@ export default async function PlayerDetailPage({
             </table>
           </div>
         </section>
-        {/* Career Stats summary (optional) */}
+
+        {/* Career Stats Detailed Table */}
         {batterStats && batterStats.careerStats && (
-          <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8 mb-8">
-            <h2 className="text-xl font-bold mb-4 text-center text-red-500">
-              통산 기록 요약
+          <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
+            <h2 className="text-2xl font-bold mb-6 text-center text-red-500">
+              통산 기록
             </h2>
-            <div className="flex flex-wrap justify-center gap-8 text-lg">
-              <div>
-                경기:{' '}
-                <span className="font-bold text-red-400">
-                  {batterStats.careerStats.games}
-                </span>
-              </div>
-              <div>
-                타율:{' '}
-                <span className="font-bold text-red-400">
-                  {batterStats.careerStats.avg}
-                </span>
-              </div>
-              <div>
-                홈런:{' '}
-                <span className="font-bold text-red-400">
-                  {batterStats.careerStats.homeruns}
-                </span>
-              </div>
-              <div>
-                타점:{' '}
-                <span className="font-bold text-red-400">
-                  {batterStats.careerStats.rbi}
-                </span>
-              </div>
-              <div>
-                도루:{' '}
-                <span className="font-bold text-red-400">
-                  {batterStats.careerStats.stolenbases}
-                </span>
-              </div>
-              <div>
-                출루율:{' '}
-                <span className="font-bold text-red-400">
-                  {batterStats.careerStats.onbasepercentage}
-                </span>
-              </div>
-              <div>
-                장타율:{' '}
-                <span className="font-bold text-red-400">
-                  {batterStats.careerStats.sluggingpercentage}
-                </span>
-              </div>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full text-center min-w-[800px]">
+                <thead>
+                  <tr className="border-b border-gray-700 text-gray-300">
+                    <th className="py-3 px-3 text-sm font-semibold">경기</th>
+                    <th className="py-3 px-3 text-sm font-semibold">타율</th>
+                    <th className="py-3 px-3 text-sm font-semibold">출루율</th>
+                    <th className="py-3 px-3 text-sm font-semibold">장타율</th>
+                    <th className="py-3 px-3 text-sm font-semibold">타석</th>
+                    <th className="py-3 px-3 text-sm font-semibold">타수</th>
+                    <th className="py-3 px-3 text-sm font-semibold">안타</th>
+                    <th className="py-3 px-3 text-sm font-semibold">홈런</th>
+                    <th className="py-3 px-3 text-sm font-semibold">득점</th>
+                    <th className="py-3 px-3 text-sm font-semibold">타점</th>
+                    <th className="py-3 px-3 text-sm font-semibold">도루</th>
+                    <th className="py-3 px-3 text-sm font-semibold">볼넷</th>
+                    <th className="py-3 px-3 text-sm font-semibold">삼진</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-gray-800">
+                    <td className="py-4 px-3 font-bold text-white">
+                      {batterStats.careerStats.games}
+                    </td>
+                    <td className="py-4 px-3 font-bold text-white text-lg">
+                      {batterStats.careerStats.avg}
+                    </td>
+                    <td className="py-4 px-3 font-bold text-white text-lg">
+                      {batterStats.careerStats.onbasepercentage}
+                    </td>
+                    <td className="py-4 px-3 font-bold text-white text-lg">
+                      {batterStats.careerStats.sluggingpercentage}
+                    </td>
+                    <td className="py-4 px-3 font-semibold">
+                      {batterStats.careerStats.plateappearances}
+                    </td>
+                    <td className="py-4 px-3 font-semibold">
+                      {batterStats.careerStats.atbats}
+                    </td>
+                    <td className="py-4 px-3 font-bold text-white">
+                      {batterStats.careerStats.hits}
+                    </td>
+                    <td className="py-4 px-3 font-bold text-white text-lg">
+                      {batterStats.careerStats.homeruns}
+                    </td>
+                    <td className="py-4 px-3 font-semibold">
+                      {batterStats.careerStats.runs}
+                    </td>
+                    <td className="py-4 px-3 font-bold text-white text-lg">
+                      {batterStats.careerStats.rbi}
+                    </td>
+                    <td className="py-4 px-3 font-semibold">
+                      {batterStats.careerStats.stolenbases}
+                    </td>
+                    <td className="py-4 px-3 font-semibold">
+                      {batterStats.careerStats.walks}
+                    </td>
+                    <td className="py-4 px-3 font-semibold">
+                      {batterStats.careerStats.strikeouts}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </section>
         )}
