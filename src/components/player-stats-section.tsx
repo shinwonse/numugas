@@ -1,34 +1,33 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useBattingStats2025 } from '@/hooks/use-batting-stats';
-import { usePitchingStats2025 } from '@/hooks/use-pitching-stats';
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import StatsTabs from './stats-tabs';
 
-// 타자 기록 데이터 제거
-// const battingStats = [...];
+interface Player {
+  rank: number;
+  name: string;
+  team: string;
+  value: number;
+}
 
-// 투수 기록 데이터 제거
-// const pitchingStats = [...];
+interface Stat {
+  category: string;
+  players: Player[];
+}
 
-export function PlayerStatsSection() {
+interface PlayerStatsSectionProps {
+  battingStats: Stat[];
+  pitchingStats: Stat[];
+}
+
+export function PlayerStatsSection({
+  battingStats,
+  pitchingStats,
+}: PlayerStatsSectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
-
-  // 2025시즌 타자 기록 fetch (커스텀 훅 사용)
-  const {
-    battingStats,
-    loading: battingLoading,
-    error: battingError,
-  } = useBattingStats2025();
-  // 2025시즌 투수 기록 fetch (커스텀 훅 사용)
-  const {
-    pitchingStats,
-    loading: pitchingLoading,
-    error: pitchingError,
-  } = usePitchingStats2025();
 
   // 탭 상태 관리
   const [currentTab, setCurrentTab] = useState<'batting' | 'pitching'>(
@@ -56,7 +55,7 @@ export function PlayerStatsSection() {
             transition={{ duration: 0.6 }}
             className="text-3xl md:text-5xl font-bold mb-4 font-display"
           >
-            <span className="text-red-600">2025시즌 주요</span> 기록
+            <span className="text-red-600">2025 시즌</span> 선수 기록
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -64,7 +63,7 @@ export function PlayerStatsSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            주요 지표별 상위 선수들의 기록을 확인하세요.
+            2025 시즌 타자와 투수의 주요 기록을 확인하세요.
           </motion.p>
         </div>
         <motion.div
@@ -78,149 +77,122 @@ export function PlayerStatsSection() {
             onTabClick={(key) => setCurrentTab(key as 'batting' | 'pitching')}
             className="mb-8"
           />
-          {currentTab === 'batting' &&
-            (battingLoading ? (
-              <div className="text-center py-12 text-gray-400">
-                기록을 불러오는 중...
-              </div>
-            ) : battingError ? (
-              <div className="text-center py-12 text-red-500">
-                {battingError}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {battingStats.map((stat, statIndex) => (
-                  <motion.div
-                    key={stat.category}
-                    initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{
-                      duration: 0.7,
-                      delay: statIndex * 0.12,
-                      ease: 'backOut',
-                    }}
-                    viewport={{ once: true, amount: 0.2 }}
-                  >
-                    <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
-                      <CardHeader className="bg-transparent pb-2">
-                        <CardTitle className="text-xl">
-                          {stat.category}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-0">
-                        {stat.players.map((player, playerIndex) => (
-                          <div
-                            key={player.rank}
-                            className={`flex items-center justify-between p-4 ${
-                              playerIndex !== stat.players.length - 1
-                                ? 'border-b border-gray-800'
-                                : ''
-                            } ${player.team === 'RED DRAGONS' ? 'bg-red-950/30' : ''}`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                                  player.rank === 1
-                                    ? 'bg-yellow-500'
-                                    : player.rank === 2
-                                      ? 'bg-gray-400'
-                                      : 'bg-amber-700'
-                                } text-black font-bold text-sm`}
-                              >
-                                {player.rank}
-                              </div>
-                              <div>
-                                <p className="font-medium">{player.name}</p>
-                                <p className="text-xs text-gray-400">
-                                  {player.team}
-                                </p>
-                              </div>
+          {currentTab === 'batting' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {battingStats.map((stat, statIndex) => (
+                <motion.div
+                  key={stat.category}
+                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    duration: 0.7,
+                    delay: statIndex * 0.12,
+                    ease: 'backOut',
+                  }}
+                  viewport={{ once: true, amount: 0.2 }}
+                >
+                  <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
+                    <CardHeader className="bg-transparent pb-2">
+                      <CardTitle className="text-xl">{stat.category}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      {stat.players.map((player, playerIndex) => (
+                        <div
+                          key={player.rank}
+                          className={`flex items-center justify-between p-4 ${
+                            playerIndex !== stat.players.length - 1
+                              ? 'border-b border-gray-800'
+                              : ''
+                          } ${player.team === 'RED DRAGONS' ? 'bg-red-950/30' : ''}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                                player.rank === 1
+                                  ? 'bg-yellow-500'
+                                  : player.rank === 2
+                                    ? 'bg-gray-400'
+                                    : 'bg-amber-700'
+                              } text-black font-bold text-sm`}
+                            >
+                              {player.rank}
                             </div>
-                            <div className="text-xl font-bold text-red-500">
-                              {stat.category === '타율'
-                                ? player.value.toFixed(3)
-                                : player.value}
+                            <div>
+                              <p className="font-medium">{player.name}</p>
+                              <p className="text-xs text-gray-400">
+                                {player.team}
+                              </p>
                             </div>
                           </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            ))}
-          {currentTab === 'pitching' &&
-            (pitchingLoading ? (
-              <div className="text-center py-12 text-gray-400">
-                기록을 불러오는 중...
-              </div>
-            ) : pitchingError ? (
-              <div className="text-center py-12 text-red-500">
-                {pitchingError}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {pitchingStats.map((stat, statIndex) => (
-                  <motion.div
-                    key={stat.category}
-                    initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{
-                      duration: 0.7,
-                      delay: statIndex * 0.12,
-                      ease: 'backOut',
-                    }}
-                    viewport={{ once: true, amount: 0.2 }}
-                  >
-                    <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
-                      <CardHeader className="bg-transparent pb-2">
-                        <CardTitle className="text-xl">
-                          {stat.category}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-0">
-                        {stat.players.map((player, playerIndex) => (
-                          <div
-                            key={player.rank}
-                            className={`flex items-center justify-between p-4 ${
-                              playerIndex !== stat.players.length - 1
-                                ? 'border-b border-gray-800'
-                                : ''
-                            } ${player.team === 'RED DRAGONS' ? 'bg-red-950/30' : ''}`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                                  player.rank === 1
-                                    ? 'bg-yellow-500'
-                                    : player.rank === 2
-                                      ? 'bg-gray-400'
-                                      : 'bg-amber-700'
-                                } text-black font-bold text-sm`}
-                              >
-                                {player.rank}
-                              </div>
-                              <div>
-                                <p className="font-medium">{player.name}</p>
-                                <p className="text-xs text-gray-400">
-                                  {player.team}
-                                </p>
-                              </div>
+                          <div className="text-right">
+                            <p className="font-bold">{player.value}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
+          {currentTab === 'pitching' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {pitchingStats.map((stat, statIndex) => (
+                <motion.div
+                  key={stat.category}
+                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    duration: 0.7,
+                    delay: statIndex * 0.12,
+                    ease: 'backOut',
+                  }}
+                  viewport={{ once: true, amount: 0.2 }}
+                >
+                  <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
+                    <CardHeader className="bg-transparent pb-2">
+                      <CardTitle className="text-xl">{stat.category}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      {stat.players.map((player, playerIndex) => (
+                        <div
+                          key={player.rank}
+                          className={`flex items-center justify-between p-4 ${
+                            playerIndex !== stat.players.length - 1
+                              ? 'border-b border-gray-800'
+                              : ''
+                          } ${player.team === 'RED DRAGONS' ? 'bg-red-950/30' : ''}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                                player.rank === 1
+                                  ? 'bg-yellow-500'
+                                  : player.rank === 2
+                                    ? 'bg-gray-400'
+                                    : 'bg-amber-700'
+                              } text-black font-bold text-sm`}
+                            >
+                              {player.rank}
                             </div>
-                            <div className="text-xl font-bold text-red-500">
-                              {typeof player.value === 'number' &&
-                              player.value % 1 === 0
-                                ? player.value
-                                : player.value.toFixed(2)}
+                            <div>
+                              <p className="font-medium">{player.name}</p>
+                              <p className="text-xs text-gray-400">
+                                {player.team}
+                              </p>
                             </div>
                           </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            ))}
+                          <div className="text-right">
+                            <p className="font-bold">{player.value}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </motion.div>
       </div>
     </motion.section>

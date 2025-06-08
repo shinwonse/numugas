@@ -7,73 +7,81 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { useTeamCareerStats } from '@/hooks/use-team-career-stats';
-import { useTeamTotalStats } from '@/hooks/use-team-total-stats';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export function StatsSection() {
+interface StatsSectionProps {
+  teamTotalStats: {
+    win_rate: string;
+    win: number;
+    lose: number;
+    draw: number;
+  };
+  teamCareerStats: {
+    homeruns: number;
+    totalbases: number;
+    hits: number;
+    strikeouts: number;
+  };
+}
+
+export function StatsSection({
+  teamTotalStats,
+  teamCareerStats,
+}: StatsSectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
-  const { data } = useTeamTotalStats();
-  const { data: careerStats } = useTeamCareerStats();
 
-  const teamStats = data
-    ? [
-        {
-          name: '승률',
-          value: data.win_rate,
-          description: '',
-          icon: '🏆',
-        },
-        {
-          name: '승',
-          value: data.win,
-          description: '',
-          icon: '🟢',
-        },
-        {
-          name: '패',
-          value: data.lose,
-          description: '',
-          icon: '🔴',
-        },
-        {
-          name: '무',
-          value: data.draw,
-          description: '',
-          icon: '⚪️',
-        },
-        ...(careerStats
-          ? [
-              {
-                name: '팀통산홈런',
-                value: careerStats.homeruns,
-                description: '',
-                icon: '💣',
-              },
-              {
-                name: '팀통산루타',
-                value: careerStats.totalbases,
-                description: '',
-                icon: '🦶',
-              },
-              {
-                name: '팀통산안타',
-                value: careerStats.hits,
-                description: '',
-                icon: '🥎',
-              },
-              {
-                name: '팀통산탈삼진',
-                value: careerStats.strikeouts,
-                description: '',
-                icon: '🔥',
-              },
-            ]
-          : []),
-      ]
-    : [];
+  const teamStats = [
+    {
+      name: '승률',
+      value: teamTotalStats.win_rate,
+      description: '',
+      icon: '🏆',
+    },
+    {
+      name: '승',
+      value: teamTotalStats.win,
+      description: '',
+      icon: '🟢',
+    },
+    {
+      name: '패',
+      value: teamTotalStats.lose,
+      description: '',
+      icon: '🔴',
+    },
+    {
+      name: '무',
+      value: teamTotalStats.draw,
+      description: '',
+      icon: '⚪️',
+    },
+    {
+      name: '팀통산홈런',
+      value: teamCareerStats.homeruns,
+      description: '',
+      icon: '💣',
+    },
+    {
+      name: '팀통산루타',
+      value: teamCareerStats.totalbases,
+      description: '',
+      icon: '🦶',
+    },
+    {
+      name: '팀통산안타',
+      value: teamCareerStats.hits,
+      description: '',
+      icon: '🥎',
+    },
+    {
+      name: '팀통산탈삼진',
+      value: teamCareerStats.strikeouts,
+      description: '',
+      icon: '🔥',
+    },
+  ];
 
   return (
     <motion.section
@@ -103,7 +111,6 @@ export function StatsSection() {
             담장NUMUGAS의 통산 주요 성적입니다.
           </motion.p>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {teamStats.map((stat, index) => (
             <motion.div
@@ -118,27 +125,19 @@ export function StatsSection() {
               viewport={{ once: true, amount: 0.2 }}
             >
               <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-2xl flex items-center gap-2">
-                    <span className="text-3xl">{stat.icon}</span>
-                    {stat.name}
-                  </CardTitle>
-                  <CardDescription>{stat.description}</CardDescription>
+                <CardHeader className="bg-transparent pb-2">
+                  <CardTitle className="text-xl">{stat.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-4xl font-bold text-red-500">
-                    {stat.name === '승률'
-                      ? `${
-                          typeof stat.value === 'number'
-                            ? stat.value % 1 === 0
-                              ? stat.value
-                              : stat.value.toFixed(1)
-                            : stat.value
-                        }%`
-                      : typeof stat.value === 'number' && stat.value % 1 === 0
-                        ? stat.value
-                        : stat.value.toFixed(1)}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl font-bold">{stat.value}</div>
+                    <div className="text-2xl">{stat.icon}</div>
+                  </div>
+                  {stat.description && (
+                    <CardDescription className="mt-2">
+                      {stat.description}
+                    </CardDescription>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
