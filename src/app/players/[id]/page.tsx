@@ -14,25 +14,24 @@ interface Player {
   stats: Record<string, number>;
 }
 
-// Mocked yearly stats for demonstration
-const MOCK_YEARLY_STATS = [
-  {
-    year: 2023,
-    games: 20,
-    avg: 0.312,
-    hr: 5,
-    rbi: 22,
-    sb: 7,
-  },
-  {
-    year: 2024,
-    games: 18,
-    avg: 0.298,
-    hr: 3,
-    rbi: 18,
-    sb: 5,
-  },
-];
+interface BatterCareerApiResponse {
+  seasonStats: any[];
+  careerStats: Record<string, any>;
+}
+
+async function fetchBatterCareerStats(
+  number: number,
+): Promise<BatterCareerApiResponse | null> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/batter-career/${number}`,
+    );
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
 
 export default async function PlayerDetailPage({
   params,
@@ -68,6 +67,9 @@ export default async function PlayerDetailPage({
     stats: {},
   };
 
+  // Fetch batter career stats from the new API
+  const batterStats = await fetchBatterCareerStats(player.number);
+
   return (
     <main className="min-h-screen bg-black text-white py-8 md:py-16 px-4 sm:px-8 md:px-16 lg:px-32">
       {/* Responsive Player Header: full width, flex on large screens */}
@@ -94,7 +96,6 @@ export default async function PlayerDetailPage({
           </div>
         </div>
       </section>
-      {/* Main content container for stats */}
       <div className="w-full">
         {/* Yearly Stats Table */}
         <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8 mb-8">
@@ -114,28 +115,92 @@ export default async function PlayerDetailPage({
                 </tr>
               </thead>
               <tbody>
-                {MOCK_YEARLY_STATS.map((stat) => (
-                  <tr
-                    key={stat.year}
-                    className="border-b border-gray-800 hover:bg-red-950/20 transition-colors"
-                  >
-                    <td className="py-2 px-4 font-bold text-red-400">
-                      {stat.year}
+                {batterStats && batterStats.seasonStats.length > 0 ? (
+                  batterStats.seasonStats.map((stat) => (
+                    <tr
+                      key={stat.season}
+                      className="border-b border-gray-800 hover:bg-red-950/20 transition-colors"
+                    >
+                      <td className="py-2 px-4 font-bold text-red-400">
+                        {stat.season}
+                      </td>
+                      <td className="py-2 px-4">{stat.games}</td>
+                      <td className="py-2 px-4">
+                        {Number(stat.avg).toFixed(3)}
+                      </td>
+                      <td className="py-2 px-4">{stat.homeruns}</td>
+                      <td className="py-2 px-4">{stat.rbi}</td>
+                      <td className="py-2 px-4">{stat.stolenbases}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-gray-400">
+                      연도별 기록이 없습니다.
                     </td>
-                    <td className="py-2 px-4">{stat.games}</td>
-                    <td className="py-2 px-4">{stat.avg.toFixed(3)}</td>
-                    <td className="py-2 px-4">{stat.hr}</td>
-                    <td className="py-2 px-4">{stat.rbi}</td>
-                    <td className="py-2 px-4">{stat.sb}</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
         </section>
-        <p className="mt-8 text-gray-400 text-center">
-          (이 페이지는 임시입니다. 실제 기록 데이터 연동 예정)
-        </p>
+        {/* Career Stats summary (optional) */}
+        {batterStats && batterStats.careerStats && (
+          <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8 mb-8">
+            <h2 className="text-xl font-bold mb-4 text-center text-red-500">
+              통산 기록 요약
+            </h2>
+            <div className="flex flex-wrap justify-center gap-8 text-lg">
+              <div>
+                경기:{' '}
+                <span className="font-bold text-red-400">
+                  {batterStats.careerStats.games}
+                </span>
+              </div>
+              <div>
+                타율:{' '}
+                <span className="font-bold text-red-400">
+                  {batterStats.careerStats.avg}
+                </span>
+              </div>
+              <div>
+                홈런:{' '}
+                <span className="font-bold text-red-400">
+                  {batterStats.careerStats.homeruns}
+                </span>
+              </div>
+              <div>
+                타점:{' '}
+                <span className="font-bold text-red-400">
+                  {batterStats.careerStats.rbi}
+                </span>
+              </div>
+              <div>
+                도루:{' '}
+                <span className="font-bold text-red-400">
+                  {batterStats.careerStats.stolenbases}
+                </span>
+              </div>
+              <div>
+                출루율:{' '}
+                <span className="font-bold text-red-400">
+                  {batterStats.careerStats.onbasepercentage}
+                </span>
+              </div>
+              <div>
+                장타율:{' '}
+                <span className="font-bold text-red-400">
+                  {batterStats.careerStats.sluggingpercentage}
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
+        {!batterStats && (
+          <p className="mt-8 text-gray-400 text-center">
+            기록 데이터를 불러오는 데 실패했습니다.
+          </p>
+        )}
       </div>
     </main>
   );
