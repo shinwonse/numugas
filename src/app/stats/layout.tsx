@@ -3,5 +3,5 @@ export default function StatsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="pt-8 px-2">{children}</div>;
+  return <div className="bg-black px-2">{children}</div>;
 }

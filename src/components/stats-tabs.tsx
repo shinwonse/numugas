@@ -75,7 +75,7 @@ export default function StatsTabs({
   return (
     <div
       className={cn(
-        'w-full max-w-[280px] sm:max-w-md mx-auto grid h-12 rounded-xl mb-8 bg-zinc-900 border border-zinc-800 shadow-lg',
+        'w-full max-w-[280px] sm:max-w-md mx-auto grid h-12 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg',
         colClass,
         className,
       )}

@@ -54,7 +54,7 @@ export default async function StatsTypeSeasonPage({
   }));
 
   return (
-    <main className="flex flex-col gap-0 bg-black min-h-screen">
+    <main className="flex flex-col gap-0 py-8 min-h-screen">
       <div className="w-full flex justify-center">
         <StatsTabs tabs={tabList} current={type} />
       </div>
