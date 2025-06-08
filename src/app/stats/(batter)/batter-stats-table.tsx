@@ -55,7 +55,9 @@ export default function BatterStatsTable({ season }: { season: string }) {
     season === '통산' ? undefined : season,
   );
   const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState<'games' | string>('games');
+  const [sortBy, setSortBy] = useState<'plateappearances' | string>(
+    'plateappearances',
+  );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const router = useRouter();
 
