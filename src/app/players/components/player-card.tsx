@@ -17,7 +17,7 @@ interface PlayerCardProps {
 export default function PlayerCard({ player }: PlayerCardProps) {
   return (
     <Link
-      href={`/players/${player.id}`}
+      href={`/players/${player.number}`}
       className="block group focus:outline-none focus:ring-2 focus:ring-red-500 rounded-2xl"
     >
       <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between min-h-[340px] group-hover:shadow-lg transition-shadow">

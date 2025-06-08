@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 
 interface PlayerDetailPageProps {
-  params: { id: string };
+  params: { number: string };
 }
 
 interface Player {
@@ -16,19 +16,100 @@ interface Player {
 
 interface BatterCareerApiResponse {
   seasonStats: any[];
-  careerStats: Record<string, any>;
+  careerStats: Record<string, any> | null;
 }
 
 async function fetchBatterCareerStats(
   number: number,
 ): Promise<BatterCareerApiResponse | null> {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/batter-career/${number}`,
-    );
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
+    console.log('Fetching batter stats for player number:', number);
+
+    // 1. 연도별 기록
+    const { data: seasonStats, error: seasonError } = await supabase
+      .from('batter_stats')
+      .select('*')
+      .eq('back_number', number)
+      .order('season', { ascending: true });
+
+    console.log('Season stats result:', {
+      data: seasonStats,
+      error: seasonError,
+      length: seasonStats?.length || 0,
+    });
+
+    if (seasonError) {
+      console.error('Season stats error:', seasonError);
+      return null;
+    }
+
+    if (!seasonStats || seasonStats.length === 0) {
+      console.log('No season stats found for player number:', number);
+      return {
+        seasonStats: [],
+        careerStats: null,
+      };
+    }
+
+    // 2. 통산 기록 집계
+    const sumFields = [
+      'games',
+      'plateappearances',
+      'atbats',
+      'runs',
+      'hits',
+      'singles',
+      'doubles',
+      'triples',
+      'homeruns',
+      'totalbases',
+      'rbi',
+      'stolenbases',
+      'caughtstealing',
+      'sacrificehits',
+      'sacrificeflies',
+      'walks',
+      'intentionalwalks',
+      'hitbypitch',
+      'strikeouts',
+      'doubleplays',
+    ];
+
+    const total: Record<string, number> = {};
+    for (const field of sumFields) {
+      total[field] = seasonStats.reduce(
+        (acc, cur) => acc + Number(cur[field] ?? 0),
+        0,
+      );
+    }
+
+    // 타율, 출루율, 장타율 계산
+    const avg = total['atbats'] ? total['hits'] / total['atbats'] : 0;
+    const onbase =
+      total['atbats'] +
+      total['walks'] +
+      total['hitbypitch'] +
+      total['sacrificeflies'];
+    const onbasepercentage = onbase
+      ? (total['hits'] + total['walks'] + total['hitbypitch']) / onbase
+      : 0;
+    const sluggingpercentage = total['atbats']
+      ? total['totalbases'] / total['atbats']
+      : 0;
+
+    const careerStats = {
+      number: number,
+      name: seasonStats[0]?.name || '',
+      ...total,
+      avg: avg.toFixed(3),
+      onbasepercentage: onbasepercentage.toFixed(3),
+      sluggingpercentage: sluggingpercentage.toFixed(3),
+    };
+
+    console.log('Career stats calculated:', careerStats);
+    return { seasonStats, careerStats };
+  } catch (error) {
+    console.error('Fetch error:', error);
     return null;
   }
 }
@@ -36,12 +117,12 @@ async function fetchBatterCareerStats(
 export default async function PlayerDetailPage({
   params,
 }: PlayerDetailPageProps) {
-  const { id } = params;
+  const { number } = await params;
   // Fetch player data from supabase
   const { data, error } = await supabase
     .from('players')
     .select('id, name, number, position, photo_url')
-    .eq('id', id)
+    .eq('number', number)
     .single();
 
   if (error || !data) {
