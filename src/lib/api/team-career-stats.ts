@@ -8,30 +8,53 @@ export type TeamCareerStats = {
 };
 
 export async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
-  const { data: hitterData, error: hitterError } = await supabase
-    .from('batter_stats')
-    .select('homeruns, totalbases, hits');
-  if (hitterError) throw hitterError;
+  try {
+    const { data: hitterData, error: hitterError } = await supabase
+      .from('batter_stats')
+      .select('homeruns, totalbases, hits');
 
-  const { data: pitcherData, error: pitcherError } = await supabase
-    .from('pitcher_stats')
-    .select('strikeouts');
-  if (pitcherError) throw pitcherError;
+    if (hitterError) {
+      console.error('Supabase error fetching hitter stats:', hitterError);
+      throw hitterError;
+    }
 
-  const hitterStats = hitterData.reduce(
-    (acc, cur) => {
-      acc.homeruns += cur.homeruns;
-      acc.totalbases += cur.totalbases;
-      acc.hits += cur.hits;
-      return acc;
-    },
-    { homeruns: 0, totalbases: 0, hits: 0 },
-  );
+    const { data: pitcherData, error: pitcherError } = await supabase
+      .from('pitcher_stats')
+      .select('strikeouts');
 
-  const strikeouts = pitcherData.reduce((acc, cur) => acc + cur.strikeouts, 0);
+    if (pitcherError) {
+      console.error('Supabase error fetching pitcher stats:', pitcherError);
+      throw pitcherError;
+    }
 
-  return {
-    ...hitterStats,
-    strikeouts,
-  };
+    const hitterStats = (hitterData || []).reduce(
+      (acc, cur) => {
+        acc.homeruns += cur.homeruns || 0;
+        acc.totalbases += cur.totalbases || 0;
+        acc.hits += cur.hits || 0;
+        return acc;
+      },
+      { homeruns: 0, totalbases: 0, hits: 0 },
+    );
+
+    const strikeouts = (pitcherData || []).reduce(
+      (acc, cur) => acc + (cur.strikeouts || 0),
+      0,
+    );
+
+    return {
+      ...hitterStats,
+      strikeouts,
+    };
+  } catch (error) {
+    console.error('Failed to fetch team career stats:', error);
+
+    // Return fallback data
+    return {
+      homeruns: 0,
+      totalbases: 0,
+      hits: 0,
+      strikeouts: 0,
+    };
+  }
 }

@@ -48,45 +48,68 @@ interface HomeProps {
   pitchingCareerStats: Stat[];
 }
 
-// 페이지를 정적으로 생성하기 위한 설정
-export const dynamic = 'force-static';
-export const revalidate = 86400; // 24시간마다 재생성
+// Remove force-static and use dynamic rendering with caching
+export const revalidate = 3600; // Cache for 1 hour
 
-// 정적 데이터를 가져오는 함수
-async function getStaticData(): Promise<HomeProps> {
-  const [
-    teamTotalStats,
-    teamCareerStats,
-    battingStats2025,
-    pitchingStats2025,
-    battingCareerStats,
-    pitchingCareerStats,
-  ] = await Promise.all([
-    fetchTeamTotalStats(),
-    fetchTeamCareerStats(),
-    fetchBattingStats2025(),
-    fetchPitchingStats2025(),
-    fetchBattingCareerStats(),
-    fetchPitchingCareerStats(),
-  ]);
+// 데이터를 가져오는 함수 with error handling
+async function getHomeData(): Promise<HomeProps> {
+  try {
+    const [
+      teamTotalStats,
+      teamCareerStats,
+      battingStats2025,
+      pitchingStats2025,
+      battingCareerStats,
+      pitchingCareerStats,
+    ] = await Promise.all([
+      fetchTeamTotalStats(),
+      fetchTeamCareerStats(),
+      fetchBattingStats2025(),
+      fetchPitchingStats2025(),
+      fetchBattingCareerStats(),
+      fetchPitchingCareerStats(),
+    ]);
 
-  return {
-    teamTotalStats: {
-      win: teamTotalStats.win,
-      lose: teamTotalStats.lose,
-      draw: teamTotalStats.draw,
-      win_rate: teamTotalStats.win_rate.toFixed(1),
-    },
-    teamCareerStats,
-    battingStats2025,
-    pitchingStats2025,
-    battingCareerStats,
-    pitchingCareerStats,
-  };
+    return {
+      teamTotalStats: {
+        win: teamTotalStats.win,
+        lose: teamTotalStats.lose,
+        draw: teamTotalStats.draw,
+        win_rate: teamTotalStats.win_rate.toFixed(1),
+      },
+      teamCareerStats,
+      battingStats2025,
+      pitchingStats2025,
+      battingCareerStats,
+      pitchingCareerStats,
+    };
+  } catch (error) {
+    console.error('Failed to fetch home data:', error);
+
+    // Return fallback data structure
+    return {
+      teamTotalStats: {
+        win: 0,
+        lose: 0,
+        draw: 0,
+        win_rate: '0.0',
+      },
+      teamCareerStats: {
+        homeruns: 0,
+        totalbases: 0,
+        hits: 0,
+        strikeouts: 0,
+      },
+      battingStats2025: [],
+      pitchingStats2025: [],
+      battingCareerStats: [],
+      pitchingCareerStats: [],
+    };
+  }
 }
 
 export default async function Home() {
-  const data = await getStaticData();
+  const data = await getHomeData();
 
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
