@@ -1,3 +1,4 @@
+import { createClient } from '@supabase/supabase-js';
 import { useQuery } from '@tanstack/react-query';
 
 export type TeamCareerStats = {
@@ -8,37 +9,37 @@ export type TeamCareerStats = {
 };
 
 async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
-  // Fetch hitter stats
-  const hitterRes = await fetch('/api/batter-career');
-  if (!hitterRes.ok) throw new Error('Failed to fetch hitter career stats');
-  const { careerStats: hitterStats } = await hitterRes.json();
-
-  // Fetch pitcher stats
-  const pitcherRes = await fetch('/api/pitcher-career');
-  if (!pitcherRes.ok) throw new Error('Failed to fetch pitcher career stats');
-  const { careerStats: pitcherStats } = await pitcherRes.json();
-
-  // Aggregate hitter stats
-  const homeruns = hitterStats.reduce(
-    (acc: number, cur: any) => acc + Number(cur.homeruns ?? 0),
-    0,
-  );
-  const totalbases = hitterStats.reduce(
-    (acc: number, cur: any) => acc + Number(cur.totalbases ?? 0),
-    0,
-  );
-  const hits = hitterStats.reduce(
-    (acc: number, cur: any) => acc + Number(cur.hits ?? 0),
-    0,
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 
-  // Aggregate pitcher strikeouts
-  const strikeouts = pitcherStats.reduce(
-    (acc: number, cur: any) => acc + Number(cur.strikeouts ?? 0),
-    0,
+  const { data: hitterData, error: hitterError } = await supabase
+    .from('batter_stats')
+    .select('homeruns, totalbases, hits');
+  if (hitterError) throw hitterError;
+
+  const { data: pitcherData, error: pitcherError } = await supabase
+    .from('pitcher_stats')
+    .select('strikeouts');
+  if (pitcherError) throw pitcherError;
+
+  const hitterStats = hitterData.reduce(
+    (acc, cur) => {
+      acc.homeruns += cur.homeruns;
+      acc.totalbases += cur.totalbases;
+      acc.hits += cur.hits;
+      return acc;
+    },
+    { homeruns: 0, totalbases: 0, hits: 0 },
   );
 
-  return { homeruns, totalbases, hits, strikeouts };
+  const strikeouts = pitcherData.reduce((acc, cur) => acc + cur.strikeouts, 0);
+
+  return {
+    ...hitterStats,
+    strikeouts,
+  };
 }
 
 export function useTeamCareerStats() {
