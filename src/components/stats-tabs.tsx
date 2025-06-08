@@ -49,7 +49,7 @@ function StatsTabButton({
       href={tab.href ?? '#'}
       onClick={onClick}
       className={cn(
-        'flex items-center justify-center h-full w-full text-center font-bold text-lg transition-all duration-150 select-none rounded-xl',
+        'flex items-center justify-center h-10 sm:h-full w-full text-center font-bold text-base sm:text-lg transition-all duration-150 select-none rounded-xl whitespace-nowrap px-3 sm:px-4',
         isActive
           ? 'bg-red-600 text-white shadow-md scale-105'
           : 'bg-zinc-900 text-zinc-400 hover:text-red-400',
@@ -75,7 +75,7 @@ export default function StatsTabs({
   return (
     <div
       className={cn(
-        'w-full max-w-[280px] sm:max-w-md mx-auto grid h-12 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg',
+        'w-full max-w-[320px] sm:max-w-md mx-auto grid h-10 sm:h-12 rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg',
         colClass,
         className,
       )}
