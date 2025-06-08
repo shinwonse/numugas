@@ -29,9 +29,17 @@ export async function GET() {
             .map((_, cell) => $(cell).text().trim())
             .get();
           if (cols.length === 0) return;
+
+          // 이름과 등번호 분리 (예: "신원세(2)" -> 이름: "신원세", 등번호: "2")
+          const nameWithNumber = cols[1];
+          const nameMatch = nameWithNumber.match(/^(.+?)\((\d+)\)$/);
+          const playerName = nameMatch ? nameMatch[1].trim() : nameWithNumber;
+          const backNumber = nameMatch ? nameMatch[2] : null;
+
           pitchers.push({
             season,
-            name: cols[1],
+            name: playerName,
+            back_number: backNumber,
             era: parseNumber(cols[2], true),
             games: parseNumber(cols[3]),
             wins: parseNumber(cols[4]),
@@ -63,7 +71,7 @@ export async function GET() {
         if (pitchers.length > 0) {
           const { error } = await supabase
             .from('pitcher_stats')
-            .upsert(pitchers, { onConflict: 'season,name' });
+            .upsert(pitchers);
           if (error) {
             throw new Error(
               `Supabase upsert error (season ${season}): ${error.message}`,
