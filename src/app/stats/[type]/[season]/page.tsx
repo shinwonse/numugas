@@ -1,4 +1,5 @@
 import StatsTabs from '@/components/stats-tabs';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import StatsTableClient from './stats-table-client';
 
@@ -14,13 +15,35 @@ export async function generateStaticParams() {
   );
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { type: string; season: string };
+}): Promise<Metadata> {
+  const resolvedParams = await Promise.resolve(params);
+  const type = decodeURIComponent(resolvedParams.type);
+  const season = decodeURIComponent(resolvedParams.season);
+  const typeObj = TYPES.find((t) => t.key === type);
+
+  if (!typeObj || !SEASONS.includes(season)) {
+    return {
+      title: 'Not Found',
+    };
+  }
+
+  return {
+    title: `${typeObj.label} - ${season}`,
+  };
+}
+
 export default async function StatsTypeSeasonPage({
   params,
 }: {
   params: { type: string; season: string };
 }) {
-  const type = decodeURIComponent(params.type);
-  const season = decodeURIComponent(params.season);
+  const resolvedParams = await Promise.resolve(params);
+  const type = decodeURIComponent(resolvedParams.type);
+  const season = decodeURIComponent(resolvedParams.season);
   const typeObj = TYPES.find((t) => t.key === type);
   if (!typeObj || !SEASONS.includes(season)) notFound();
 
