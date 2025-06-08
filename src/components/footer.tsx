@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
+import { Instagram, Youtube } from 'lucide-react';
 import Link from 'next/link';
 
 export function Footer() {
@@ -13,56 +13,20 @@ export function Footer() {
             <p className="mb-4">나는 내가 생각한 것보다 훨씬 강하다</p>
             <div className="flex gap-4">
               <Link
-                href="#"
-                className="text-gray-400 hover:text-red-500 transition-colors"
-              >
-                <Facebook size={20} />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-400 hover:text-red-500 transition-colors"
-              >
-                <Twitter size={20} />
-              </Link>
-              <Link
-                href="#"
+                href="https://www.instagram.com/numugas/"
+                target="_blank"
                 className="text-gray-400 hover:text-red-500 transition-colors"
               >
                 <Instagram size={20} />
               </Link>
               <Link
-                href="#"
+                href="https://www.youtube.com/@NUMUGAS-rk3rn"
+                target="_blank"
                 className="text-gray-400 hover:text-red-500 transition-colors"
               >
                 <Youtube size={20} />
               </Link>
             </div>
-          </div>
-
-          <div>
-            <h4 className="text-white font-bold mb-4">팀 정보</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link href="#" className="hover:text-red-500 transition-colors">
-                  구단 소개
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-red-500 transition-colors">
-                  선수단
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-red-500 transition-colors">
-                  코칭 스태프
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-red-500 transition-colors">
-                  구단 역사
-                </Link>
-              </li>
-            </ul>
           </div>
         </div>
 
