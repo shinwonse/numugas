@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
 
 export type TeamTotalStats = {
@@ -10,11 +10,6 @@ export type TeamTotalStats = {
 };
 
 async function fetchTeamTotalStats(): Promise<TeamTotalStats> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
-
   const { data, error } = await supabase
     .from('team_records')
     .select('win, lose, draw');

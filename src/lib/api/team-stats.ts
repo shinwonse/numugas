@@ -1,18 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 
-export interface TeamTotalStats {
-  win_rate: string;
+export type TeamTotalStats = {
   win: number;
   lose: number;
   draw: number;
-}
+  total_games: number;
+  win_rate: number; // %
+};
 
 export async function fetchTeamTotalStats(): Promise<TeamTotalStats> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
-
   const { data, error } = await supabase
     .from('team_records')
     .select('win, lose, draw');
@@ -29,12 +25,13 @@ export async function fetchTeamTotalStats(): Promise<TeamTotalStats> {
   );
   const total_games = total.win + total.lose + total.draw;
   const win_rate =
-    total_games > 0 ? ((total.win / total_games) * 100).toFixed(1) : '0.0';
+    total_games > 0 ? Number(((total.win / total_games) * 100).toFixed(1)) : 0;
 
   return {
-    win_rate,
     win: total.win,
     lose: total.lose,
     draw: total.draw,
+    total_games,
+    win_rate,
   };
 }
