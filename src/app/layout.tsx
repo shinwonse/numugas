@@ -20,6 +20,21 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: '담장NUMUGAS',
   description: '담장NUMUGAS 공식 홈페이지',
+  openGraph: {
+    title: '담장NUMUGAS',
+    description: '담장NUMUGAS 공식 홈페이지',
+    images: [
+      {
+        url: '/opengraph.png',
+        width: 1200,
+        height: 630,
+        alt: '담장NUMUGAS 썸네일',
+      },
+    ],
+    type: 'website',
+    locale: 'ko_KR',
+    siteName: '담장NUMUGAS',
+  },
 };
 
 const stagewiseConfig = {

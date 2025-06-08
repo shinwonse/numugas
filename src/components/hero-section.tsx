@@ -15,21 +15,6 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Video background with overlay */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-black/70 z-10"></div>
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src="/baseball-bg.mp4" type="video/mp4" />
-        </video>
-      </div>
-
       {/* Content */}
       <div className="relative z-20 max-w-7xl mx-auto px-6 text-center">
         <motion.div
@@ -47,14 +32,6 @@ export function HeroSection() {
               className="object-contain"
             />
           </div>
-          {/* <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Button
-              variant="outline"
-              className="border-white text-white hover:bg-white/10 text-lg px-8 py-6"
-            >
-              팀 소개
-            </Button>
-          </div> */}
         </motion.div>
       </div>
 
