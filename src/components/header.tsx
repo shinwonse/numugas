@@ -41,7 +41,6 @@ export function Header() {
           {[
             { label: '기록', href: '/stats' },
             { label: '선수단', href: '/players' },
-            { label: '일정', href: '/schedule' },
           ].map((item) => (
             <Link
               key={item.label}
@@ -69,7 +68,6 @@ export function Header() {
           {[
             { label: '기록', href: '/stats' },
             { label: '선수단', href: '/players' },
-            { label: '일정', href: '/schedule' },
           ].map((item) => (
             <Link
               key={item.label}
