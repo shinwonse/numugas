@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { unstable_cache } from 'next/cache';
 import { PlayerDetailContent } from './player-detail-content';
 
 interface PlayerDetailPageProps {
@@ -14,16 +15,31 @@ interface Player {
   stats: Record<string, number>;
 }
 
+// 선수 데이터 캐싱 함수
+const getCachedPlayerData = unstable_cache(
+  async (number: string) => {
+    const { data, error } = await supabase
+      .from('players')
+      .select('id, name, number, position, photo_url')
+      .eq('number', number)
+      .single();
+
+    return { data, error };
+  },
+  ['player-data'], // 캐시 키
+  {
+    revalidate: 300, // 5분마다 재검증
+    tags: ['players'], // 태그로 무효화 가능
+  },
+);
+
 export default async function PlayerDetailPage({
   params,
 }: PlayerDetailPageProps) {
   const { number } = await params;
-  // Fetch player data from supabase
-  const { data, error } = await supabase
-    .from('players')
-    .select('id, name, number, position, photo_url')
-    .eq('number', number)
-    .single();
+
+  // 캐시된 데이터 가져오기
+  const { data, error } = await getCachedPlayerData(number);
 
   if (error || !data) {
     // Show not found or error state

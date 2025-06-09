@@ -1,8 +1,8 @@
 'use client';
 
-import { supabase } from '@/lib/supabase';
+import { useBatterStats, usePitcherStats } from '@/hooks/use-player-stats';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface Player {
   id: number;
@@ -13,307 +13,25 @@ interface Player {
   stats: Record<string, number>;
 }
 
-interface BatterSeasonStat {
-  season: number;
-  games: number;
-  atbats: number;
-  hits: number;
-  plateappearances: number;
-  runs: number;
-  singles: number;
-  doubles: number;
-  triples: number;
-  homeruns: number;
-  totalbases: number;
-  rbi: number;
-  stolenbases: number;
-  caughtstealing: number;
-  sacrificehits: number;
-  sacrificeflies: number;
-  walks: number;
-  intentionalwalks: number;
-  hitbypitch: number;
-  strikeouts: number;
-  doubleplays: number;
-}
-
-interface PitcherSeasonStat {
-  season: number;
-  games: number;
-  era: string;
-  wins: number;
-  losses: number;
-  saves: number;
-  holds: number;
-  winrate: string;
-  innings: string;
-  batters: number;
-  atbats: number;
-  pitches: number;
-  hits: number;
-  homeruns: number;
-  sacrificehits: number;
-  sacrificeflies: number;
-  walks: number;
-  intentionalwalks: number;
-  hitbypitch: number;
-  strikeouts: number;
-  wildpitches: number;
-  balks: number;
-  runs: number;
-  earnedruns: number;
-  whip: string;
-  opponent_avg: string;
-  strikeout_rate: string;
-}
-
-interface BatterCareerApiResponse {
-  seasonStats: BatterSeasonStat[];
-  careerStats: Record<string, any> | null;
-}
-
-interface PitcherCareerApiResponse {
-  seasonStats: PitcherSeasonStat[];
-  careerStats: Record<string, any> | null;
-}
-
-async function fetchBatterCareerStats(
-  number: number,
-): Promise<BatterCareerApiResponse | null> {
-  try {
-    console.log('Fetching batter stats for player number:', number);
-
-    // 1. 연도별 기록
-    const { data: seasonStats, error: seasonError } = await supabase
-      .from('batter_stats')
-      .select('*')
-      .eq('back_number', number)
-      .order('season', { ascending: true });
-
-    console.log('Season stats result:', {
-      data: seasonStats,
-      error: seasonError,
-      length: seasonStats?.length || 0,
-    });
-
-    if (seasonError) {
-      console.error('Season stats error:', seasonError);
-      return null;
-    }
-
-    if (!seasonStats || seasonStats.length === 0) {
-      console.log('No season stats found for player number:', number);
-      return {
-        seasonStats: [],
-        careerStats: null,
-      };
-    }
-
-    // 2. 통산 기록 집계
-    const sumFields = [
-      'games',
-      'plateappearances',
-      'atbats',
-      'runs',
-      'hits',
-      'singles',
-      'doubles',
-      'triples',
-      'homeruns',
-      'totalbases',
-      'rbi',
-      'stolenbases',
-      'caughtstealing',
-      'sacrificehits',
-      'sacrificeflies',
-      'walks',
-      'intentionalwalks',
-      'hitbypitch',
-      'strikeouts',
-      'doubleplays',
-    ];
-
-    const total: Record<string, number> = {};
-    for (const field of sumFields) {
-      total[field] = seasonStats.reduce(
-        (acc, cur) => acc + Number(cur[field] ?? 0),
-        0,
-      );
-    }
-
-    // 타율, 출루율, 장타율 계산
-    const avg = total['atbats'] ? total['hits'] / total['atbats'] : 0;
-    const onbase =
-      total['atbats'] +
-      total['walks'] +
-      total['hitbypitch'] +
-      total['sacrificeflies'];
-    const onbasepercentage = onbase
-      ? (total['hits'] + total['walks'] + total['hitbypitch']) / onbase
-      : 0;
-    const sluggingpercentage = total['atbats']
-      ? total['totalbases'] / total['atbats']
-      : 0;
-
-    const careerStats = {
-      number: number,
-      name: seasonStats[0]?.name || '',
-      ...total,
-      avg: avg.toFixed(3),
-      onbasepercentage: onbasepercentage.toFixed(3),
-      sluggingpercentage: sluggingpercentage.toFixed(3),
-    };
-
-    console.log('Career stats calculated:', careerStats);
-    return { seasonStats, careerStats };
-  } catch (error) {
-    console.error('Fetch error:', error);
-    return null;
-  }
-}
-
-async function fetchPitcherCareerStats(
-  playerNumber: number,
-): Promise<PitcherCareerApiResponse | null> {
-  try {
-    console.log('Fetching pitcher stats for player number:', playerNumber);
-
-    // 1. 연도별 기록
-    const { data: seasonStats, error: seasonError } = await supabase
-      .from('pitcher_stats')
-      .select('*')
-      .eq('back_number', playerNumber)
-      .order('season', { ascending: true });
-
-    console.log('Pitcher season stats result:', {
-      data: seasonStats,
-      error: seasonError,
-      length: seasonStats?.length || 0,
-    });
-
-    if (seasonError) {
-      console.error('Pitcher season stats error:', seasonError);
-      return null;
-    }
-
-    if (!seasonStats || seasonStats.length === 0) {
-      console.log(
-        'No pitcher season stats found for player number:',
-        playerNumber,
-      );
-      return {
-        seasonStats: [],
-        careerStats: null,
-      };
-    }
-
-    // 2. 통산 기록 집계
-    const sumFields = [
-      'games',
-      'wins',
-      'losses',
-      'saves',
-      'holds',
-      'batters',
-      'atbats',
-      'pitches',
-      'hits',
-      'homeruns',
-      'sacrificehits',
-      'sacrificeflies',
-      'walks',
-      'intentionalwalks',
-      'hitbypitch',
-      'strikeouts',
-      'wildpitches',
-      'balks',
-      'runs',
-      'earnedruns',
-    ];
-
-    const total: Record<string, number> = {};
-    for (const field of sumFields) {
-      total[field] = seasonStats.reduce(
-        (acc, cur) => acc + Number(cur[field] ?? 0),
-        0,
-      );
-    }
-
-    // 이닝 합산 (ex: "12.2" -> 12 + 2/3)
-    function parseInning(inn: string) {
-      if (!inn) return 0;
-      const [whole, frac] = String(inn).split('.');
-      return Number(whole) + (frac ? Number(frac) / 3 : 0);
-    }
-    const totalInnings = seasonStats.reduce(
-      (acc, cur) => acc + parseInning(cur.innings),
-      0,
-    );
-
-    // ERA, WHIP, 승률, 피안타율, 탈삼진율 계산
-    const era = totalInnings ? (total['earnedruns'] * 9) / totalInnings : 0;
-    const whip = totalInnings
-      ? (total['walks'] + total['hits']) / totalInnings
-      : 0;
-    const winrate =
-      total['wins'] + total['losses'] > 0
-        ? total['wins'] / (total['wins'] + total['losses'])
-        : 0;
-    const opponent_avg =
-      total['atbats'] > 0 ? total['hits'] / total['atbats'] : 0;
-    const strikeout_rate =
-      total['batters'] > 0 ? (total['strikeouts'] / total['batters']) * 100 : 0;
-
-    const careerStats = {
-      number: playerNumber,
-      name: seasonStats[0]?.name || '',
-      ...total,
-      innings: totalInnings.toFixed(1),
-      era: era.toFixed(2),
-      whip: whip.toFixed(3),
-      winrate: winrate.toFixed(3),
-      opponent_avg: opponent_avg.toFixed(3),
-      strikeout_rate: strikeout_rate.toFixed(1),
-    };
-
-    console.log('Pitcher career stats calculated:', careerStats);
-    return { seasonStats, careerStats };
-  } catch (error) {
-    console.error('Pitcher fetch error:', error);
-    return null;
-  }
-}
-
 export function PlayerDetailContent({ player }: { player: Player }) {
   const [activeTab, setActiveTab] = useState<'batter' | 'pitcher'>('batter');
-  const [batterStats, setBatterStats] =
-    useState<BatterCareerApiResponse | null>(null);
-  const [pitcherStats, setPitcherStats] =
-    useState<PitcherCareerApiResponse | null>(null);
-  const [isLoadingBatter, setIsLoadingBatter] = useState(false);
-  const [isLoadingPitcher, setIsLoadingPitcher] = useState(false);
 
-  // 탭 변경 시 해당 데이터 로드
-  const handleTabChange = async (tab: 'batter' | 'pitcher') => {
+  // React Query 훅 사용 - 필요할 때만 데이터 fetching
+  const {
+    data: batterStats,
+    isLoading: isLoadingBatter,
+    error: batterError,
+  } = useBatterStats(player.number);
+
+  const {
+    data: pitcherStats,
+    isLoading: isLoadingPitcher,
+    error: pitcherError,
+  } = usePitcherStats(player.number);
+
+  const handleTabChange = (tab: 'batter' | 'pitcher') => {
     setActiveTab(tab);
-
-    if (tab === 'batter' && !batterStats) {
-      setIsLoadingBatter(true);
-      const stats = await fetchBatterCareerStats(player.number);
-      setBatterStats(stats);
-      setIsLoadingBatter(false);
-    } else if (tab === 'pitcher' && !pitcherStats) {
-      setIsLoadingPitcher(true);
-      const stats = await fetchPitcherCareerStats(player.number);
-      setPitcherStats(stats);
-      setIsLoadingPitcher(false);
-    }
   };
-
-  // 초기 타자 데이터 로드
-  useEffect(() => {
-    handleTabChange('batter');
-  }, []);
 
   return (
     <main className="min-h-screen bg-black text-white py-8 md:py-16 px-4 sm:px-8 md:px-16 lg:px-32">
@@ -376,7 +94,16 @@ export function PlayerDetailContent({ player }: { player: Player }) {
           <>
             {isLoadingBatter ? (
               <div className="flex justify-center items-center py-12">
-                <div className="text-gray-400">타자 기록을 불러오는 중...</div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
+                <span className="ml-3 text-gray-400">
+                  타자 기록을 불러오는 중...
+                </span>
+              </div>
+            ) : batterError ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="text-red-400">
+                  타자 기록을 불러오는데 실패했습니다.
+                </div>
               </div>
             ) : (
               <>
@@ -385,72 +112,72 @@ export function PlayerDetailContent({ player }: { player: Player }) {
                   <h2 className="text-2xl font-bold mb-6 text-center text-red-500">
                     연도별 기록
                   </h2>
-                  <div className="overflow-x-auto w-full">
-                    <table className="w-full text-center min-w-[1200px]">
-                      <thead>
-                        <tr className="border-b border-gray-700 text-gray-300">
-                          <th className="py-3 px-2 text-sm font-semibold sticky left-0 bg-black/80">
-                            연도
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            경기
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            타율
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            출루율
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            장타율
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            타석
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            타수
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            안타
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            1루타
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            2루타
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            3루타
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            홈런
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            득점
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            타점
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            루타
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            도루
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            도루실패
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            볼넷
-                          </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
-                            삼진
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {batterStats && batterStats.seasonStats.length > 0 ? (
-                          batterStats.seasonStats.map((stat) => {
+                  {batterStats && batterStats.seasonStats.length > 0 ? (
+                    <div className="overflow-x-auto w-full">
+                      <table className="w-full text-center min-w-[1200px]">
+                        <thead>
+                          <tr className="border-b border-gray-700 text-gray-300">
+                            <th className="py-3 px-2 text-sm font-semibold sticky left-0 bg-black/80">
+                              연도
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              경기
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              타율
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              출루율
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              장타율
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              타석
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              타수
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              안타
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              1루타
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              2루타
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              3루타
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              홈런
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              득점
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              타점
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              루타
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              도루
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              도루실패
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              볼넷
+                            </th>
+                            <th className="py-3 px-2 text-sm font-semibold">
+                              삼진
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {batterStats.seasonStats.map((stat) => {
                             const avg = stat.atbats
                               ? (stat.hits / stat.atbats).toFixed(3)
                               : '0.000';
@@ -527,17 +254,19 @@ export function PlayerDetailContent({ player }: { player: Player }) {
                                 </td>
                               </tr>
                             );
-                          })
-                        ) : (
-                          <tr>
-                            <td colSpan={19} className="py-8 text-gray-400">
-                              연도별 기록이 없습니다.
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <tbody>
+                      <tr>
+                        <td colSpan={19} className="py-8 text-gray-400">
+                          연도별 기록이 없습니다.
+                        </td>
+                      </tr>
+                    </tbody>
+                  )}
                 </section>
 
                 {/* Career Stats Detailed Table */}
@@ -648,7 +377,16 @@ export function PlayerDetailContent({ player }: { player: Player }) {
           <>
             {isLoadingPitcher ? (
               <div className="flex justify-center items-center py-12">
-                <div className="text-gray-400">투수 기록을 불러오는 중...</div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
+                <span className="ml-3 text-gray-400">
+                  투수 기록을 불러오는 중...
+                </span>
+              </div>
+            ) : pitcherError ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="text-red-400">
+                  투수 기록을 불러오는데 실패했습니다.
+                </div>
               </div>
             ) : (
               <>
@@ -879,12 +617,6 @@ export function PlayerDetailContent({ player }: { player: Player }) {
               </>
             )}
           </>
-        )}
-
-        {!batterStats && !pitcherStats && (
-          <p className="mt-8 text-gray-400 text-center">
-            기록 데이터를 불러오는 데 실패했습니다.
-          </p>
         )}
       </div>
     </main>
