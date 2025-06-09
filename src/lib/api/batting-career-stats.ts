@@ -1,3 +1,5 @@
+import { supabase } from '@/lib/supabase';
+
 export interface Player {
   rank: number;
   name: string;
@@ -12,24 +14,78 @@ export interface Stat {
 
 export async function fetchBattingCareerStats(): Promise<Stat[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/batter-career`, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
+    // 직접 Supabase에서 모든 시즌 데이터 가져오기
+    const { data, error } = await supabase.from('batter_stats').select('*');
 
-    if (!res.ok) {
+    if (error) {
       console.error(
-        `Failed to fetch batting career stats: ${res.status} ${res.statusText}`,
+        'Failed to fetch batting career stats from Supabase:',
+        error,
       );
       throw new Error('통산 기록을 불러오지 못했습니다.');
     }
 
-    const { careerStats } = await res.json();
-
-    if (!Array.isArray(careerStats)) {
-      console.error('Invalid career stats data structure');
-      throw new Error('기록 데이터가 올바르지 않습니다.');
+    // 선수별로 그룹화 및 통산 집계
+    const playerMap: Record<string, any[]> = {};
+    for (const row of data ?? []) {
+      if (!playerMap[row.name]) playerMap[row.name] = [];
+      playerMap[row.name].push(row);
     }
+
+    // 통산 기록 계산
+    const careerStats = Object.entries(playerMap).map(([name, records]) => {
+      // 합산용 숫자 필드
+      const sumFields = [
+        'games',
+        'plateappearances',
+        'atbats',
+        'runs',
+        'hits',
+        'singles',
+        'doubles',
+        'triples',
+        'homeruns',
+        'totalbases',
+        'rbi',
+        'stolenbases',
+        'caughtstealing',
+        'sacrificehits',
+        'sacrificeflies',
+        'walks',
+        'intentionalwalks',
+        'hitbypitch',
+        'strikeouts',
+        'doubleplays',
+      ];
+      const total: Record<string, number> = {};
+      for (const field of sumFields) {
+        total[field] = records.reduce(
+          (acc, cur) => acc + Number(cur[field] ?? 0),
+          0,
+        );
+      }
+      // 타율, 출루율, 장타율 계산
+      const avg = total['atbats'] ? total['hits'] / total['atbats'] : 0;
+      const onbase =
+        total['atbats'] +
+        total['walks'] +
+        total['hitbypitch'] +
+        total['sacrificeflies'];
+      const onbasepercentage = onbase
+        ? (total['hits'] + total['walks'] + total['hitbypitch']) / onbase
+        : 0;
+      const sluggingpercentage = total['atbats']
+        ? total['totalbases'] / total['atbats']
+        : 0;
+
+      return {
+        name,
+        ...total,
+        avg: avg.toFixed(3),
+        onbasepercentage: onbasepercentage.toFixed(3),
+        sluggingpercentage: sluggingpercentage.toFixed(3),
+      };
+    });
 
     // TOP3 계산
     const categories = [

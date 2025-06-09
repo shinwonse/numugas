@@ -1,3 +1,5 @@
+import { supabase } from '@/lib/supabase';
+
 export interface Player {
   rank: number;
   name: string;
@@ -12,22 +14,16 @@ export interface Stat {
 
 export async function fetchPitchingStats2025(): Promise<Stat[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(
-      `${baseUrl}/api/pitcher-career/season?season=2025`,
-      {
-        next: { revalidate: 3600 }, // Cache for 1 hour
-      },
-    );
+    // 직접 Supabase에서 데이터 가져오기
+    const { data: seasonStats, error } = await supabase
+      .from('pitcher_stats')
+      .select('*')
+      .eq('season', '2025');
 
-    if (!res.ok) {
-      console.error(
-        `Failed to fetch pitching stats: ${res.status} ${res.statusText}`,
-      );
+    if (error) {
+      console.error('Failed to fetch pitching stats from Supabase:', error);
       throw new Error('기록을 불러오지 못했습니다.');
     }
-
-    const { seasonStats } = await res.json();
 
     if (!Array.isArray(seasonStats)) {
       console.error('Invalid season stats data structure');

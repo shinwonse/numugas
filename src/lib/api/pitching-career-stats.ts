@@ -1,3 +1,5 @@
+import { supabase } from '@/lib/supabase';
+
 export interface Player {
   rank: number;
   name: string;
@@ -12,24 +14,93 @@ export interface Stat {
 
 export async function fetchPitchingCareerStats(): Promise<Stat[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/pitcher-career`, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
+    // 직접 Supabase에서 모든 시즌 데이터 가져오기
+    const { data, error } = await supabase.from('pitcher_stats').select('*');
 
-    if (!res.ok) {
+    if (error) {
       console.error(
-        `Failed to fetch pitching career stats: ${res.status} ${res.statusText}`,
+        'Failed to fetch pitching career stats from Supabase:',
+        error,
       );
       throw new Error('통산 기록을 불러오지 못했습니다.');
     }
 
-    const { careerStats } = await res.json();
-
-    if (!Array.isArray(careerStats)) {
-      console.error('Invalid career stats data structure');
-      throw new Error('기록 데이터가 올바르지 않습니다.');
+    // 선수별로 그룹화 및 통산 집계
+    const playerMap: Record<string, any[]> = {};
+    for (const row of data ?? []) {
+      if (!playerMap[row.name]) playerMap[row.name] = [];
+      playerMap[row.name].push(row);
     }
+
+    // 통산 기록 계산
+    const careerStats = Object.entries(playerMap).map(([name, records]) => {
+      // 합산용 숫자 필드
+      const sumFields = [
+        'games',
+        'wins',
+        'losses',
+        'saves',
+        'holds',
+        'batters',
+        'atbats',
+        'pitches',
+        'hits',
+        'homeruns',
+        'sacrificehits',
+        'sacrificeflies',
+        'walks',
+        'intentionalwalks',
+        'hitbypitch',
+        'strikeouts',
+        'wildpitches',
+        'balks',
+        'runs',
+        'earnedruns',
+      ];
+      const total: Record<string, number> = {};
+      for (const field of sumFields) {
+        total[field] = records.reduce(
+          (acc, cur) => acc + Number(cur[field] ?? 0),
+          0,
+        );
+      }
+
+      // 이닝 합산 (ex: "12.2" -> 12 + 2/3)
+      function parseInning(inn: string) {
+        if (!inn) return 0;
+        const [whole, frac] = String(inn).split('.');
+        return Number(whole) + (frac ? Number(frac) / 3 : 0);
+      }
+      const totalInnings = records.reduce(
+        (acc, cur) => acc + parseInning(cur.innings),
+        0,
+      );
+
+      // ERA, WHIP, 승률, 피안타율, 탈삼진율 계산
+      const era = totalInnings ? (total['earnedruns'] * 9) / totalInnings : 0;
+      const whip = totalInnings
+        ? (total['hits'] + total['walks']) / totalInnings
+        : 0;
+      const winRate =
+        total['wins'] + total['losses']
+          ? total['wins'] / (total['wins'] + total['losses'])
+          : 0;
+      const avg = total['atbats'] ? total['hits'] / total['atbats'] : 0;
+      const strikeoutRate = totalInnings
+        ? (total['strikeouts'] * 9) / totalInnings
+        : 0;
+
+      return {
+        name,
+        ...total,
+        innings: totalInnings.toFixed(1),
+        era: era.toFixed(2),
+        whip: whip.toFixed(2),
+        winrate: winRate.toFixed(3),
+        avg: avg.toFixed(3),
+        strikeoutrate: strikeoutRate.toFixed(1),
+      };
+    });
 
     // TOP3 계산
     const categories = [
@@ -60,13 +131,16 @@ export async function fetchPitchingCareerStats(): Promise<Stat[]> {
     ];
 
     const stats = categories.map(({ category, sort, value, key }) => {
-      // 1. value > 0 인 선수 TOP3
+      // 평균자책점은 0보다 큰 값만, 나머지는 0 초과
+      const filterFn =
+        key === 'era'
+          ? (p: any) => value(p) > 0 && p.name
+          : (p: any) => value(p) > 0 && p.name;
       const topPlayers = [...careerStats]
-        .filter((p) => value(p) > 0 && p.name)
+        .filter(filterFn)
         .sort(sort)
         .slice(0, 3);
 
-      // 2. 부족하면 value==0 이고 이름순으로 채움 (중복X)
       if (topPlayers.length < 3) {
         const pickedNames = new Set(topPlayers.map((p) => p.name));
         const fillers = [...careerStats]
@@ -76,7 +150,6 @@ export async function fetchPitchingCareerStats(): Promise<Stat[]> {
         topPlayers.push(...fillers);
       }
 
-      // 3. 최종 3명만, 이름순 정렬은 하지 않고 랭크만 부여
       const players = topPlayers.slice(0, 3).map((p, i) => ({
         rank: i + 1,
         name: p.name,
