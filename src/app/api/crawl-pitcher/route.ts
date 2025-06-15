@@ -69,13 +69,59 @@ export async function GET() {
           });
         });
         if (pitchers.length > 0) {
-          const { error } = await supabase
+          // First, get existing records for this season
+          const { data: existingPitchers, error: fetchError } = await supabase
             .from('pitcher_stats')
-            .upsert(pitchers);
-          if (error) {
+            .select('name')
+            .eq('season', season);
+
+          if (fetchError) {
             throw new Error(
-              `Supabase upsert error (season ${season}): ${error.message}`,
+              `Failed to fetch existing pitchers (season ${season}): ${fetchError.message}`,
             );
+          }
+
+          // Create a map of existing pitcher names
+          const existingPitcherNames = new Set(
+            existingPitchers?.map((p) => p.name) || [],
+          );
+
+          // Split pitchers into new and existing
+          const newPitchers = pitchers.filter(
+            (p) => !existingPitcherNames.has(p.name),
+          );
+          const existingPitchersToUpdate = pitchers.filter((p) =>
+            existingPitcherNames.has(p.name),
+          );
+
+          // Insert new pitchers
+          if (newPitchers.length > 0) {
+            const { error: insertError } = await supabase
+              .from('pitcher_stats')
+              .insert(newPitchers);
+
+            if (insertError) {
+              throw new Error(
+                `Failed to insert new pitchers (season ${season}): ${insertError.message}`,
+              );
+            }
+          }
+
+          // Update existing pitchers
+          if (existingPitchersToUpdate.length > 0) {
+            for (const pitcher of existingPitchersToUpdate) {
+              const { error: updateError } = await supabase
+                .from('pitcher_stats')
+                .update(pitcher)
+                .eq('season', season)
+                .eq('name', pitcher.name);
+
+              if (updateError) {
+                throw new Error(
+                  `Failed to update pitcher ${pitcher.name} (season ${season}): ${updateError.message}`,
+                );
+              }
+            }
           }
         }
         return { season, pitchers };
