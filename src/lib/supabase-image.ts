@@ -7,7 +7,7 @@ export function getBlurImageUrl(
   originalUrl: string,
   blur: number = 15,
 ): string {
-  if (!originalUrl) return '/logo.png';
+  if (!originalUrl) return '/logo.webp';
 
   // Supabase Storage URL인지 확인
   if (!originalUrl.includes('supabase')) return originalUrl;
@@ -31,7 +31,7 @@ export function getPreviewImageUrl(
   originalUrl: string,
   size: number = 200,
 ): string {
-  if (!originalUrl) return '/logo.png';
+  if (!originalUrl) return '/logo.webp';
 
   if (!originalUrl.includes('supabase')) return originalUrl;
 
@@ -54,7 +54,7 @@ export function getOptimizedImageUrl(
   width?: number,
   height?: number,
 ): string {
-  if (!originalUrl) return '/logo.png';
+  if (!originalUrl) return '/logo.webp';
 
   if (!originalUrl.includes('supabase')) return originalUrl;
 

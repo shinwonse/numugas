@@ -60,7 +60,7 @@ export default async function PlayerDetailPage({
     name: data.name,
     position: data.position,
     number: data.number,
-    photo: data.photo_url ?? '/logo.png',
+    photo: data.photo_url ?? '/logo.webp',
     stats: {},
   };
 
