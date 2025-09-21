@@ -1,3 +1,4 @@
+import { ImageUtils } from '@/lib/supabase-image';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -24,11 +25,13 @@ export default function PlayerCard({ player }: PlayerCardProps) {
       <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between min-h-[240px] sm:min-h-[300px] md:min-h-[340px] group-hover:shadow-lg transition-all duration-200">
         <div className="w-full aspect-square relative">
           <Image
-            src={player.photo ?? '/logo.png'}
+            src={ImageUtils.getCardSize(player.photo ?? '/logo.png')}
             alt={player.name}
             fill
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
             sizes="(max-width: 768px) 100vw, 33vw"
+            placeholder="blur"
+            blurDataURL={ImageUtils.getTinyBlur(player.photo ?? '/logo.png')}
             priority={false}
           />
         </div>
