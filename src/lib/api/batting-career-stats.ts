@@ -1,5 +1,5 @@
+import { calculateRankingsWithTies } from '@/lib/calculate-rankings-with-ties';
 import { supabase } from '@/lib/supabase';
-import { calculateRankingsWithTies } from '@/lib/utils';
 
 export interface Player {
   rank: number;
