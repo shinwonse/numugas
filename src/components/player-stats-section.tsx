@@ -98,7 +98,7 @@ export function PlayerStatsSection({
                     <CardContent className="p-0">
                       {stat.players.map((player, playerIndex) => (
                         <div
-                          key={player.rank}
+                          key={`${stat.category}-${player.name}-batting`}
                           className={`flex items-center justify-between p-4 ${
                             playerIndex !== stat.players.length - 1
                               ? 'border-b border-gray-800'
@@ -156,7 +156,7 @@ export function PlayerStatsSection({
                     <CardContent className="p-0">
                       {stat.players.map((player, playerIndex) => (
                         <div
-                          key={player.rank}
+                          key={`${stat.category}-${player.name}-pitching`}
                           className={`flex items-center justify-between p-4 ${
                             playerIndex !== stat.players.length - 1
                               ? 'border-b border-gray-800'

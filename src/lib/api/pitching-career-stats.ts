@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { calculateRankingsWithTies } from '@/lib/utils';
 
 export interface Player {
   rank: number;
@@ -136,26 +137,26 @@ export async function fetchPitchingCareerStats(): Promise<Stat[]> {
         key === 'era'
           ? (p: any) => value(p) > 0 && p.name
           : (p: any) => value(p) > 0 && p.name;
-      const topPlayers = [...careerStats]
-        .filter(filterFn)
-        .sort(sort)
-        .slice(0, 3);
+      const topPlayers = [...careerStats].filter(filterFn).sort(sort);
 
+      let allPlayers = [...topPlayers];
       if (topPlayers.length < 3) {
         const pickedNames = new Set(topPlayers.map((p) => p.name));
         const fillers = [...careerStats]
           .filter((p) => value(p) === 0 && p.name && !pickedNames.has(p.name))
           .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0))
           .slice(0, 3 - topPlayers.length);
-        topPlayers.push(...fillers);
+        allPlayers.push(...fillers);
       }
 
-      const players = topPlayers.slice(0, 3).map((p, i) => ({
-        rank: i + 1,
+      // 공동 기록을 고려한 순위 계산
+      const playersWithValue = allPlayers.map((p) => ({
         name: p.name,
-        value: value(p),
         team: '', // 통산 기록에는 팀 정보가 없음
+        value: value(p),
       }));
+
+      const players = calculateRankingsWithTies(playersWithValue);
       return { category, players };
     });
 
