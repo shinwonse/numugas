@@ -18,6 +18,11 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'
+      : 'http://localhost:3000',
+  ),
   title: '담장NUMUGAS',
   description: '나는 내가 생각한 것보다 훨씬 강하다',
   openGraph: {
