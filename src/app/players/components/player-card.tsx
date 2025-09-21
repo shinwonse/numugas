@@ -21,7 +21,7 @@ export default function PlayerCard({ player }: PlayerCardProps) {
       prefetch={true}
       className="block group focus:outline-none focus:ring-2 focus:ring-red-500 rounded-2xl"
     >
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between min-h-[340px] group-hover:shadow-lg transition-all duration-200">
+      <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between min-h-[240px] sm:min-h-[300px] md:min-h-[340px] group-hover:shadow-lg transition-all duration-200">
         <div className="w-full aspect-square relative">
           <Image
             src={player.photo ?? '/logo.png'}
@@ -32,11 +32,11 @@ export default function PlayerCard({ player }: PlayerCardProps) {
             priority={false}
           />
         </div>
-        <div className="flex items-center justify-between px-6 py-5 bg-white">
-          <span className="text-lg font-semibold text-black group-hover:text-red-600 transition-colors">
+        <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 md:px-6 md:py-5 bg-white">
+          <span className="text-sm sm:text-base md:text-lg font-semibold text-black group-hover:text-red-600 transition-colors">
             {player.name}
           </span>
-          <span className="text-3xl font-extrabold text-gray-800">
+          <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-800">
             {player.number}
           </span>
         </div>
