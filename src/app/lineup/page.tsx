@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useState } from 'react';
+import { LineupPreview } from './lineup-preview';
 
 interface PlayerPosition {
   position: string;
@@ -63,25 +64,7 @@ export default function LineupPage() {
       {/* Mobile: 세로 배치, PC: 가로 배치 */}
       <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8">
         {/* 라인업 미리보기 */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">라인업 미리보기</h2>
-          <div className="space-y-3">
-            {lineup.map((player, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-4 p-3 bg-muted rounded-lg"
-              >
-                <span className="font-bold text-lg w-8">
-                  {player.battingOrder}
-                </span>
-                <span className="font-medium w-16">
-                  {player.position || '(포지션)'}
-                </span>
-                <span className="flex-1">{player.name || '(이름 없음)'}</span>
-              </div>
-            ))}
-          </div>
-        </Card>
+        <LineupPreview lineup={lineup} />
 
         {/* 라인업 입력 폼 */}
         <Card className="p-6">
