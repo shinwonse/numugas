@@ -76,7 +76,7 @@ export function LineupPreview({
             </div>
 
             {/* 우측 영역 - 라인업 리스트 */}
-            <div className="absolute top-0 right-0 bottom-0 w-[45%] bg-black/30 p-4 sm:p-5 md:p-6 flex flex-col z-20">
+            <div className="absolute top-0 right-0 bottom-0 w-[40%] bg-black/80 p-4 sm:p-5 md:p-6 flex flex-col z-20">
               {/* 팀 로고 */}
               <div className="flex items-center justify-center mb-4 pt-10">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 relative">
