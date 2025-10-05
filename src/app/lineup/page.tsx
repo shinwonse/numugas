@@ -20,9 +20,12 @@ interface PlayerPosition {
   battingOrder: number;
 }
 
-const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF'];
+const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'];
 
 export default function LineupPage() {
+  const [date, setDate] = useState('');
+  const [location, setLocation] = useState('');
+  const [playerImage, setPlayerImage] = useState<string | null>(null);
   const [lineup, setLineup] = useState<PlayerPosition[]>([
     { position: '', name: '', battingOrder: 1 },
     { position: '', name: '', battingOrder: 2 },
@@ -47,7 +50,21 @@ export default function LineupPage() {
     setLineup(newLineup);
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPlayerImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleReset = () => {
+    setDate('');
+    setLocation('');
+    setPlayerImage(null);
     setLineup(
       Array.from({ length: 9 }, (_, i) => ({
         position: '',
@@ -64,11 +81,53 @@ export default function LineupPage() {
       {/* Mobile: 세로 배치, PC: 가로 배치 */}
       <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8">
         {/* 라인업 미리보기 */}
-        <LineupPreview lineup={lineup} />
+        <LineupPreview lineup={lineup} playerImage={playerImage} />
 
         {/* 라인업 입력 폼 */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">선수 입력</h2>
+          <h2 className="text-xl font-semibold mb-4">라인업 정보</h2>
+
+          {/* 날짜, 장소, 이미지 입력 */}
+          <div className="space-y-4 mb-6 pb-6 border-b">
+            <div>
+              <Label htmlFor="date" className="mb-2 block">
+                날짜
+              </Label>
+              <Input
+                id="date"
+                type="datetime-local"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                placeholder="YYYY/MM/DD HH:MM"
+              />
+            </div>
+            <div>
+              <Label htmlFor="location" className="mb-2 block">
+                장소
+              </Label>
+              <Input
+                id="location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="경기 장소"
+              />
+            </div>
+            <div>
+              <Label htmlFor="playerImage" className="mb-2 block">
+                대표 선수 사진
+              </Label>
+              <Input
+                id="playerImage"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="cursor-pointer"
+              />
+            </div>
+          </div>
+
+          {/* 선수 입력 */}
+          <h3 className="text-lg font-semibold mb-3">선수 입력</h3>
           <div className="space-y-3">
             {lineup.map((player, index) => (
               <div
