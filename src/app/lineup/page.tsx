@@ -22,6 +22,21 @@ interface PlayerPosition {
 
 const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'];
 
+const formatDate = (dateString: string): string => {
+  if (!dateString) return '';
+
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+
+  const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+  const weekday = weekdays[date.getDay()];
+
+  return `${month}/${day}(${weekday}) ${hours}:${minutes}`;
+};
+
 export default function LineupPage() {
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
@@ -89,7 +104,7 @@ export default function LineupPage() {
           lineup={lineup}
           playerImage={playerImage}
           startingPitcher={startingPitcher}
-          date={date}
+          date={formatDate(date)}
           location={location}
           league={league}
         />
