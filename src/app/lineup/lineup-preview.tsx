@@ -102,10 +102,10 @@ export function LineupPreview({
 
               {/* 경기 정보 */}
               <div className="text-center space-y-1 mb-4">
-                <p className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl">
+                <p className="text-gray-400 font-bold text-sm sm:text-base md:text-lg">
                   {date || '날짜'}
                 </p>
-                <p className="text-white font-bold text-lg sm:text-xl md:text-2xl">
+                <p className="text-gray-400 font-medium text-xs sm:text-sm md:text-base">
                   {location || '장소'}
                 </p>
               </div>
