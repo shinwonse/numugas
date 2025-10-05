@@ -1,4 +1,7 @@
+'use client';
+
 import { Card } from '@/components/ui/card';
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 interface PlayerPosition {
   position: string;
@@ -18,21 +21,37 @@ export function LineupPreview({ lineup, playerImage }: LineupPreviewProps) {
         <Card className="overflow-hidden p-0 bg-slate-900 w-full aspect-[9/16]">
           <div className="flex h-full">
             {/* 좌측 영역 - 선수 이미지 영역 */}
-            <div className="flex-1 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
+            <div className="flex-1 bg-gradient-to-br from-slate-800 to-slate-900 relative overflow-hidden">
               {playerImage ? (
-                <img
-                  src={playerImage}
-                  alt="대표 선수"
-                  className="w-full h-full object-cover absolute inset-0"
-                />
+                <TransformWrapper
+                  initialScale={1}
+                  minScale={0.3}
+                  maxScale={4}
+                  centerOnInit
+                  wheel={{ smoothStep: 0.01 }}
+                >
+                  <TransformComponent
+                    wrapperClass="!w-full !h-full absolute inset-0"
+                    contentClass="!w-full !h-full"
+                  >
+                    <img
+                      src={playerImage}
+                      alt="대표 선수"
+                      className="w-full h-full object-cover"
+                      style={{ minWidth: '100%', minHeight: '100%' }}
+                    />
+                  </TransformComponent>
+                </TransformWrapper>
               ) : (
-                <div className="text-center">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-3">
-                    STARTING
-                  </h2>
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-400">
-                    LINEUP
-                  </h3>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-3">
+                      STARTING
+                    </h2>
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-400">
+                      LINEUP
+                    </h3>
+                  </div>
                 </div>
               )}
             </div>
