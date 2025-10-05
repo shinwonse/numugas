@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { LineupPreview } from './lineup-preview';
@@ -102,34 +102,22 @@ export default function LineupPage() {
 
     setIsExporting(true);
     try {
-      const canvas = await html2canvas(previewRef.current, {
-        backgroundColor: null,
-        scale: 2, // 고해상도 이미지
-        useCORS: true,
-        logging: false,
-        imageTimeout: 0,
+      const dataUrl = await toPng(previewRef.current, {
+        quality: 1,
+        pixelRatio: 2, // 고해상도
+        cacheBust: true,
       });
 
-      // Canvas를 Blob으로 변환
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          toast.error('이미지 생성에 실패했습니다.');
-          return;
-        }
+      // 다운로드 링크 생성
+      const link = document.createElement('a');
+      const fileName = `lineup_${new Date().getTime()}.png`;
+      link.href = dataUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-        // 다운로드 링크 생성
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        const fileName = `lineup_${new Date().getTime()}.png`;
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-
-        toast.success('라인업 이미지가 다운로드되었습니다.');
-      }, 'image/png');
+      toast.success('라인업 이미지가 다운로드되었습니다.');
     } catch (error) {
       console.error('Image export error:', error);
       toast.error('이미지 다운로드 중 오류가 발생했습니다.');

@@ -34,6 +34,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
       <div className="flex justify-center w-full">
         <Card
           ref={ref}
+          data-export-target
           className="overflow-hidden p-0 w-full aspect-[9/16] relative"
         >
           {/* 배경 이미지 */}
@@ -44,7 +45,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
           <div className="relative h-full z-10">
             {/* 선수 이미지 영역 - 전체 배경 */}
             <div className="absolute inset-0 z-10">
-              {playerImage ? (
+              {playerImage && (
                 <TransformWrapper
                   initialScale={1}
                   minScale={0.1}
@@ -66,12 +67,6 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                     />
                   </TransformComponent>
                 </TransformWrapper>
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-gray-400/30 text-6xl font-bold">
-                    NO IMAGE
-                  </div>
-                </div>
               )}
             </div>
 
@@ -91,7 +86,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
             {/* 우측 영역 - 라인업 리스트 */}
             <div className="absolute top-0 right-0 bottom-0 w-[40%] bg-black/80 p-4 sm:p-5 md:p-6 flex flex-col z-20">
               {/* 팀 로고 */}
-              <div className="flex items-center justify-center mb-3 pt-6">
+              <div className="flex items-center justify-center mb-8 pt-6">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 relative">
                   <img
                     src="/logo.png"
@@ -102,11 +97,17 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
               </div>
 
               {/* 경기 정보 */}
-              <div className="text-center space-y-1 mb-4">
-                <p className="text-gray-400 font-bold text-base sm:text-lg md:text-xl">
+              <div className="text-center space-y-3 mb-8">
+                <p
+                  className="text-gray-400 font-bold text-lg sm:text-xl md:text-2xl"
+                  style={{ lineHeight: '1.2' }}
+                >
                   {date || '날짜'}
                 </p>
-                <p className="text-gray-400 font-medium text-sm sm:text-base md:text-lg">
+                <p
+                  className="text-gray-400 font-medium text-lg sm:text-xl md:text-2xl"
+                  style={{ lineHeight: '1.2' }}
+                >
                   {location || '장소'}
                 </p>
               </div>
@@ -115,12 +116,29 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
               <div className="flex-1 flex flex-col justify-start overflow-y-auto">
                 <div className="space-y-2 sm:space-y-2.5 md:space-y-3">
                   {/* 선발투수 */}
-                  <div className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 shadow-lg border-l-4 border-l-gray-400 backdrop-blur-sm">
+                  <div
+                    className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 shadow-lg border-l-4 border-l-gray-400 backdrop-blur-sm"
+                    style={{ padding: '12px 16px' }}
+                  >
                     <div className="flex items-center justify-between gap-2 sm:gap-3">
-                      <span className="text-gray-400 font-extrabold text-base sm:text-lg md:text-xl w-10 sm:w-12 shrink-0">
+                      <span
+                        className="text-gray-400 font-extrabold text-xl sm:text-2xl md:text-3xl w-10 sm:w-12 shrink-0"
+                        style={{
+                          lineHeight: '1',
+                          verticalAlign: 'middle',
+                          display: 'inline-block',
+                        }}
+                      >
                         SP
                       </span>
-                      <span className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl flex-1 text-right break-words">
+                      <span
+                        className="text-white font-extrabold text-2xl sm:text-3xl md:text-4xl flex-1 text-right break-words"
+                        style={{
+                          lineHeight: '1',
+                          verticalAlign: 'middle',
+                          display: 'inline-block',
+                        }}
+                      >
                         {startingPitcher || '선수 이름'}
                       </span>
                     </div>
@@ -129,13 +147,28 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   {lineup.map((player, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 shadow-lg border-l-4 border-l-red-700 backdrop-blur-sm hover:border-l-red-400 transition-all duration-200"
+                      className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 shadow-lg border-l-4 border-l-red-700 backdrop-blur-sm hover:border-l-red-400 transition-all duration-200"
+                      style={{ padding: '12px 16px' }}
                     >
                       <div className="flex items-center justify-between gap-2 sm:gap-3">
-                        <span className="text-red-700 font-extrabold text-base sm:text-lg md:text-xl w-10 sm:w-12 shrink-0">
+                        <span
+                          className="text-red-700 font-extrabold text-xl sm:text-2xl md:text-3xl w-10 sm:w-12 shrink-0"
+                          style={{
+                            lineHeight: '1',
+                            verticalAlign: 'middle',
+                            display: 'inline-block',
+                          }}
+                        >
                           {player.position || '-'}
                         </span>
-                        <span className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl flex-1 text-right break-words">
+                        <span
+                          className="text-white font-extrabold text-2xl sm:text-3xl md:text-4xl flex-1 text-right break-words"
+                          style={{
+                            lineHeight: '1',
+                            verticalAlign: 'middle',
+                            display: 'inline-block',
+                          }}
+                        >
                           {player.name || '선수 이름'}
                         </span>
                       </div>
@@ -143,8 +176,11 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   ))}
 
                   {/* 감독 정보 */}
-                  <div className="mt-4 pt-3 border-t border-white/10">
-                    <p className="text-white/70 text-lg sm:text-xl md:text-2xl font-bold text-right">
+                  <div className="mt-6 pt-4 border-t border-white/10">
+                    <p
+                      className="text-white/70 text-xl sm:text-2xl md:text-3xl font-bold text-right"
+                      style={{ lineHeight: '1.2' }}
+                    >
                       감독 주형준
                     </p>
                   </div>
