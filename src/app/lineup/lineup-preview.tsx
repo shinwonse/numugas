@@ -100,13 +100,19 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
               <div className="text-center space-y-3 mb-8">
                 <p
                   className="text-gray-400 font-bold text-lg sm:text-xl md:text-2xl"
-                  style={{ lineHeight: '1.2' }}
+                  style={{
+                    lineHeight: '1.2',
+                    fontFamily: 'Aggravo, sans-serif',
+                  }}
                 >
                   {date || '날짜'}
                 </p>
                 <p
                   className="text-gray-400 font-medium text-lg sm:text-xl md:text-2xl"
-                  style={{ lineHeight: '1.2' }}
+                  style={{
+                    lineHeight: '1.2',
+                    fontFamily: 'Aggravo, sans-serif',
+                  }}
                 >
                   {location || '장소'}
                 </p>
@@ -131,6 +137,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                           lineHeight: '1',
                           verticalAlign: 'middle',
                           display: 'inline-block',
+                          fontFamily: 'Aggravo, sans-serif',
                         }}
                       >
                         SP
@@ -141,6 +148,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                           lineHeight: '1',
                           verticalAlign: 'middle',
                           display: 'inline-block',
+                          fontFamily: 'Aggravo, sans-serif',
                         }}
                       >
                         {startingPitcher || '선수 이름'}
@@ -165,6 +173,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                             lineHeight: '1',
                             verticalAlign: 'middle',
                             display: 'inline-block',
+                            fontFamily: 'Aggravo, sans-serif',
                           }}
                         >
                           {player.position || '-'}
@@ -175,6 +184,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                             lineHeight: '1',
                             verticalAlign: 'middle',
                             display: 'inline-block',
+                            fontFamily: 'Aggravo, sans-serif',
                           }}
                         >
                           {player.name || '선수 이름'}
@@ -187,7 +197,10 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   <div className="mt-6 pt-4 border-t border-white/10">
                     <p
                       className="text-white/70 text-xl sm:text-2xl md:text-3xl font-bold text-right"
-                      style={{ lineHeight: '1.2' }}
+                      style={{
+                        lineHeight: '1.2',
+                        fontFamily: 'Aggravo, sans-serif',
+                      }}
                     >
                       감독 주형준
                     </p>
