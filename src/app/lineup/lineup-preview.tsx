@@ -132,7 +132,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   >
                     <div className="flex items-center justify-between gap-2 sm:gap-3">
                       <span
-                        className="text-gray-400 font-extrabold text-lg sm:text-xl md:text-2xl w-10 sm:w-12 shrink-0"
+                        className="text-gray-400 font-extrabold text-base sm:text-lg md:text-xl w-10 sm:w-12 shrink-0"
                         style={{
                           lineHeight: '1',
                           verticalAlign: 'middle',
@@ -143,7 +143,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                         SP
                       </span>
                       <span
-                        className="text-white font-extrabold text-2xl sm:text-3xl md:text-4xl flex-1 text-right break-words"
+                        className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl flex-1 text-right break-words"
                         style={{
                           lineHeight: '1',
                           verticalAlign: 'middle',
@@ -168,7 +168,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                     >
                       <div className="flex items-center justify-between gap-2 sm:gap-3">
                         <span
-                          className="text-red-700 font-extrabold text-lg sm:text-xl md:text-2xl w-10 sm:w-12 shrink-0"
+                          className="text-red-700 font-extrabold text-base sm:text-lg md:text-xl w-10 sm:w-12 shrink-0"
                           style={{
                             lineHeight: '1',
                             verticalAlign: 'middle',
@@ -179,7 +179,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                           {player.position || '-'}
                         </span>
                         <span
-                          className="text-white font-extrabold text-2xl sm:text-3xl md:text-4xl flex-1 text-right break-words"
+                          className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl flex-1 text-right break-words"
                           style={{
                             lineHeight: '1',
                             verticalAlign: 'middle',

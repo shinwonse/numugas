@@ -102,10 +102,21 @@ export default function LineupPage() {
 
     setIsExporting(true);
     try {
+      // 폰트가 완전히 로드될 때까지 대기
+      await document.fonts.ready;
+
       const dataUrl = await toPng(previewRef.current, {
         quality: 1,
         pixelRatio: 2, // 고해상도
         cacheBust: true,
+        skipFonts: false,
+        filter: (node) => {
+          // 외부 스타일시트 링크를 제외하여 CORS 오류 방지
+          if (node instanceof HTMLLinkElement && node.rel === 'stylesheet') {
+            return false;
+          }
+          return true;
+        },
       });
 
       // 다운로드 링크 생성
