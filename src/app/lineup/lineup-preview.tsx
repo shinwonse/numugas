@@ -117,8 +117,12 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                 <div className="space-y-4 sm:space-y-4 md:space-y-4">
                   {/* 선발투수 */}
                   <div
-                    className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 shadow-lg border-l-4 border-l-gray-400 backdrop-blur-sm"
-                    style={{ padding: '12px 16px' }}
+                    className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 border-l-4 border-l-gray-400 backdrop-blur-sm"
+                    style={{
+                      padding: '12px 16px',
+                      boxShadow:
+                        '0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3)',
+                    }}
                   >
                     <div className="flex items-center justify-between gap-2 sm:gap-3">
                       <span
@@ -147,8 +151,12 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   {lineup.map((player, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 shadow-lg border-l-4 border-l-red-700 backdrop-blur-sm hover:border-l-red-400 transition-all duration-200"
-                      style={{ padding: '12px 16px' }}
+                      className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 border-l-4 border-l-red-700 backdrop-blur-sm hover:border-l-red-400 transition-all duration-200"
+                      style={{
+                        padding: '12px 16px',
+                        boxShadow:
+                          '0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3)',
+                      }}
                     >
                       <div className="flex items-center justify-between gap-2 sm:gap-3">
                         <span
