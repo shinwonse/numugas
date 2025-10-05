@@ -25,6 +25,7 @@ const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'];
 export default function LineupPage() {
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
+  const [league, setLeague] = useState('');
   const [playerImage, setPlayerImage] = useState<string | null>(null);
   const [startingPitcher, setStartingPitcher] = useState('');
   const [lineup, setLineup] = useState<PlayerPosition[]>([
@@ -65,6 +66,7 @@ export default function LineupPage() {
   const handleReset = () => {
     setDate('');
     setLocation('');
+    setLeague('');
     setPlayerImage(null);
     setStartingPitcher('');
     setLineup(
@@ -89,13 +91,14 @@ export default function LineupPage() {
           startingPitcher={startingPitcher}
           date={date}
           location={location}
+          league={league}
         />
 
         {/* 라인업 입력 폼 */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-4">라인업 정보</h2>
 
-          {/* 날짜, 장소, 이미지 입력 */}
+          {/* 날짜, 장소, 리그, 이미지 입력 */}
           <div className="space-y-4 mb-6 pb-6 border-b">
             <div>
               <Label htmlFor="date" className="mb-2 block">
@@ -119,6 +122,20 @@ export default function LineupPage() {
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="경기 장소"
               />
+            </div>
+            <div>
+              <Label htmlFor="league" className="mb-2 block">
+                리그 선택
+              </Label>
+              <Select value={league} onValueChange={setLeague}>
+                <SelectTrigger>
+                  <SelectValue placeholder="리그를 선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ecoking">에코킹리그</SelectItem>
+                  <SelectItem value="jungnang">중랑리그</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="playerImage" className="mb-2 block">

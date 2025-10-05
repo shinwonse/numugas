@@ -15,6 +15,7 @@ interface LineupPreviewProps {
   startingPitcher?: string;
   date?: string;
   location?: string;
+  league?: string;
 }
 
 export function LineupPreview({
@@ -23,7 +24,13 @@ export function LineupPreview({
   startingPitcher,
   date,
   location,
+  league,
 }: LineupPreviewProps) {
+  const leagueText = (() => {
+    if (league === 'ecoking') return 'ECOKING LEAGUE';
+    if (league === 'jungnang') return 'JUNGNANG LEAGUE';
+    return null;
+  })();
   return (
     <div className="flex justify-center w-full">
       <div className="w-full">
@@ -67,8 +74,13 @@ export function LineupPreview({
               )}
             </div>
 
-            {/* STARTING LINEUP 타이틀 */}
+            {/* 리그 텍스트 & STARTING LINEUP 타이틀 */}
             <div className="absolute top-20 left-6 z-30">
+              {leagueText && (
+                <p className="text-xl sm:text-2xl md:text-3xl font-bold text-red-500 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-2">
+                  {leagueText}
+                </p>
+              )}
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
                 STARTING
                 <br /> LINEUP
