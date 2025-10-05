@@ -78,7 +78,7 @@ export function LineupPreview({
             {/* 우측 영역 - 라인업 리스트 */}
             <div className="absolute top-0 right-0 bottom-0 w-[40%] bg-black/80 p-4 sm:p-5 md:p-6 flex flex-col z-20">
               {/* 팀 로고 */}
-              <div className="flex items-center justify-center mb-4 pt-10">
+              <div className="flex items-center justify-center mb-3 pt-6">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 relative">
                   <img
                     src="/logo.png"
@@ -89,7 +89,7 @@ export function LineupPreview({
               </div>
 
               {/* 경기 정보 */}
-              <div className="text-center space-y-1 mb-6">
+              <div className="text-center space-y-1 mb-4">
                 <p className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl">
                   {date || '날짜'}
                 </p>
@@ -99,31 +99,42 @@ export function LineupPreview({
               </div>
 
               {/* 선수 목록 */}
-              <div className="flex-1 flex flex-col justify-center">
-                <div className="space-y-1 sm:space-y-1.5 md:space-y-2">
+              <div className="flex-1 flex flex-col justify-start overflow-y-auto">
+                <div className="space-y-2 sm:space-y-2.5 md:space-y-3">
                   {/* 선발투수 */}
-                  <div className="flex items-center justify-between gap-2 sm:gap-3 py-1.5 sm:py-2 md:py-2.5 border-b border-slate-800">
-                    <span className="text-red-400 font-extrabold text-sm sm:text-base md:text-lg w-10 sm:w-12">
-                      SP
-                    </span>
-                    <span className="text-white font-extrabold text-lg sm:text-xl md:text-2xl flex-1 truncate text-right">
-                      {startingPitcher || '선수 이름'}
-                    </span>
+                  <div className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 shadow-lg border-l-4 border-l-gray-400 backdrop-blur-sm">
+                    <div className="flex items-center justify-between gap-2 sm:gap-3">
+                      <span className="text-gray-400 font-extrabold text-sm sm:text-base md:text-lg w-10 sm:w-12">
+                        SP
+                      </span>
+                      <span className="text-white font-extrabold text-lg sm:text-xl md:text-2xl flex-1 truncate text-right">
+                        {startingPitcher || '선수 이름'}
+                      </span>
+                    </div>
                   </div>
                   {/* 타자 라인업 */}
                   {lineup.map((player, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between gap-2 sm:gap-3 py-1.5 sm:py-2 md:py-2.5 border-b border-slate-800 last:border-b-0"
+                      className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 shadow-lg border-l-4 border-l-red-800 backdrop-blur-sm hover:border-l-red-400 transition-all duration-200"
                     >
-                      <span className="text-red-400 font-extrabold text-sm sm:text-base md:text-lg w-10 sm:w-12">
-                        {player.position || '-'}
-                      </span>
-                      <span className="text-white font-extrabold text-lg sm:text-xl md:text-2xl flex-1 truncate text-right">
-                        {player.name || '선수 이름'}
-                      </span>
+                      <div className="flex items-center justify-between gap-2 sm:gap-3">
+                        <span className="text-red-800 font-extrabold text-sm sm:text-base md:text-lg w-10 sm:w-12">
+                          {player.position || '-'}
+                        </span>
+                        <span className="text-white font-extrabold text-lg sm:text-xl md:text-2xl flex-1 truncate text-right">
+                          {player.name || '선수 이름'}
+                        </span>
+                      </div>
                     </div>
                   ))}
+
+                  {/* 감독 정보 */}
+                  <div className="mt-4 pt-3 border-t border-white/10">
+                    <p className="text-white/70 text-base sm:text-lg md:text-xl font-bold text-right">
+                      감독 주형준
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -131,17 +142,17 @@ export function LineupPreview({
             {/* 하단 띠 영역 */}
             <div className="absolute bottom-10 left-0 right-0 z-30 gap-4 flex flex-col">
               {/* 첫 번째 띠 */}
-              <div className="h-8 bg-gray-700 flex items-center justify-center overflow-hidden">
+              <div className="h-8 bg-black/70 flex items-center justify-start overflow-hidden">
                 <p className="text-white text-[10px] sm:text-xs font-bold tracking-widest whitespace-nowrap">
-                  DAMJANG NUMUGAS BASEBALL CLUB • DAMJANG NUMUGAS BASEBALL CLUB
-                  • DAMJANG NUMUGAS BASEBALL CLUB
+                  NUMUGAS BASEBALL CLUB • DAMJANG NUMUGAS BASEBALL CLUB •
+                  DAMJANG NUMUGAS BASEBALL CLUB
                 </p>
               </div>
               {/* 두 번째 띠 */}
-              <div className="h-8 bg-gray-600 flex items-center justify-center overflow-hidden">
+              <div className="h-8 bg-black/70 flex items-center justify-start overflow-hidden">
                 <p className="text-white text-[10px] sm:text-xs font-bold tracking-widest whitespace-nowrap">
-                  DAMJANG NUMUGAS BASEBALL CLUB • DAMJANG NUMUGAS BASEBALL CLUB
-                  • DAMJANG NUMUGAS BASEBALL CLUB
+                  CLUB • DAMJANG NUMUGAS BASEBALL CLUB • DAMJANG NUMUGAS
+                  BASEBALL CLUB • DAMJANG NUMUGAS BASEBALL CLUB
                 </p>
               </div>
             </div>
