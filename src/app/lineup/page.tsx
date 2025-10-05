@@ -26,6 +26,7 @@ export default function LineupPage() {
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
   const [playerImage, setPlayerImage] = useState<string | null>(null);
+  const [startingPitcher, setStartingPitcher] = useState('');
   const [lineup, setLineup] = useState<PlayerPosition[]>([
     { position: '', name: '', battingOrder: 1 },
     { position: '', name: '', battingOrder: 2 },
@@ -65,6 +66,7 @@ export default function LineupPage() {
     setDate('');
     setLocation('');
     setPlayerImage(null);
+    setStartingPitcher('');
     setLineup(
       Array.from({ length: 9 }, (_, i) => ({
         position: '',
@@ -81,7 +83,13 @@ export default function LineupPage() {
       {/* Mobile: 세로 배치, PC: 가로 배치 */}
       <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8">
         {/* 라인업 미리보기 */}
-        <LineupPreview lineup={lineup} playerImage={playerImage} />
+        <LineupPreview
+          lineup={lineup}
+          playerImage={playerImage}
+          startingPitcher={startingPitcher}
+          date={date}
+          location={location}
+        />
 
         {/* 라인업 입력 폼 */}
         <Card className="p-6">
@@ -126,8 +134,18 @@ export default function LineupPage() {
             </div>
           </div>
 
+          {/* 선발투수 입력 */}
+          <div className="mb-6 pb-6 border-b">
+            <h3 className="text-lg font-semibold mb-3">선발투수</h3>
+            <Input
+              value={startingPitcher}
+              onChange={(e) => setStartingPitcher(e.target.value)}
+              placeholder="선발투수 이름"
+            />
+          </div>
+
           {/* 선수 입력 */}
-          <h3 className="text-lg font-semibold mb-3">선수 입력</h3>
+          <h3 className="text-lg font-semibold mb-3">타자 라인업</h3>
           <div className="space-y-3">
             {lineup.map((player, index) => (
               <div
