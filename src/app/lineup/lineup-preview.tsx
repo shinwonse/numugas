@@ -29,6 +29,7 @@ export function LineupPreview({
   const leagueText = (() => {
     if (league === 'ecoking') return 'ECOKING LEAGUE';
     if (league === 'jungnang') return 'JUNGNANG LEAGUE';
+    if (league === 'nowon') return 'NOWON TOURNAMENT';
     return null;
   })();
   return (

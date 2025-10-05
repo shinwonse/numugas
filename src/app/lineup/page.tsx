@@ -149,6 +149,7 @@ export default function LineupPage() {
                 <SelectContent>
                   <SelectItem value="ecoking">에코킹리그</SelectItem>
                   <SelectItem value="jungnang">중랑리그</SelectItem>
+                  <SelectItem value="nowon">노원구청장기</SelectItem>
                 </SelectContent>
               </Select>
             </div>
