@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const NAVIGATION_ITEMS = [
   { label: '기록', href: '/stats' },
@@ -13,19 +13,7 @@ const NAVIGATION_ITEMS = [
 ] as const;
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   return (
     <header
@@ -35,20 +23,28 @@ export function Header() {
         'h-20',
       )}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between h-full">
+      <div
+        className={cn(
+          'max-w-7xl mx-auto flex items-center justify-between h-full',
+        )}
+      >
         <Link
           href="/"
-          className="text-2xl font-bold flex items-center gap-2 text-white font-display"
+          className={cn(
+            'text-2xl font-bold flex items-center gap-2 text-white font-display',
+          )}
         >
           <Image src="/logo.webp" alt="title" width={50} height={10} />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className={cn('hidden md:flex items-center gap-8')}>
           {NAVIGATION_ITEMS.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className="text-gray-300 hover:text-red-500 transition-colors"
+              className={cn(
+                'text-gray-300 hover:text-red-500 transition-colors',
+              )}
             >
               {item.label}
             </Link>
@@ -56,10 +52,11 @@ export function Header() {
         </nav>
 
         <button
-          className="md:hidden text-white"
+          className={cn('md:hidden text-white')}
           onClick={() => {
             setIsMenuOpen(!isMenuOpen);
           }}
+          type="button"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -67,12 +64,18 @@ export function Header() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-black/95 z-40 flex flex-col items-center pt-10 gap-6">
+        <div
+          className={cn(
+            'md:hidden fixed inset-0 top-16 bg-black/95 z-40 flex flex-col items-center pt-10 gap-6',
+          )}
+        >
           {NAVIGATION_ITEMS.map((item) => (
             <Link
               key={item.label}
               href={item.href}
-              className="text-xl text-gray-300 hover:text-red-500 transition-colors"
+              className={cn(
+                'text-xl text-gray-300 hover:text-red-500 transition-colors',
+              )}
               onClick={() => {
                 setIsMenuOpen(false);
               }}
