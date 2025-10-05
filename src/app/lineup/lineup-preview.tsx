@@ -114,7 +114,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
 
               {/* 선수 목록 */}
               <div className="flex-1 flex flex-col justify-start overflow-y-auto">
-                <div className="space-y-2 sm:space-y-2.5 md:space-y-3">
+                <div className="space-y-4 sm:space-y-4 md:space-y-4">
                   {/* 선발투수 */}
                   <div
                     className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 shadow-lg border-l-4 border-l-gray-400 backdrop-blur-sm"
@@ -122,7 +122,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   >
                     <div className="flex items-center justify-between gap-2 sm:gap-3">
                       <span
-                        className="text-gray-400 font-extrabold text-xl sm:text-2xl md:text-3xl w-10 sm:w-12 shrink-0"
+                        className="text-gray-400 font-extrabold text-lg sm:text-xl md:text-2xl w-10 sm:w-12 shrink-0"
                         style={{
                           lineHeight: '1',
                           verticalAlign: 'middle',
@@ -152,7 +152,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                     >
                       <div className="flex items-center justify-between gap-2 sm:gap-3">
                         <span
-                          className="text-red-700 font-extrabold text-xl sm:text-2xl md:text-3xl w-10 sm:w-12 shrink-0"
+                          className="text-red-700 font-extrabold text-lg sm:text-xl md:text-2xl w-10 sm:w-12 shrink-0"
                           style={{
                             lineHeight: '1',
                             verticalAlign: 'middle',
