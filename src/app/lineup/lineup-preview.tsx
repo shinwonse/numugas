@@ -71,7 +71,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
             </div>
 
             {/* 리그 텍스트 & STARTING LINEUP 타이틀 */}
-            <div className="absolute top-16 left-6 z-30">
+            <div className="absolute top-24 left-6 z-30">
               {leagueText && (
                 <p className="text-xl sm:text-2xl md:text-3xl font-bold text-red-700 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-2">
                   {leagueText}
@@ -86,7 +86,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
             {/* 우측 영역 - 라인업 리스트 */}
             <div className="absolute top-0 right-0 bottom-0 w-[40%] bg-black/80 p-4 sm:p-5 md:p-6 flex flex-col z-20">
               {/* 팀 로고 */}
-              <div className="flex items-center justify-center mb-8 pt-6">
+              <div className="flex items-center justify-center mb-8 pt-16">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 relative">
                   <img
                     src="/logo.png"
