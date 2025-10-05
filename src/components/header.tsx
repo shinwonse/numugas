@@ -6,6 +6,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
+const NAVIGATION_ITEMS = [
+  { label: '기록', href: '/stats' },
+  { label: '선수단', href: '/players' },
+  { label: '라인업', href: '/lineup' },
+] as const;
+
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,10 +44,7 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {[
-            { label: '기록', href: '/stats' },
-            { label: '선수단', href: '/players' },
-          ].map((item) => (
+          {NAVIGATION_ITEMS.map((item) => (
             <Link
               key={item.label}
               href={item.href}
@@ -65,10 +68,7 @@ export function Header() {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden fixed inset-0 top-16 bg-black/95 z-40 flex flex-col items-center pt-10 gap-6">
-          {[
-            { label: '기록', href: '/stats' },
-            { label: '선수단', href: '/players' },
-          ].map((item) => (
+          {NAVIGATION_ITEMS.map((item) => (
             <Link
               key={item.label}
               href={item.href}
