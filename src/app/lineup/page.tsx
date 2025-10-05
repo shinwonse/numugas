@@ -11,7 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useState } from 'react';
+import html2canvas from 'html2canvas';
+import { useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { LineupPreview } from './lineup-preview';
 
 interface PlayerPosition {
@@ -38,11 +40,13 @@ const formatDate = (dateString: string): string => {
 };
 
 export default function LineupPage() {
+  const previewRef = useRef<HTMLDivElement>(null);
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
   const [league, setLeague] = useState('');
   const [playerImage, setPlayerImage] = useState<string | null>(null);
   const [startingPitcher, setStartingPitcher] = useState('');
+  const [isExporting, setIsExporting] = useState(false);
   const [lineup, setLineup] = useState<PlayerPosition[]>([
     { position: '', name: '', battingOrder: 1 },
     { position: '', name: '', battingOrder: 2 },
@@ -93,6 +97,47 @@ export default function LineupPage() {
     );
   };
 
+  const handleExportImage = async () => {
+    if (!previewRef.current) return;
+
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(previewRef.current, {
+        backgroundColor: null,
+        scale: 2, // 고해상도 이미지
+        useCORS: true,
+        logging: false,
+        imageTimeout: 0,
+      });
+
+      // Canvas를 Blob으로 변환
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          toast.error('이미지 생성에 실패했습니다.');
+          return;
+        }
+
+        // 다운로드 링크 생성
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const fileName = `lineup_${new Date().getTime()}.png`;
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        toast.success('라인업 이미지가 다운로드되었습니다.');
+      }, 'image/png');
+    } catch (error) {
+      console.error('Image export error:', error);
+      toast.error('이미지 다운로드 중 오류가 발생했습니다.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">라인업 작성</h1>
@@ -101,6 +146,7 @@ export default function LineupPage() {
       <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8">
         {/* 라인업 미리보기 */}
         <LineupPreview
+          ref={previewRef}
           lineup={lineup}
           playerImage={playerImage}
           startingPitcher={startingPitcher}
@@ -221,7 +267,14 @@ export default function LineupPage() {
             <Button className="flex-1" variant="outline" onClick={handleReset}>
               초기화
             </Button>
-            <Button className="flex-1">저장</Button>
+            <Button
+              className="flex-1"
+              variant="secondary"
+              onClick={handleExportImage}
+              disabled={isExporting}
+            >
+              {isExporting ? '이미지 생성 중...' : '이미지 다운로드'}
+            </Button>
           </div>
         </Card>
       </div>

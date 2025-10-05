@@ -1,6 +1,7 @@
 import { Header } from '@/components/header';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 import { StagewiseToolbar } from '@stagewise/toolbar-next';
 import { Montserrat, Orbitron } from 'next/font/google';
 import type { Metadata } from 'next/types';
@@ -63,6 +64,7 @@ export default function RootLayout({
           >
             <Header />
             <div className="pt-20">{children}</div>
+            <Toaster />
           </ThemeProvider>
         </QueryClientProviderWrapper>
         {process.env.NODE_ENV === 'development' && (
