@@ -2,6 +2,7 @@ import { Header } from '@/components/header';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { aggravo } from '@/lib/fonts';
 import { StagewiseToolbar } from '@stagewise/toolbar-next';
 import { Montserrat, Orbitron } from 'next/font/google';
 import type { Metadata } from 'next/types';
@@ -54,7 +55,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body className={`${montserrat.variable} ${orbitron.variable} font-sans`}>
+      <body
+        className={`${montserrat.variable} ${orbitron.variable} ${aggravo.variable} font-sans`}
+      >
         <QueryClientProviderWrapper>
           <ThemeProvider
             attribute="class"

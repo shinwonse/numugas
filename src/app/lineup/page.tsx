@@ -11,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Download } from 'lucide-react';
+import { domToPng } from 'modern-screenshot';
 import { useRef, useState } from 'react';
 import { LineupPreview } from './lineup-preview';
 
@@ -44,6 +46,7 @@ export default function LineupPage() {
   const [league, setLeague] = useState('');
   const [playerImage, setPlayerImage] = useState<string | null>(null);
   const [startingPitcher, setStartingPitcher] = useState('');
+  const [isExporting, setIsExporting] = useState(false);
   const [lineup, setLineup] = useState<PlayerPosition[]>([
     { position: '', name: '', battingOrder: 1 },
     { position: '', name: '', battingOrder: 2 },
@@ -94,6 +97,51 @@ export default function LineupPage() {
     );
   };
 
+  const handleDownloadImage = async () => {
+    if (!previewRef.current) return;
+
+    setIsExporting(true);
+
+    try {
+      // 폰트가 로드될 때까지 기다리기
+      await document.fonts.ready;
+
+      // 렌더링 완료 보장
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
+      // modern-screenshot을 사용하여 이미지 생성
+      const dataUrl = await domToPng(previewRef.current, {
+        scale: 2,
+        backgroundColor: '#000000',
+        filter: (node) => {
+          // TransformWrapper 관련 요소 제외
+          if (
+            node instanceof Element &&
+            (node.classList?.contains('react-transform-wrapper') ||
+              node.classList?.contains('react-transform-component'))
+          ) {
+            return false;
+          }
+          return true;
+        },
+      });
+
+      const link = document.createElement('a');
+      const timestamp = new Date()
+        .toISOString()
+        .slice(0, 16)
+        .replace(/:/g, '-');
+      link.download = `lineup-${timestamp}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('이미지 다운로드 중 오류가 발생했습니다:', error);
+      alert('이미지 다운로드에 실패했습니다.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <>
       <div className="container mx-auto px-4 py-8">
@@ -110,6 +158,7 @@ export default function LineupPage() {
             date={formatDate(date)}
             location={location}
             league={league}
+            disableTransform={isExporting}
           />
 
           {/* 라인업 입력 폼 */}
@@ -225,8 +274,17 @@ export default function LineupPage() {
                 className="flex-1"
                 variant="outline"
                 onClick={handleReset}
+                disabled={isExporting}
               >
                 초기화
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleDownloadImage}
+                disabled={isExporting}
+              >
+                <Download className="w-4 h-4 mr-2" />
+                {isExporting ? '생성 중...' : '이미지 다운로드'}
               </Button>
             </div>
           </Card>

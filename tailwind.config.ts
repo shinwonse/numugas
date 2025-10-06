@@ -22,6 +22,7 @@ const config = {
       fontFamily: {
         sans: ["var(--font-montserrat)", "sans-serif"],
         display: ["var(--font-orbitron)", "sans-serif"],
+        aggravo: ["var(--font-aggravo)", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

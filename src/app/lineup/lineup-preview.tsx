@@ -17,11 +17,20 @@ interface LineupPreviewProps {
   date?: string;
   location?: string;
   league?: string;
+  disableTransform?: boolean;
 }
 
 export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
   function LineupPreview(
-    { lineup, playerImage, startingPitcher, date, location, league },
+    {
+      lineup,
+      playerImage,
+      startingPitcher,
+      date,
+      location,
+      league,
+      disableTransform = false,
+    },
     ref,
   ) {
     const leagueText = (() => {
@@ -45,7 +54,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
           <div className="relative h-full z-10">
             {/* 선수 이미지 영역 - 전체 배경 */}
             <div className="absolute inset-0 z-10">
-              {playerImage && (
+              {playerImage && !disableTransform && (
                 <TransformWrapper
                   initialScale={1}
                   minScale={0.1}
@@ -67,6 +76,15 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                     />
                   </TransformComponent>
                 </TransformWrapper>
+              )}
+              {playerImage && disableTransform && (
+                <div className="w-full h-full flex items-center justify-center">
+                  <img
+                    src={playerImage}
+                    alt="대표 선수"
+                    className="max-w-none h-full object-contain"
+                  />
+                </div>
               )}
             </div>
 
@@ -98,22 +116,10 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
 
               {/* 경기 정보 */}
               <div className="text-center space-y-3 mb-8">
-                <p
-                  className="text-gray-400 font-bold text-lg sm:text-xl md:text-2xl"
-                  style={{
-                    lineHeight: '1.2',
-                    fontFamily: 'Aggravo, sans-serif',
-                  }}
-                >
+                <p className="text-gray-400 font-bold text-lg sm:text-xl md:text-2xl font-aggravo leading-tight">
                   {date || '날짜'}
                 </p>
-                <p
-                  className="text-gray-400 font-medium text-lg sm:text-xl md:text-2xl"
-                  style={{
-                    lineHeight: '1.2',
-                    fontFamily: 'Aggravo, sans-serif',
-                  }}
-                >
+                <p className="text-gray-400 font-medium text-lg sm:text-xl md:text-2xl font-aggravo leading-tight">
                   {location || '장소'}
                 </p>
               </div>
@@ -131,26 +137,10 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                     }}
                   >
                     <div className="flex items-center justify-between gap-2 sm:gap-3">
-                      <span
-                        className="text-gray-400 font-extrabold text-base sm:text-lg md:text-xl w-10 sm:w-12 shrink-0"
-                        style={{
-                          lineHeight: '1',
-                          verticalAlign: 'middle',
-                          display: 'inline-block',
-                          fontFamily: 'Aggravo, sans-serif',
-                        }}
-                      >
+                      <span className="text-gray-400 font-extrabold text-base sm:text-lg md:text-xl w-10 sm:w-12 shrink-0 font-aggravo leading-none inline-block align-middle">
                         SP
                       </span>
-                      <span
-                        className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl flex-1 text-right break-words"
-                        style={{
-                          lineHeight: '1',
-                          verticalAlign: 'middle',
-                          display: 'inline-block',
-                          fontFamily: 'Aggravo, sans-serif',
-                        }}
-                      >
+                      <span className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl flex-1 text-right break-words font-aggravo leading-none inline-block align-middle">
                         {startingPitcher || '이름'}
                       </span>
                     </div>
@@ -167,26 +157,10 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                       }}
                     >
                       <div className="flex items-center justify-between gap-2 sm:gap-3">
-                        <span
-                          className="text-red-700 font-extrabold text-base sm:text-lg md:text-xl w-10 sm:w-12 shrink-0"
-                          style={{
-                            lineHeight: '1',
-                            verticalAlign: 'middle',
-                            display: 'inline-block',
-                            fontFamily: 'Aggravo, sans-serif',
-                          }}
-                        >
+                        <span className="text-red-700 font-extrabold text-base sm:text-lg md:text-xl w-10 sm:w-12 shrink-0 font-aggravo leading-none inline-block align-middle">
                           {player.position || '-'}
                         </span>
-                        <span
-                          className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl flex-1 text-right break-words"
-                          style={{
-                            lineHeight: '1',
-                            verticalAlign: 'middle',
-                            display: 'inline-block',
-                            fontFamily: 'Aggravo, sans-serif',
-                          }}
-                        >
+                        <span className="text-white font-extrabold text-xl sm:text-2xl md:text-3xl flex-1 text-right break-words font-aggravo leading-none inline-block align-middle">
                           {player.name || '이름'}
                         </span>
                       </div>
@@ -195,13 +169,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
 
                   {/* 감독 정보 */}
                   <div className="mt-6 pt-4 border-t border-white/10">
-                    <p
-                      className="text-white/70 text-xl sm:text-2xl md:text-3xl font-bold text-right"
-                      style={{
-                        lineHeight: '1.2',
-                        fontFamily: 'Aggravo, sans-serif',
-                      }}
-                    >
+                    <p className="text-white/70 text-xl sm:text-2xl md:text-3xl font-bold text-right font-aggravo leading-tight">
                       감독 주형준
                     </p>
                   </div>
