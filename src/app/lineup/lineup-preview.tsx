@@ -111,7 +111,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
               {leagueText && (
                 <p
                   className="font-bold text-2xl text-red-700 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-4"
-                  style={{ fontSize: '3.75rem' }}
+                  style={{ fontSize: '3rem' }}
                 >
                   {leagueText}
                 </p>
