@@ -98,11 +98,16 @@ export default function LineupPage() {
   };
 
   const handleDownloadImage = async () => {
-    if (!previewRef.current) return;
-
     setIsExporting(true);
 
     try {
+      // Export용 컴포넌트가 렌더링되고 ref가 연결될 때까지 기다리기
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      if (!previewRef.current) {
+        throw new Error('미리보기 요소를 찾을 수 없습니다.');
+      }
+
       // 폰트가 로드될 때까지 기다리기
       await document.fonts.ready;
 
@@ -144,25 +149,50 @@ export default function LineupPage() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">라인업 작성</h1>
+      <div className="px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8 text-center">라인업 작성</h1>
 
-        {/* Mobile: 세로 배치, PC: 가로 배치 */}
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8">
-          {/* 라인업 미리보기 */}
-          <LineupPreview
-            ref={previewRef}
-            lineup={lineup}
-            playerImage={playerImage}
-            startingPitcher={startingPitcher}
-            date={formatDate(date)}
-            location={location}
-            league={league}
-            disableTransform={isExporting}
-          />
+        {/* 고정 레이아웃 */}
+        <div className="flex gap-8 justify-center items-start overflow-x-auto">
+          {/* 편집용 미리보기 (항상 표시) */}
+          <div className="flex-shrink-0">
+            <LineupPreview
+              lineup={lineup}
+              playerImage={playerImage}
+              startingPitcher={startingPitcher}
+              date={formatDate(date)}
+              location={location}
+              league={league}
+              disableTransform={false}
+              isExporting={false}
+            />
+          </div>
+
+          {/* Export용 미리보기 (화면 밖, export 시에만 렌더링) */}
+          {isExporting && (
+            <div
+              style={{
+                position: 'fixed',
+                left: '-9999px',
+                top: '0',
+              }}
+            >
+              <LineupPreview
+                ref={previewRef}
+                lineup={lineup}
+                playerImage={playerImage}
+                startingPitcher={startingPitcher}
+                date={formatDate(date)}
+                location={location}
+                league={league}
+                disableTransform={true}
+                isExporting={true}
+              />
+            </div>
+          )}
 
           {/* 라인업 입력 폼 */}
-          <Card className="p-6">
+          <Card className="p-6 flex-shrink-0" style={{ width: '500px' }}>
             <h2 className="text-xl font-semibold mb-4">라인업 정보</h2>
 
             {/* 날짜, 장소, 리그, 이미지 입력 */}
