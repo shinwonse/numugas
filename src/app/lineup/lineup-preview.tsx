@@ -151,7 +151,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                           fontFamily: 'Aggravo, sans-serif',
                         }}
                       >
-                        {startingPitcher || '선수 이름'}
+                        {startingPitcher || '이름'}
                       </span>
                     </div>
                   </div>
@@ -187,7 +187,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                             fontFamily: 'Aggravo, sans-serif',
                           }}
                         >
-                          {player.name || '선수 이름'}
+                          {player.name || '이름'}
                         </span>
                       </div>
                     </div>
