@@ -11,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Download } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Download, Monitor } from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
 import { useRef, useState } from 'react';
 import { LineupPreview } from './lineup-preview';
@@ -40,6 +41,7 @@ const formatDate = (dateString: string): string => {
 };
 
 export default function LineupPage() {
+  const isMobile = useIsMobile();
   const previewRef = useRef<HTMLDivElement>(null);
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
@@ -149,11 +151,15 @@ export default function LineupPage() {
 
   return (
     <>
-      <div className="px-4 py-8">
+      <div className="relative px-4 py-8">
         <h1 className="text-3xl font-bold mb-8 text-center">라인업 작성</h1>
 
         {/* 고정 레이아웃 */}
-        <div className="flex gap-8 justify-center items-start overflow-x-auto">
+        <div
+          className={`flex gap-8 justify-center items-start overflow-x-auto ${
+            isMobile ? 'blur-sm pointer-events-none select-none' : ''
+          }`}
+        >
           {/* 편집용 미리보기 (항상 표시) */}
           <div className="flex-shrink-0">
             <LineupPreview
@@ -319,6 +325,28 @@ export default function LineupPage() {
             </div>
           </Card>
         </div>
+
+        {/* 모바일 안내 메시지 */}
+        {isMobile && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20">
+            <Card className="max-w-md p-8 text-center space-y-4">
+              <div className="flex justify-center mb-4">
+                <div className="p-4 bg-primary/10 rounded-full">
+                  <Monitor className="w-12 h-12 text-primary" />
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold">데스크톱에서 이용해주세요</h2>
+              <p className="text-muted-foreground">
+                라인업 작성 기능은 더 나은 경험을 위해
+                <br />
+                데스크톱 환경에서만 지원됩니다.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                PC 또는 태블릿의 가로 모드로 접속해주세요.
+              </p>
+            </Card>
+          </div>
+        )}
       </div>
     </>
   );
