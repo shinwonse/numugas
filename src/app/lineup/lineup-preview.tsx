@@ -123,7 +123,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                 <div className="space-y-4 sm:space-y-4 md:space-y-4">
                   {/* 선발투수 */}
                   <div
-                    className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 border-l-4 border-l-gray-400 backdrop-blur-sm"
+                    className="rounded-sm px-3 sm:px-4 border-l-4 border-l-gray-400 backdrop-blur-sm"
                     style={{
                       padding: '12px 16px',
                       boxShadow:
@@ -159,7 +159,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   {lineup.map((player, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-sm px-3 sm:px-4 border-l-4 border-l-red-700 backdrop-blur-sm hover:border-l-red-400 transition-all duration-200"
+                      className="rounded-sm px-3 sm:px-4 border-l-4 border-l-red-700 backdrop-blur-sm hover:border-l-red-400 transition-all duration-200"
                       style={{
                         padding: '12px 16px',
                         boxShadow:
