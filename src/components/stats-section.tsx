@@ -79,7 +79,7 @@ export function StatsSection({
       className="py-32 md:py-40"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="text-center mb-20">
+        <div className="text-center mb-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -88,14 +88,6 @@ export function StatsSection({
           >
             팀 통산 성적
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto"
-          >
-            담장NUMUGAS의 통산 주요 성적입니다.
-          </motion.p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {teamStats.map((stat, index) => (

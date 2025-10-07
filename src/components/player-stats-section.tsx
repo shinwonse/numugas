@@ -48,7 +48,7 @@ export function PlayerStatsSection({
       className="py-32 md:py-40"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="text-center mb-20">
+        <div className="text-center mb-10">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -57,14 +57,6 @@ export function PlayerStatsSection({
           >
             2025 시즌 선수 기록
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto"
-          >
-            2025 시즌 타자와 투수의 주요 기록을 확인하세요.
-          </motion.p>
         </div>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
