@@ -56,17 +56,17 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
-        className={`${montserrat.variable} ${orbitron.variable} ${aggravo.variable} font-sans`}
+        className={`${montserrat.variable} ${orbitron.variable} ${aggravo.variable} font-sans antialiased`}
       >
         <QueryClientProviderWrapper>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
+            enableSystem={false}
             disableTransitionOnChange
           >
             <Header />
-            <div className="pt-20">{children}</div>
+            <div className="pt-16">{children}</div>
             <Toaster />
           </ThemeProvider>
         </QueryClientProviderWrapper>

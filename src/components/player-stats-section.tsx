@@ -53,15 +53,15 @@ export function PlayerStatsSection({
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-5xl font-bold mb-4 font-display"
+            className="text-3xl md:text-4xl font-bold mb-3 font-display text-white"
           >
-            <span className="text-red-600">2025 시즌</span> 선수 기록
+            2025 시즌 선수 기록
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-gray-400 max-w-2xl mx-auto"
+            className="text-sm text-gray-500 max-w-2xl mx-auto"
           >
             2025 시즌 타자와 투수의 주요 기록을 확인하세요.
           </motion.p>
@@ -91,9 +91,11 @@ export function PlayerStatsSection({
                   }}
                   viewport={{ once: true, amount: 0.2 }}
                 >
-                  <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
-                    <CardHeader className="bg-transparent pb-2">
-                      <CardTitle className="text-xl">{stat.category}</CardTitle>
+                  <Card className="bg-black/40 border-white/5 hover:border-red-500/50 transition-all duration-300">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base font-semibold text-white">
+                        {stat.category}
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0">
                       {stat.players.map((player, playerIndex) => (
@@ -101,31 +103,33 @@ export function PlayerStatsSection({
                           key={`${stat.category}-${player.name}-batting`}
                           className={`flex items-center justify-between p-4 ${
                             playerIndex !== stat.players.length - 1
-                              ? 'border-b border-gray-800'
+                              ? 'border-b border-white/5'
                               : ''
-                          } ${player.team === 'RED DRAGONS' ? 'bg-red-950/30' : ''}`}
+                          } ${player.team === 'RED DRAGONS' ? 'bg-red-500/5' : ''}`}
                         >
                           <div className="flex items-center gap-3">
                             <div
-                              className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                              className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
                                 player.rank === 1
-                                  ? 'bg-yellow-500'
-                                  : player.rank === 2
-                                    ? 'bg-gray-400'
-                                    : 'bg-amber-700'
-                              } text-black font-bold text-sm`}
+                                  ? 'bg-red-500 text-white'
+                                  : 'bg-white/10 text-gray-400'
+                              }`}
                             >
                               {player.rank}
                             </div>
                             <div>
-                              <p className="font-medium">{player.name}</p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-sm font-medium text-white">
+                                {player.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
                                 {player.team}
                               </p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="font-bold">{player.value}</p>
+                            <p className="text-sm font-semibold text-white">
+                              {player.value}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -149,9 +153,11 @@ export function PlayerStatsSection({
                   }}
                   viewport={{ once: true, amount: 0.2 }}
                 >
-                  <Card className="bg-black/60 border-white/10 hover:border-red-400/60 shadow-xl shadow-red-400/10 transition-all duration-300">
-                    <CardHeader className="bg-transparent pb-2">
-                      <CardTitle className="text-xl">{stat.category}</CardTitle>
+                  <Card className="bg-black/40 border-white/5 hover:border-red-500/50 transition-all duration-300">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-base font-semibold text-white">
+                        {stat.category}
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0">
                       {stat.players.map((player, playerIndex) => (
@@ -159,31 +165,33 @@ export function PlayerStatsSection({
                           key={`${stat.category}-${player.name}-pitching`}
                           className={`flex items-center justify-between p-4 ${
                             playerIndex !== stat.players.length - 1
-                              ? 'border-b border-gray-800'
+                              ? 'border-b border-white/5'
                               : ''
-                          } ${player.team === 'RED DRAGONS' ? 'bg-red-950/30' : ''}`}
+                          } ${player.team === 'RED DRAGONS' ? 'bg-red-500/5' : ''}`}
                         >
                           <div className="flex items-center gap-3">
                             <div
-                              className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                              className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
                                 player.rank === 1
-                                  ? 'bg-yellow-500'
-                                  : player.rank === 2
-                                    ? 'bg-gray-400'
-                                    : 'bg-amber-700'
-                              } text-black font-bold text-sm`}
+                                  ? 'bg-red-500 text-white'
+                                  : 'bg-white/10 text-gray-400'
+                              }`}
                             >
                               {player.rank}
                             </div>
                             <div>
-                              <p className="font-medium">{player.name}</p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-sm font-medium text-white">
+                                {player.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
                                 {player.team}
                               </p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="font-bold">{player.value}</p>
+                            <p className="text-sm font-semibold text-white">
+                              {player.value}
+                            </p>
                           </div>
                         </div>
                       ))}

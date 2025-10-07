@@ -18,9 +18,9 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 md:px-12',
-        'bg-black/95 shadow-lg border-b border-white/10',
-        'h-20',
+        'fixed top-0 left-0 right-0 z-50 px-6 md:px-8 lg:px-12',
+        'bg-black/80 backdrop-blur-md border-b border-white/5',
+        'h-16',
       )}
     >
       <div
@@ -31,19 +31,25 @@ export function Header() {
         <Link
           href="/"
           className={cn(
-            'text-2xl font-bold flex items-center gap-2 text-white font-display',
+            'flex items-center transition-opacity hover:opacity-80',
           )}
         >
-          <Image src="/logo.webp" alt="title" width={50} height={10} />
+          <Image
+            src="/logo.webp"
+            alt="NUMUGAS"
+            width={45}
+            height={10}
+            className="object-contain"
+          />
         </Link>
 
-        <nav className={cn('hidden md:flex items-center gap-8')}>
+        <nav className={cn('hidden md:flex items-center gap-6 lg:gap-8')}>
           {NAVIGATION_ITEMS.map((item) => (
             <Link
               key={item.label}
               href={item.href}
               className={cn(
-                'text-gray-300 hover:text-red-500 transition-colors',
+                'text-sm font-medium text-gray-400 hover:text-white transition-colors duration-200',
               )}
             >
               {item.label}
@@ -52,21 +58,24 @@ export function Header() {
         </nav>
 
         <button
-          className={cn('md:hidden text-white')}
+          className={cn(
+            'md:hidden text-gray-400 hover:text-white transition-colors',
+          )}
           onClick={() => {
             setIsMenuOpen(!isMenuOpen);
           }}
           type="button"
+          aria-label="메뉴 토글"
         >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div
           className={cn(
-            'md:hidden fixed inset-0 top-16 bg-black/95 z-40 flex flex-col items-center pt-10 gap-6',
+            'md:hidden fixed inset-0 top-16 bg-black/98 backdrop-blur-lg z-40',
+            'flex flex-col items-center justify-center gap-8',
           )}
         >
           {NAVIGATION_ITEMS.map((item) => (
@@ -74,7 +83,7 @@ export function Header() {
               key={item.label}
               href={item.href}
               className={cn(
-                'text-xl text-gray-300 hover:text-red-500 transition-colors',
+                'text-lg font-medium text-gray-400 hover:text-white transition-colors duration-200',
               )}
               onClick={() => {
                 setIsMenuOpen(false);
