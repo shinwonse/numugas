@@ -129,3 +129,37 @@ html {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }
+
+/* View Transitions API 스타일 */
+@layer utilities {
+  /* 기본 페이지 전환 애니메이션 */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 이전 페이지: 페이드 아웃 + 살짝 왼쪽으로 */
+  ::view-transition-old(root) {
+    animation-name: fade-out-slide-left;
+  }
+
+  /* 새 페이지: 페이드 인 + 오른쪽에서 들어옴 */
+  ::view-transition-new(root) {
+    animation-name: fade-in-slide-right;
+  }
+
+  @keyframes fade-out-slide-left {
+    to {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+  }
+
+  @keyframes fade-in-slide-right {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+  }
+}
