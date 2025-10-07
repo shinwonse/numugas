@@ -3,7 +3,6 @@ import { QueryClientProviderWrapper } from '@/components/query-client-provider-w
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { aggravo } from '@/lib/fonts';
-import { StagewiseToolbar } from '@stagewise/toolbar-next';
 import { Montserrat, Orbitron } from 'next/font/google';
 import type { Metadata } from 'next/types';
 import type React from 'react';
@@ -70,9 +69,6 @@ export default function RootLayout({
             <Toaster />
           </ThemeProvider>
         </QueryClientProviderWrapper>
-        {process.env.NODE_ENV === 'development' && (
-          <StagewiseToolbar config={stagewiseConfig} />
-        )}
       </body>
     </html>
   );
