@@ -65,8 +65,8 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-            <Header />
             <ViewTransitionLayout>
+              <Header />
               <div className="pt-16">{children}</div>
             </ViewTransitionLayout>
             <Toaster />

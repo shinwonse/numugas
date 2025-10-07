@@ -162,4 +162,15 @@ html {
       transform: translateX(20px);
     }
   }
+
+  /* Header를 페이지 전환 시 고정 */
+  .view-transition-header {
+    view-transition-name: header;
+  }
+
+  ::view-transition-old(header),
+  ::view-transition-new(header) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
 }
