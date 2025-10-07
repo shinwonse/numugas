@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
@@ -76,15 +76,15 @@ export function StatsSection({
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 1, ease: 'easeOut' }}
-      className="py-24"
+      className="py-32 md:py-40"
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+        <div className="text-center mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold mb-3 font-display text-white"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-display text-white tracking-tight"
           >
             팀 통산 성적
           </motion.h2>
@@ -92,12 +92,12 @@ export function StatsSection({
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-sm text-gray-500 max-w-2xl mx-auto"
+            className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto"
           >
             담장NUMUGAS의 통산 주요 성적입니다.
           </motion.p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {teamStats.map((stat, index) => (
             <motion.div
               key={stat.name}
@@ -110,15 +110,15 @@ export function StatsSection({
               }}
               viewport={{ once: true, amount: 0.2 }}
             >
-              <Card className="bg-black/40 border-white/5 hover:border-red-500/50 transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-400">
-                    {stat.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="text-3xl font-bold text-white">
-                    {stat.value}
+              <Card className="bg-black/20 border-white/5 hover:border-red-500/30 transition-all duration-300 group">
+                <CardContent className="p-8 md:p-10">
+                  <div className="flex flex-col gap-4">
+                    <div className="text-5xl md:text-6xl font-bold text-white tracking-tighter">
+                      {stat.value}
+                    </div>
+                    <div className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      {stat.name}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
