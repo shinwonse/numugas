@@ -161,6 +161,9 @@ importers:
       react-resizable-panels:
         specifier: ^2.1.9
         version: 2.1.9(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      react-simplikit:
+        specifier: ^0.0.42
+        version: 0.0.42(react@19.2.0)
       react-zoom-pan-pinch:
         specifier: ^3.7.0
         version: 3.7.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -3162,6 +3165,11 @@ packages:
     peerDependencies:
       react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
       react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+
+  react-simplikit@0.0.42:
+    resolution: {integrity: sha512-z24jmcsPsrkiAhcpvPSw5SDIDmtJJz+WWUgq3udpDLeP8MXDIvIOcTfeXuNynVdTIFuiN52Y+B7XlT/ziYQ44g==}
+    peerDependencies:
+      react: '*'
 
   react-smooth@4.0.4:
     resolution: {integrity: sha512-gnGKTpYwqL0Iii09gHobNolvX4Kiq4PKx6eWBCYYix+8cdw+cGo3do906l1NBPKkSWx1DghC1dlWG9L2uGd61Q==}
@@ -6907,6 +6915,10 @@ snapshots:
     dependencies:
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
+
+  react-simplikit@0.0.42(react@19.2.0):
+    dependencies:
+      react: 19.2.0
 
   react-smooth@4.0.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
