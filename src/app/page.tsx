@@ -1,10 +1,15 @@
+import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { HeroSection } from '@/components/hero-section';
 import { PlayerStatsSection } from '@/components/player-stats-section';
 import { StatsSection } from '@/components/stats-section';
 import { TotalStatsSection } from '@/components/total-stats-section';
-import { YoutubeSection } from '@/components/youtube-section';
+import {
+  YoutubeErrorFallback,
+  YoutubeLoadingFallback,
+  YoutubeSection,
+} from '@/components/youtube-section';
 import {
   fetchBattingCareerStats,
   fetchBattingStats2025,
@@ -13,6 +18,7 @@ import {
   fetchTeamCareerStats,
   fetchTeamTotalStats,
 } from '@/lib/api';
+import { Suspense } from 'react';
 
 interface Player {
   rank: number;
@@ -128,7 +134,11 @@ export default async function Home() {
         battingStats={data.battingCareerStats}
         pitchingStats={data.pitchingCareerStats}
       />
-      <YoutubeSection />
+      <ErrorBoundary fallback={<YoutubeErrorFallback />}>
+        <Suspense fallback={<YoutubeLoadingFallback />}>
+          <YoutubeSection />
+        </Suspense>
+      </ErrorBoundary>
       {/* <ScheduleSection /> */}
       <Footer />
     </main>
