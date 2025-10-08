@@ -4,6 +4,7 @@ import { HeroSection } from '@/components/hero-section';
 import { PlayerStatsSection } from '@/components/player-stats-section';
 import { StatsSection } from '@/components/stats-section';
 import { TotalStatsSection } from '@/components/total-stats-section';
+import { YoutubeSection } from '@/components/youtube-section';
 import {
   fetchBattingCareerStats,
   fetchBattingStats2025,
@@ -127,6 +128,7 @@ export default async function Home() {
         battingStats={data.battingCareerStats}
         pitchingStats={data.pitchingCareerStats}
       />
+      <YoutubeSection />
       {/* <ScheduleSection /> */}
       <Footer />
     </main>
