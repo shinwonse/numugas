@@ -1,7 +1,15 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { cn } from '@/lib/cn';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -58,43 +66,41 @@ export function Header() {
           ))}
         </nav>
 
-        <button
-          className={cn(
-            'md:hidden text-gray-400 hover:text-white transition-colors',
-          )}
-          onClick={() => {
-            setIsMenuOpen(!isMenuOpen);
-          }}
-          type="button"
-          aria-label="메뉴 토글"
-        >
-          {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      {isMenuOpen && (
-        <div
-          className={cn(
-            'md:hidden fixed inset-0 top-16 bg-black/98 backdrop-blur-lg z-40',
-            'flex flex-col items-center justify-center gap-8',
-          )}
-        >
-          {NAVIGATION_ITEMS.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
+        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <SheetTrigger asChild className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
               className={cn(
-                'text-lg font-medium text-gray-400 hover:text-white transition-colors duration-200',
+                'text-gray-400 hover:text-white hover:bg-transparent',
               )}
-              onClick={() => {
-                setIsMenuOpen(false);
-              }}
+              aria-label="메뉴 토글"
             >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      )}
+              <Menu size={20} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="top"
+            className="bg-black/98 backdrop-blur-lg border-white/10 border-t-0"
+          >
+            <SheetTitle className="sr-only">메뉴</SheetTitle>
+            <div className="flex flex-col items-center justify-center gap-8 py-8 mt-2">
+              {NAVIGATION_ITEMS.map((item) => (
+                <SheetClose key={item.label} asChild>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      'text-lg font-medium text-gray-400 hover:text-white transition-colors duration-200',
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                </SheetClose>
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
     </header>
   );
 }
