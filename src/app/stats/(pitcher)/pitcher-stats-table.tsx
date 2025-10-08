@@ -35,7 +35,6 @@ const COLUMNS = [
   { value: 'innings', label: '이닝' },
   { value: 'batters', label: '타자' },
   { value: 'atbats', label: '타수' },
-  { value: 'pitches', label: '투구수' },
   { value: 'hits', label: '피안타' },
   { value: 'homeruns', label: '피홈런' },
   { value: 'sacrificehits', label: '희생번트' },
@@ -179,7 +178,10 @@ export default function PitcherStatsTable({ season }: { season: string }) {
                             key={col.value}
                             className="whitespace-nowrap text-center"
                           >
-                            {row[col.value]}
+                            {col.value === 'winrate' &&
+                            typeof row[col.value] === 'number'
+                              ? row[col.value].toFixed(3)
+                              : row[col.value]}
                           </TableCell>
                         ))}
                       </TableRow>
