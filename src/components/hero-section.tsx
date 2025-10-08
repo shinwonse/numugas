@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-6">
+    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden px-6">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

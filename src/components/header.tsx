@@ -76,7 +76,7 @@ export function Header() {
               )}
               aria-label="메뉴 토글"
             >
-              <Menu size={20} />
+              <Menu size={28} strokeWidth={2.5} />
             </Button>
           </SheetTrigger>
           <SheetContent
