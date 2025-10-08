@@ -5,11 +5,8 @@ import { HeroSection } from '@/components/hero-section';
 import { PlayerStatsSection } from '@/components/player-stats-section';
 import { StatsSection } from '@/components/stats-section';
 import { TotalStatsSection } from '@/components/total-stats-section';
-import {
-  YoutubeErrorFallback,
-  YoutubeLoadingFallback,
-  YoutubeSection,
-} from '@/components/youtube-section';
+import { YoutubeErrorFallback } from '@/components/youtube-section';
+import { YoutubeSectionWrapper } from '@/components/youtube-section-wrapper';
 import {
   fetchBattingCareerStats,
   fetchBattingStats2025,
@@ -135,8 +132,8 @@ export default async function Home() {
         pitchingStats={data.pitchingCareerStats}
       />
       <ErrorBoundary fallback={<YoutubeErrorFallback />}>
-        <Suspense fallback={<YoutubeLoadingFallback />}>
-          <YoutubeSection />
+        <Suspense>
+          <YoutubeSectionWrapper />
         </Suspense>
       </ErrorBoundary>
       {/* <ScheduleSection /> */}

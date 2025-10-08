@@ -8,7 +8,12 @@ interface YouTubeVideo {
 }
 
 async function fetchLatestYouTubeVideo(): Promise<YouTubeVideo> {
-  const response = await fetch('/api/youtube/latest');
+  const baseUrl =
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+  const response = await fetch(`${baseUrl}/api/youtube/latest`);
 
   if (!response.ok) {
     throw new Error('Failed to fetch YouTube video');
