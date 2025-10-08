@@ -12,8 +12,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Download, Monitor } from 'lucide-react';
+import { Download, Home, Monitor } from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { LineupPreview } from './lineup-preview';
 
@@ -42,6 +43,7 @@ const formatDate = (dateString: string): string => {
 
 export default function LineupPage() {
   const isMobile = useIsMobile();
+  const router = useRouter();
   const previewRef = useRef<HTMLDivElement>(null);
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
@@ -344,6 +346,14 @@ export default function LineupPage() {
               <p className="text-sm text-muted-foreground">
                 PC 또는 태블릿의 가로 모드로 접속해주세요.
               </p>
+              <Button
+                onClick={() => router.push('/')}
+                className="w-full mt-4"
+                size="lg"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                홈으로 돌아가기
+              </Button>
             </Card>
           </div>
         )}
