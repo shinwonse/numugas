@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { useCountAnimation } from '@/hooks/use-count-animation';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
@@ -17,6 +18,47 @@ interface StatsSectionProps {
     hits: number;
     strikeouts: number;
   };
+}
+
+interface StatCardProps {
+  name: string;
+  value: number | string;
+  index: number;
+  isInView: boolean;
+}
+
+function StatCard({ name, value, index, isInView }: StatCardProps) {
+  const animatedValue = useCountAnimation({
+    end: value,
+    duration: 2000,
+    isInView,
+  });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{
+        duration: 0.7,
+        delay: index * 0.12,
+        ease: 'backOut',
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
+      <Card className="bg-black/20 border-white/5 hover:border-red-500/30 transition-all duration-300 group">
+        <CardContent className="p-8 md:p-10">
+          <div className="flex flex-col gap-4">
+            <div className="text-5xl md:text-6xl font-bold text-white tracking-tighter">
+              {animatedValue}
+            </div>
+            <div className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
+              {name}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
 }
 
 export function StatsSection({
@@ -91,30 +133,13 @@ export function StatsSection({
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {teamStats.map((stat, index) => (
-            <motion.div
+            <StatCard
               key={stat.name}
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{
-                duration: 0.7,
-                delay: index * 0.12,
-                ease: 'backOut',
-              }}
-              viewport={{ once: true, amount: 0.2 }}
-            >
-              <Card className="bg-black/20 border-white/5 hover:border-red-500/30 transition-all duration-300 group">
-                <CardContent className="p-8 md:p-10">
-                  <div className="flex flex-col gap-4">
-                    <div className="text-5xl md:text-6xl font-bold text-white tracking-tighter">
-                      {stat.value}
-                    </div>
-                    <div className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {stat.name}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+              name={stat.name}
+              value={stat.value}
+              index={index}
+              isInView={isInView}
+            />
           ))}
         </div>
       </div>
