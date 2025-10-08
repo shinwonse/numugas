@@ -12,11 +12,25 @@ interface UseCountAnimationOptions {
 }
 
 /**
+ * 숫자 크기에 따라 적절한 애니메이션 duration을 계산
+ */
+function calculateDuration(value: number): number {
+  const absoluteValue = Math.abs(value);
+
+  if (absoluteValue < 1) return 1000; // 소수점 (예: 0.583)
+  if (absoluteValue < 10) return 800; // 한 자릿수
+  if (absoluteValue < 100) return 1200; // 두 자릿수
+  if (absoluteValue < 1000) return 1600; // 세 자릿수
+  if (absoluteValue < 10000) return 2000; // 네 자릿수
+  return 2400; // 다섯 자릿수 이상
+}
+
+/**
  * 숫자가 올라가는 카운팅 애니메이션 훅
  */
 export function useCountAnimation({
   end,
-  duration = 2000,
+  duration,
   isInView = true,
   decimals = 0,
 }: UseCountAnimationOptions) {
@@ -25,7 +39,11 @@ export function useCountAnimation({
   const startTimeRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (!isInView) return;
+    // 뷰에서 벗어나면 카운트를 0으로 리셋
+    if (!isInView) {
+      setCount(0);
+      return;
+    }
 
     // 문자열인 경우 (예: '0.583')
     if (typeof end === 'string') {
@@ -41,13 +59,16 @@ export function useCountAnimation({
         ? end.split('.')[1]?.length || decimals
         : decimals;
 
+      // duration이 명시되지 않았으면 숫자 크기에 따라 자동 계산
+      const animationDuration = duration ?? calculateDuration(numericEnd);
+
       const animate = (currentTime: number) => {
         if (!startTimeRef.current) {
           startTimeRef.current = currentTime;
         }
 
         const elapsed = currentTime - startTimeRef.current;
-        const progress = Math.min(elapsed / duration, 1);
+        const progress = Math.min(elapsed / animationDuration, 1);
 
         // easeOutExpo 이징 함수
         const easeProgress =
@@ -82,13 +103,16 @@ export function useCountAnimation({
     const numericEnd = end;
     const startValue = 0;
 
+    // duration이 명시되지 않았으면 숫자 크기에 따라 자동 계산
+    const animationDuration = duration ?? calculateDuration(numericEnd);
+
     const animate = (currentTime: number) => {
       if (!startTimeRef.current) {
         startTimeRef.current = currentTime;
       }
 
       const elapsed = currentTime - startTimeRef.current;
-      const progress = Math.min(elapsed / duration, 1);
+      const progress = Math.min(elapsed / animationDuration, 1);
 
       // easeOutExpo 이징 함수
       const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);

@@ -30,7 +30,6 @@ interface StatCardProps {
 function StatCard({ name, value, index, isInView }: StatCardProps) {
   const animatedValue = useCountAnimation({
     end: value,
-    duration: 2000,
     isInView,
   });
 
@@ -43,7 +42,7 @@ function StatCard({ name, value, index, isInView }: StatCardProps) {
         delay: index * 0.12,
         ease: 'backOut',
       }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: false, amount: 0.2 }}
     >
       <Card className="bg-black/20 border-white/5 hover:border-red-500/30 transition-all duration-300 group">
         <CardContent className="p-8 md:p-10">
@@ -66,7 +65,7 @@ export function StatsSection({
   teamCareerStats,
 }: StatsSectionProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
 
   const teamStats = [
     {
