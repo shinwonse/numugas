@@ -1,5 +1,7 @@
 'use client';
 
+import { SectionBackground } from '@/components/animated/section-background';
+import { SectionTitle } from '@/components/animated/section-title';
 import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { SpotlightCard } from '@/components/animated/spotlight-card';
 import { Card, CardContent } from '@/components/ui/card';
@@ -113,19 +115,20 @@ export function StatsSection({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 1, ease: 'easeOut' }}
-      className="py-32 md:py-40"
+      className="relative py-32 md:py-40 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="text-center mb-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-display text-white tracking-tight"
-          >
-            팀 통산 성적
-          </motion.h2>
-        </div>
+      <SectionBackground variant="dots" />
+
+      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+        <SectionTitle
+          subtitle="TEAM STATISTICS"
+          title={
+            <>
+              팀 <span className="text-red-500">통산 기록</span>
+            </>
+          }
+          isInView={isInView}
+        />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {teamStats.map((stat, index) => (
             <StatCard

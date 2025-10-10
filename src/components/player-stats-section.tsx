@@ -1,5 +1,7 @@
 'use client';
 
+import { SectionBackground } from '@/components/animated/section-background';
+import { SectionTitle } from '@/components/animated/section-title';
 import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion, useInView } from 'framer-motion';
@@ -47,19 +49,20 @@ export function PlayerStatsSection({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 1, ease: 'easeOut' }}
-      className="py-32 md:py-40"
+      className="relative py-32 md:py-40 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="text-center mb-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-display text-white tracking-tight"
-          >
-            2025 시즌 선수 기록
-          </motion.h2>
-        </div>
+      <SectionBackground variant="lines" />
+
+      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+        <SectionTitle
+          subtitle="SEASON LEADERS 2025"
+          title={
+            <>
+              2025 시즌 <span className="text-red-500">주요 기록</span>
+            </>
+          }
+          isInView={isInView}
+        />
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}

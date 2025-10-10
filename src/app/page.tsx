@@ -1,3 +1,4 @@
+import { SectionDivider } from '@/components/animated/section-divider';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
@@ -119,23 +120,32 @@ export default async function Home() {
     <main className="min-h-screen bg-black text-white overflow-hidden">
       <Header />
       <HeroSection />
+
+      <SectionDivider />
       <StatsSection
         teamTotalStats={data.teamTotalStats}
         teamCareerStats={data.teamCareerStats}
       />
+
+      <SectionDivider />
       <PlayerStatsSection
         battingStats={data.battingStats2025}
         pitchingStats={data.pitchingStats2025}
       />
+
+      <SectionDivider />
       <TotalStatsSection
         battingStats={data.battingCareerStats}
         pitchingStats={data.pitchingCareerStats}
       />
+
+      <SectionDivider />
       <ErrorBoundary fallback={<YoutubeErrorFallback />}>
         <Suspense>
           <YoutubeSectionWrapper />
         </Suspense>
       </ErrorBoundary>
+
       {/* <ScheduleSection /> */}
       <Footer />
     </main>

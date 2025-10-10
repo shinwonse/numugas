@@ -1,5 +1,7 @@
 'use client';
 
+import { SectionBackground } from '@/components/animated/section-background';
+import { SectionTitle } from '@/components/animated/section-title';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useYouTubeLatest } from '@/hooks/use-youtube-latest';
@@ -92,20 +94,22 @@ export function YoutubeSection() {
       ref={ref}
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{ duration: 1, ease: 'easeOut' }}
-      className="py-32 md:py-40"
+      className="relative py-32 md:py-40 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="text-center mb-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-display text-white tracking-tight"
-          >
-            경기 영상
-          </motion.h2>
-        </div>
+      <SectionBackground variant="dots" />
+
+      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+        <SectionTitle
+          subtitle="GAME HIGHLIGHTS"
+          title={
+            <>
+              경기 <span className="text-red-500">하이라이트</span>
+            </>
+          }
+          isInView={isInView}
+        />
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
