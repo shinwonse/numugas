@@ -34,7 +34,7 @@ export default async function StatsTypeSeasonPage({
 
   return (
     <main className="relative flex flex-col py-12 md:py-16 min-h-screen overflow-hidden">
-      <SectionBackground variant="dots" />
+      <SectionBackground variant="gradient" />
 
       <div className="relative z-10 max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
         <StatsPageHeader tabList={tabList} currentType={type} />

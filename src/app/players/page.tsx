@@ -43,7 +43,7 @@ export default async function PlayersPage() {
 
   return (
     <main className="relative min-h-screen bg-black text-white py-12 md:py-16 overflow-hidden">
-      <SectionBackground variant="dots" />
+      <SectionBackground variant="gradient" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         {error ? (

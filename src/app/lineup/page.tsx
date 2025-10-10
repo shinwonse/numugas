@@ -14,7 +14,15 @@ import {
 } from '@/components/ui/select';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion } from 'framer-motion';
-import { Download, Home, Monitor, RotateCcw } from 'lucide-react';
+import {
+  Download,
+  Home,
+  Image as ImageIcon,
+  Monitor,
+  RotateCcw,
+  Upload,
+  X,
+} from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
@@ -47,10 +55,13 @@ export default function LineupPage() {
   const isMobile = useIsMobile();
   const router = useRouter();
   const previewRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
   const [league, setLeague] = useState('');
   const [playerImage, setPlayerImage] = useState<string | null>(null);
+  const [playerImageName, setPlayerImageName] = useState<string>('');
+  const [isDragging, setIsDragging] = useState(false);
   const [startingPitcher, setStartingPitcher] = useState('');
   const [isExporting, setIsExporting] = useState(false);
   const [lineup, setLineup] = useState<PlayerPosition[]>([
@@ -80,6 +91,7 @@ export default function LineupPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setPlayerImageName(file.name);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPlayerImage(reader.result as string);
@@ -88,12 +100,49 @@ export default function LineupPage() {
     }
   };
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      setPlayerImageName(file.name);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPlayerImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setPlayerImage(null);
+    setPlayerImageName('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleReset = () => {
     setDate('');
     setLocation('');
     setLeague('');
     setPlayerImage(null);
+    setPlayerImageName('');
     setStartingPitcher('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     setLineup(
       Array.from({ length: 9 }, (_, i) => ({
         position: '',
@@ -297,18 +346,80 @@ export default function LineupPage() {
                   </Select>
                 </div>
                 <div>
-                  <Label
-                    htmlFor="playerImage"
-                    className="mb-2 block text-gray-300"
-                  >
+                  <Label className="mb-3 block text-gray-300 font-semibold">
                     대표 선수 사진
                   </Label>
-                  <Input
-                    id="playerImage"
+
+                  {/* 이미지 미리보기 또는 업로드 영역 */}
+                  {playerImage ? (
+                    <div className="relative group">
+                      {/* 미리보기 이미지 */}
+                      <div className="relative h-48 rounded-lg overflow-hidden bg-black/60 border-2 border-white/10">
+                        <img
+                          src={playerImage}
+                          alt="선수 사진 미리보기"
+                          className="w-full h-full object-contain"
+                        />
+                        {/* 오버레이 */}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            onClick={handleRemoveImage}
+                            className="bg-red-500 hover:bg-red-600"
+                          >
+                            <X className="w-4 h-4 mr-2" />
+                            제거
+                          </Button>
+                        </div>
+                      </div>
+                      {/* 파일명 */}
+                      <p className="mt-2 text-xs text-gray-400 truncate">
+                        {playerImageName}
+                      </p>
+                    </div>
+                  ) : (
+                    <div
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`relative h-48 rounded-lg border-2 border-dashed transition-all cursor-pointer ${
+                        isDragging
+                          ? 'border-red-500 bg-red-500/10'
+                          : 'border-white/20 bg-black/40 hover:border-red-500/50 hover:bg-black/60'
+                      }`}
+                    >
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center p-6">
+                        <div className="p-4 rounded-full bg-red-500/10">
+                          {isDragging ? (
+                            <Upload className="w-8 h-8 text-red-500" />
+                          ) : (
+                            <ImageIcon className="w-8 h-8 text-gray-400" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white mb-1">
+                            {isDragging
+                              ? '이미지를 놓으세요'
+                              : '클릭하거나 드래그하여 업로드'}
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            PNG, JPG, GIF 등 (최대 10MB)
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 숨겨진 파일 인풋 */}
+                  <input
+                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="cursor-pointer bg-black/60 border-white/10 hover:border-red-500/50 transition-colors text-white file:bg-red-500/20 file:text-red-400 file:border-0 file:mr-4 file:py-2 file:px-4"
+                    className="hidden"
                   />
                 </div>
               </div>
