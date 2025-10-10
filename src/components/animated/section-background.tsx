@@ -26,7 +26,7 @@ export function SectionBackground({
 
   if (variant === 'lines') {
     return (
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
         <svg
           className="absolute inset-0 w-full h-full"
           xmlns="http://www.w3.org/2000/svg"
@@ -43,8 +43,8 @@ export function SectionBackground({
               <path
                 d="M 0 20 L 100 20 M 0 50 L 100 50 M 0 80 L 100 80"
                 stroke="currentColor"
-                strokeWidth="0.5"
-                className="text-red-500"
+                strokeWidth="1"
+                className="text-red-500/50"
               />
             </pattern>
           </defs>

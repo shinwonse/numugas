@@ -51,7 +51,7 @@ export function PlayerStatsSection({
       transition={{ duration: 1, ease: 'easeOut' }}
       className="relative py-32 md:py-40 overflow-hidden"
     >
-      <SectionBackground variant="lines" />
+      <SectionBackground variant="dots" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <SectionTitle
