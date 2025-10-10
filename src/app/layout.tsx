@@ -2,7 +2,6 @@ import { Header } from '@/components/header';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
-import { ViewTransitionLayout } from '@/components/view-transition-layout';
 import { aggravo } from '@/lib/fonts';
 import { Montserrat, Orbitron } from 'next/font/google';
 import type { Metadata } from 'next/types';
@@ -65,10 +64,8 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-            <ViewTransitionLayout>
-              <Header />
-              <div className="pt-16">{children}</div>
-            </ViewTransitionLayout>
+            <Header />
+            <div className="pt-16">{children}</div>
             <Toaster />
           </ThemeProvider>
         </QueryClientProviderWrapper>

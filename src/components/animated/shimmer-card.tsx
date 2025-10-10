@@ -23,10 +23,10 @@ export function ShimmerCard({
         delay,
         ease: 'backOut',
       }}
-      viewport={{ once: false, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.2 }}
       className={`relative overflow-hidden group ${className}`}
     >
-      <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-red-500/10 to-transparent group-hover:translate-x-full transition-transform duration-1000" />
+      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-red-500/10 to-transparent group-hover:translate-x-full transition-transform duration-1000" />
       {children}
     </motion.div>
   );

@@ -1,12 +1,19 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function GridBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -59,7 +66,9 @@ export function GridBackground() {
       window.removeEventListener('resize', setCanvasSize);
       cancelAnimationFrame(animationFrame);
     };
-  }, []);
+  }, [isClient]);
+
+  if (!isClient) return null;
 
   return (
     <motion.canvas

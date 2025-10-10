@@ -60,7 +60,7 @@ export function StatsSection({
   teamCareerStats,
 }: StatsSectionProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const teamStats = [
     {
@@ -111,6 +111,7 @@ export function StatsSection({
       ref={ref}
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{ duration: 1, ease: 'easeOut' }}
       className="py-32 md:py-40"
     >
