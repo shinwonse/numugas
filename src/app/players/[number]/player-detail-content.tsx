@@ -1,6 +1,8 @@
 'use client';
 
+import { SectionBackground } from '@/components/animated/section-background';
 import { useBatterStats, usePitcherStats } from '@/hooks/use-player-stats';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -34,82 +36,184 @@ export function PlayerDetailContent({ player }: { player: Player }) {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white py-8 md:py-16 px-4 sm:px-8 md:px-16 lg:px-32">
+    <main className="relative min-h-screen bg-black text-white py-8 md:py-16 px-4 sm:px-8 md:px-16 lg:px-32 overflow-hidden">
+      <SectionBackground variant="dots" />
+
       {/* Responsive Player Header: full width, flex on large screens */}
-      <section className="w-full flex flex-col md:flex-row items-center md:items-stretch gap-8 mb-12">
-        <div className="flex-shrink-0 flex justify-center w-full md:w-auto">
-          <div className="w-40 h-40 relative rounded-full overflow-hidden border-4 border-red-500 shadow-lg">
-            <Image
-              src={player.photo}
-              alt={player.name}
-              fill
-              className="object-cover"
-              sizes="160px"
-              priority
-            />
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 w-full mb-12"
+      >
+        <div className="bg-gradient-to-br from-red-950/30 to-black/50 backdrop-blur-sm border border-red-900/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-red-900/20">
+          <div className="flex flex-col md:flex-row items-center md:items-stretch gap-8">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="flex-shrink-0 flex justify-center w-full md:w-auto relative"
+            >
+              <div className="w-40 h-40 md:w-48 md:h-48 relative rounded-full overflow-hidden border-4 border-red-500 shadow-2xl shadow-red-500/50">
+                <Image
+                  src={player.photo}
+                  alt={player.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 160px, 192px"
+                  priority
+                />
+              </div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-red-600/20 to-transparent rounded-full blur-2xl -z-10" />
+            </motion.div>
+            <motion.div
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex flex-col justify-center items-center md:items-start flex-1 text-center md:text-left"
+            >
+              <h1 className="text-4xl md:text-6xl font-bold mb-3 font-display flex flex-col md:flex-row items-center gap-3 md:gap-4">
+                <span className="text-red-500 text-5xl md:text-7xl">
+                  #{player.number}
+                </span>
+                <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  {player.name}
+                </span>
+              </h1>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-950/50 border border-red-500/30 rounded-full text-lg md:text-xl text-red-300">
+                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                {player.position}
+              </div>
+            </motion.div>
           </div>
         </div>
-        <div className="flex flex-col justify-center items-center md:items-start flex-1 text-center md:text-left">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 font-display flex items-center gap-4 justify-center md:justify-start">
-            <span className="text-red-500">#{player.number}</span>
-            <span>{player.name}</span>
-          </h1>
-          <div className="text-lg md:text-xl text-gray-400 mb-2">
-            {player.position}
-          </div>
-        </div>
-      </section>
+      </motion.section>
 
       {/* Tab Navigation */}
-      <section className="w-full mb-8">
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        className="relative z-10 w-full mb-8"
+      >
         <div className="flex justify-center">
-          <div className="flex bg-gray-800 rounded-lg p-1">
+          <div className="flex bg-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-1.5 shadow-xl">
             <button
               onClick={() => handleTabChange('batter')}
-              className={`px-6 py-3 rounded-md transition-all duration-200 font-semibold ${
+              className={`relative px-8 py-4 rounded-xl transition-all duration-300 font-bold text-lg ${
                 activeTab === 'batter'
-                  ? 'bg-red-500 text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                  ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/50'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
               }`}
             >
-              타자 기록
+              {activeTab === 'batter' && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500 rounded-xl"
+                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10">타자 기록</span>
             </button>
             <button
               onClick={() => handleTabChange('pitcher')}
-              className={`px-6 py-3 rounded-md transition-all duration-200 font-semibold ${
+              className={`relative px-8 py-4 rounded-xl transition-all duration-300 font-bold text-lg ${
                 activeTab === 'pitcher'
-                  ? 'bg-red-500 text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                  ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/50'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
               }`}
             >
-              투수 기록
+              {activeTab === 'pitcher' && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500 rounded-xl"
+                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              <span className="relative z-10">투수 기록</span>
             </button>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <div className="w-full space-y-8">
+      <div className="relative z-10 w-full space-y-8">
         {/* Batter Stats */}
         {activeTab === 'batter' && (
           <>
             {isLoadingBatter ? (
-              <div className="flex justify-center items-center py-12">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex justify-center items-center py-12"
+              >
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
                 <span className="ml-3 text-gray-400">
                   타자 기록을 불러오는 중...
                 </span>
-              </div>
+              </motion.div>
             ) : batterError ? (
-              <div className="flex justify-center items-center py-12">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex justify-center items-center py-12"
+              >
                 <div className="text-red-400">
                   타자 기록을 불러오는데 실패했습니다.
                 </div>
-              </div>
+              </motion.div>
             ) : (
               <>
+                {/* Highlight Stats Cards - 통산 기록이 있는 경우에만 표시 */}
+                {batterStats && batterStats.careerStats && (
+                  <motion.section
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+                  >
+                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
+                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
+                        {batterStats.careerStats.avg}
+                      </div>
+                      <div className="text-sm text-gray-400 font-semibold">
+                        타율
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
+                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
+                        {batterStats.careerStats.homeruns}
+                      </div>
+                      <div className="text-sm text-gray-400 font-semibold">
+                        홈런
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
+                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
+                        {batterStats.careerStats.rbi}
+                      </div>
+                      <div className="text-sm text-gray-400 font-semibold">
+                        타점
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
+                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
+                        {batterStats.careerStats.hits}
+                      </div>
+                      <div className="text-sm text-gray-400 font-semibold">
+                        안타
+                      </div>
+                    </div>
+                  </motion.section>
+                )}
+
                 {/* Detailed Yearly Stats Table */}
-                <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                  <h2 className="text-2xl font-bold mb-6 text-center text-red-500">
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8"
+                >
+                  <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
                     연도별 기록
                   </h2>
                   {batterStats && batterStats.seasonStats.length > 0 ? (
@@ -267,12 +371,17 @@ export function PlayerDetailContent({ player }: { player: Player }) {
                       </tr>
                     </tbody>
                   )}
-                </section>
+                </motion.section>
 
                 {/* Career Stats Detailed Table */}
                 {batterStats && batterStats.careerStats && (
-                  <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                    <h2 className="text-2xl font-bold mb-6 text-center text-red-500">
+                  <motion.section
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8"
+                  >
+                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
                       통산 기록
                     </h2>
                     <div className="overflow-x-auto w-full">
@@ -365,7 +474,7 @@ export function PlayerDetailContent({ player }: { player: Player }) {
                         </tbody>
                       </table>
                     </div>
-                  </section>
+                  </motion.section>
                 )}
               </>
             )}
@@ -376,23 +485,79 @@ export function PlayerDetailContent({ player }: { player: Player }) {
         {activeTab === 'pitcher' && (
           <>
             {isLoadingPitcher ? (
-              <div className="flex justify-center items-center py-12">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex justify-center items-center py-12"
+              >
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
                 <span className="ml-3 text-gray-400">
                   투수 기록을 불러오는 중...
                 </span>
-              </div>
+              </motion.div>
             ) : pitcherError ? (
-              <div className="flex justify-center items-center py-12">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex justify-center items-center py-12"
+              >
                 <div className="text-red-400">
                   투수 기록을 불러오는데 실패했습니다.
                 </div>
-              </div>
+              </motion.div>
             ) : (
               <>
+                {/* Pitcher Highlight Stats Cards */}
+                {pitcherStats && pitcherStats.careerStats && (
+                  <motion.section
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+                  >
+                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
+                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
+                        {pitcherStats.careerStats.era}
+                      </div>
+                      <div className="text-sm text-gray-400 font-semibold">
+                        평균자책점
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
+                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
+                        {pitcherStats.careerStats.wins}
+                      </div>
+                      <div className="text-sm text-gray-400 font-semibold">
+                        승
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
+                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
+                        {pitcherStats.careerStats.strikeouts}
+                      </div>
+                      <div className="text-sm text-gray-400 font-semibold">
+                        삼진
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
+                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
+                        {pitcherStats.careerStats.whip}
+                      </div>
+                      <div className="text-sm text-gray-400 font-semibold">
+                        WHIP
+                      </div>
+                    </div>
+                  </motion.section>
+                )}
+
                 {/* Detailed Yearly Pitcher Stats Table */}
-                <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                  <h2 className="text-2xl font-bold mb-6 text-center text-red-500">
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8"
+                >
+                  <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
                     연도별 기록
                   </h2>
                   <div className="overflow-x-auto w-full">
@@ -520,12 +685,17 @@ export function PlayerDetailContent({ player }: { player: Player }) {
                       </tbody>
                     </table>
                   </div>
-                </section>
+                </motion.section>
 
                 {/* Pitcher Career Stats Detailed Table */}
                 {pitcherStats && pitcherStats.careerStats && (
-                  <section className="w-full bg-black/60 border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                    <h2 className="text-2xl font-bold mb-6 text-center text-red-500">
+                  <motion.section
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8"
+                  >
+                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
                       통산 기록
                     </h2>
                     <div className="overflow-x-auto w-full">
@@ -612,7 +782,7 @@ export function PlayerDetailContent({ player }: { player: Player }) {
                         </tbody>
                       </table>
                     </div>
-                  </section>
+                  </motion.section>
                 )}
               </>
             )}
