@@ -38,13 +38,13 @@ export default async function StatsTypeSeasonPage({
 
       <div className="relative z-10 max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
         {/* Header Section */}
-        <div className="text-center mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-display text-white tracking-tight">
+        <div className="text-center mb-16 md:mb-20">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 font-display text-white tracking-tight">
             선수 기록 <span className="text-red-500">통계</span>
           </h1>
 
           {/* Tabs */}
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center">
             <StatsTabs tabs={tabList} current={type} />
           </div>
         </div>

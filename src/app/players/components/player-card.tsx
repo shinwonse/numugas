@@ -16,10 +16,11 @@ interface PlayerCardProps {
 }
 
 export default function PlayerCard({ player, index = 0 }: PlayerCardProps) {
-  // 사진 URL 처리
-  const photoUrl = player.photo
-    ? ImageUtils.getCardSize(player.photo)
-    : '/placeholder-user.jpg';
+  // 사진 URL 처리 - 빈 문자열이나 null/undefined 체크
+  const photoUrl =
+    player.photo && player.photo.trim() !== ''
+      ? ImageUtils.getCardSize(player.photo)
+      : '/logo.webp';
 
   return (
     <PlayerCard3D

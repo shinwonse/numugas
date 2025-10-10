@@ -23,30 +23,31 @@ export default function PlayerPositionSection({
 
   return (
     <div>
-      {/* Position Tabs */}
-      <div className="flex justify-center mb-12 md:mb-16">
-        <PlayerPositionTabs
-          positions={positions}
-          selectedPosition={selectedPosition}
-          onSelect={setSelectedPosition}
-        />
+      {/* Header Section */}
+      <div className="text-center mb-16 md:mb-20">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 font-display text-white tracking-tight">
+          선수단 <span className="text-red-500">로스터</span>
+        </h1>
+
+        {/* Position Tabs */}
+        <div className="flex justify-center">
+          <PlayerPositionTabs
+            positions={positions}
+            selectedPosition={selectedPosition}
+            onSelect={setSelectedPosition}
+          />
+        </div>
       </div>
 
-      {/* Stats Info */}
+      {/* Player List */}
       <motion.div
         key={selectedPosition}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="text-center mb-8"
       >
-        <p className="text-gray-400">
-          {filteredPlayers.length}명의 선수
-        </p>
+        <PlayerList players={filteredPlayers} />
       </motion.div>
-
-      {/* Player List */}
-      <PlayerList players={filteredPlayers} />
     </div>
   );
 }

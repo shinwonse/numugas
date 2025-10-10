@@ -44,7 +44,11 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
             {/* Image */}
             <div className="relative w-full aspect-square overflow-hidden">
               <Image
-                src={player.photo ?? '/placeholder-user.jpg'}
+                src={
+                  player.photo && player.photo.trim() !== ''
+                    ? player.photo
+                    : '/logo.webp'
+                }
                 alt={player.name}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
