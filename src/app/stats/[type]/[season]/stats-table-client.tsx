@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { SwitchCase } from 'react-simplikit';
 
@@ -23,12 +24,19 @@ export default function StatsTableClient({
   season,
 }: StatsTableClientProps) {
   return (
-    <SwitchCase
-      value={type}
-      caseBy={{
-        batter: () => <BatterStatsTable season={season} />,
-        pitcher: () => <PitcherStatsTable season={season} />,
-      }}
-    />
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.7, delay: 0.2 }}
+    >
+      <SwitchCase
+        value={type}
+        caseBy={{
+          batter: () => <BatterStatsTable season={season} />,
+          pitcher: () => <PitcherStatsTable season={season} />,
+        }}
+      />
+    </motion.div>
   );
 }

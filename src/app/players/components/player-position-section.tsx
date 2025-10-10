@@ -16,6 +16,7 @@ export default function PlayerPositionSection({
   players,
 }: PlayerPositionSectionProps) {
   const [selectedPosition, setSelectedPosition] = useState(positions[0]);
+
   const filteredPlayers =
     selectedPosition === '전체'
       ? players
@@ -25,18 +26,53 @@ export default function PlayerPositionSection({
     <div>
       {/* Header Section */}
       <div className="text-center mb-16 md:mb-20">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 font-display text-white tracking-tight">
+        {/* Subtitle */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-4"
+        >
+          <span className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-red-500">
+            TEAM ROSTER
+          </span>
+        </motion.div>
+
+        {/* Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-display text-white tracking-tight"
+        >
           선수단 <span className="text-red-500">로스터</span>
-        </h1>
+        </motion.h1>
+
+        {/* Decorative line */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, amount: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mx-auto h-1 w-20 bg-gradient-to-r from-transparent via-red-500 to-transparent mb-8"
+        />
 
         {/* Position Tabs */}
-        <div className="flex justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex justify-center"
+        >
           <PlayerPositionTabs
             positions={positions}
             selectedPosition={selectedPosition}
             onSelect={setSelectedPosition}
           />
-        </div>
+        </motion.div>
       </div>
 
       {/* Player List */}
