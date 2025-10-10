@@ -1,5 +1,6 @@
 'use client';
 
+import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
@@ -72,18 +73,8 @@ export function PlayerStatsSection({
           {currentTab === 'batting' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {battingStats.map((stat, statIndex) => (
-                <motion.div
-                  key={stat.category}
-                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{
-                    duration: 0.7,
-                    delay: statIndex * 0.12,
-                    ease: 'backOut',
-                  }}
-                  viewport={{ once: true, amount: 0.2 }}
-                >
-                  <Card className="bg-black/20 border-white/5 hover:border-red-500/30 transition-all duration-300">
+                <ShimmerCard key={stat.category} delay={statIndex * 0.12}>
+                  <Card className="bg-black/20 border-white/5 hover:border-red-500/50 transition-all duration-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]">
                     <CardHeader className="pb-4 border-b border-white/5">
                       <CardTitle className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
                         {stat.category}
@@ -127,25 +118,15 @@ export function PlayerStatsSection({
                       ))}
                     </CardContent>
                   </Card>
-                </motion.div>
+                </ShimmerCard>
               ))}
             </div>
           )}
           {currentTab === 'pitching' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {pitchingStats.map((stat, statIndex) => (
-                <motion.div
-                  key={stat.category}
-                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{
-                    duration: 0.7,
-                    delay: statIndex * 0.12,
-                    ease: 'backOut',
-                  }}
-                  viewport={{ once: true, amount: 0.2 }}
-                >
-                  <Card className="bg-black/20 border-white/5 hover:border-red-500/30 transition-all duration-300">
+                <ShimmerCard key={stat.category} delay={statIndex * 0.12}>
+                  <Card className="bg-black/20 border-white/5 hover:border-red-500/50 transition-all duration-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]">
                     <CardHeader className="pb-4 border-b border-white/5">
                       <CardTitle className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
                         {stat.category}
@@ -189,7 +170,7 @@ export function PlayerStatsSection({
                       ))}
                     </CardContent>
                   </Card>
-                </motion.div>
+                </ShimmerCard>
               ))}
             </div>
           )}

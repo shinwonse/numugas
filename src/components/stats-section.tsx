@@ -1,5 +1,7 @@
 'use client';
 
+import { ShimmerCard } from '@/components/animated/shimmer-card';
+import { SpotlightCard } from '@/components/animated/spotlight-card';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCountAnimation } from '@/hooks/use-count-animation';
 import { motion, useInView } from 'framer-motion';
@@ -34,29 +36,22 @@ function StatCard({ name, value, index, isInView }: StatCardProps) {
   });
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        duration: 0.7,
-        delay: index * 0.12,
-        ease: 'backOut',
-      }}
-      viewport={{ once: false, amount: 0.2 }}
-    >
-      <Card className="bg-black/20 border-white/5 hover:border-red-500/30 transition-all duration-300 group">
-        <CardContent className="p-8 md:p-10">
-          <div className="flex flex-col gap-4">
-            <div className="text-5xl md:text-6xl font-bold text-white tracking-tighter">
-              {animatedValue}
+    <ShimmerCard delay={index * 0.12}>
+      <SpotlightCard>
+        <Card className="bg-black/20 border-white/5 hover:border-red-500/50 transition-all duration-500 group hover:shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+          <CardContent className="p-8 md:p-10">
+            <div className="flex flex-col gap-4">
+              <div className="text-5xl md:text-6xl font-bold text-white tracking-tighter group-hover:text-red-400 transition-colors duration-300">
+                {animatedValue}
+              </div>
+              <div className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider group-hover:text-gray-300 transition-colors duration-300">
+                {name}
+              </div>
             </div>
-            <div className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider">
-              {name}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+          </CardContent>
+        </Card>
+      </SpotlightCard>
+    </ShimmerCard>
   );
 }
 
