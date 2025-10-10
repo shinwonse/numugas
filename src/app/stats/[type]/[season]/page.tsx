@@ -1,6 +1,6 @@
-import { notFound } from 'next/navigation';
-
+import { SectionBackground } from '@/components/animated/section-background';
 import StatsTabs from '@/components/stats-tabs';
+import { notFound } from 'next/navigation';
 import StatsTableClient from './stats-table-client';
 
 const SEASONS = ['통산', '2025', '2024', '2023', '2022', '2021', '2020'];
@@ -33,11 +33,23 @@ export default async function StatsTypeSeasonPage({
   }));
 
   return (
-    <main className="flex flex-col py-8 min-h-screen">
-      <div className="w-full flex justify-center">
-        <StatsTabs tabs={tabList} current={type} />
-      </div>
-      <div className="w-full max-w-7xl mx-auto">
+    <main className="relative flex flex-col py-12 md:py-16 min-h-screen overflow-hidden">
+      <SectionBackground variant="dots" />
+
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="text-center mb-12 md:mb-16">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-display text-white tracking-tight">
+            선수 기록 <span className="text-red-500">통계</span>
+          </h1>
+
+          {/* Tabs */}
+          <div className="flex justify-center mb-8">
+            <StatsTabs tabs={tabList} current={type} />
+          </div>
+        </div>
+
+        {/* Stats Table */}
         <StatsTableClient type={type} season={season} />
       </div>
     </main>

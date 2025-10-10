@@ -106,84 +106,134 @@ export default function PitcherStatsTable({ season }: { season: string }) {
   };
 
   return (
-    <div>
-      <Card className="max-w-7xl mx-auto mt-10">
-        <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <CardTitle className="text-2xl">시즌별 투수 기록</CardTitle>
-          <div className="flex gap-2 w-full md:w-auto">
-            <Select
-              value={season}
-              onValueChange={(value) => router.push(`/stats/pitcher/${value}`)}
-            >
-              <SelectTrigger className="w-28">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SEASONS.map((s) => (
-                  <SelectItem key={s} value={s}>
-                    {s}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input
-              className="w-40"
-              placeholder="선수명 검색"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+    <div className="w-full">
+      <Card className="bg-black/40 backdrop-blur-sm border-white/10 shadow-xl">
+        <CardHeader className="border-b border-white/5 pb-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <CardTitle className="text-2xl md:text-3xl font-bold text-white">
+                {season === '통산' ? '통산' : `${season} 시즌`} 투수 기록
+              </CardTitle>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <div className="relative">
+                <Select
+                  value={season}
+                  onValueChange={(value) =>
+                    router.push(`/stats/pitcher/${value}`)
+                  }
+                >
+                  <SelectTrigger className="w-32 bg-black/60 border-white/10 hover:border-red-500/50 transition-colors">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SEASONS.map((s) => (
+                      <SelectItem key={s} value={s}>
+                        {s}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="relative">
+                <Input
+                  className="w-48 bg-black/60 border-white/10 hover:border-red-500/50 focus:border-red-500 transition-colors pl-10"
+                  placeholder="선수명 검색"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="overflow-x-auto w-full">
             {isLoading ? (
-              <div className="text-center py-12">불러오는 중...</div>
+              <div className="text-center py-20">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent"></div>
+                <p className="mt-4 text-gray-400">불러오는 중...</p>
+              </div>
             ) : error ? (
-              <div className="text-center py-12 text-red-500">
-                {error.message}
+              <div className="text-center py-20">
+                <div className="text-red-500 text-lg mb-2">⚠️ 오류 발생</div>
+                <p className="text-gray-400">{error.message}</p>
               </div>
             ) : (
               <Table className="min-w-[600px] w-full">
                 <TableHeader>
-                  <TableRow>
-                    {COLUMNS.map((col) => (
+                  <TableRow className="border-b border-white/5 hover:bg-transparent">
+                    {COLUMNS.map((col, idx) => (
                       <TableHead
                         key={col.value}
-                        className="whitespace-nowrap text-center cursor-pointer select-none"
+                        className={`whitespace-nowrap text-center cursor-pointer select-none transition-colors text-gray-400 hover:text-white ${idx === 0 ? 'sticky left-0 z-10 bg-black/80 backdrop-blur-sm' : ''}`}
                         onClick={() => handleHeaderClick(col.value)}
                       >
-                        {col.label}
-                        <span style={{ marginLeft: 4 }}>
-                          {getSortIcon(col.value)}
-                        </span>
+                        <div className="flex items-center justify-center gap-1">
+                          {col.label}
+                          {getSortIcon(col.value) && (
+                            <span className="text-red-500">
+                              {getSortIcon(col.value)}
+                            </span>
+                          )}
+                        </div>
                       </TableHead>
                     ))}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filtered.length === 0 ? (
-                    <TableRow>
+                    <TableRow className="hover:bg-transparent">
                       <TableCell
                         colSpan={COLUMNS.length}
-                        className="text-center"
+                        className="text-center py-12 text-gray-400"
                       >
                         검색 결과가 없습니다.
                       </TableCell>
                     </TableRow>
                   ) : (
                     filtered.map((row: any, i: number) => (
-                      <TableRow key={row.name + row.season + i}>
-                        {COLUMNS.map((col) => (
-                          <TableCell
-                            key={col.value}
-                            className="whitespace-nowrap text-center"
-                          >
-                            {col.value === 'winrate' &&
-                            typeof row[col.value] === 'number'
-                              ? row[col.value].toFixed(3)
-                              : row[col.value]}
-                          </TableCell>
-                        ))}
+                      <TableRow
+                        key={row.name + row.season + i}
+                        className="border-b border-white/5 hover:bg-red-500/5 transition-colors"
+                      >
+                        {COLUMNS.map((col, idx) => {
+                          const isHighlight = [
+                            'name',
+                            'era',
+                            'wins',
+                            'strikeouts',
+                          ].includes(col.value);
+                          return (
+                            <TableCell
+                              key={col.value}
+                              className={`whitespace-nowrap text-center ${
+                                isHighlight
+                                  ? 'text-white font-medium'
+                                  : 'text-gray-300'
+                              } ${idx === 0 ? 'sticky left-0 z-10 bg-black/80 backdrop-blur-sm' : ''}`}
+                            >
+                              {col.value === 'winrate' &&
+                              typeof row[col.value] === 'number'
+                                ? row[col.value].toFixed(3)
+                                : row[col.value]}
+                            </TableCell>
+                          );
+                        })}
                       </TableRow>
                     ))
                   )}
