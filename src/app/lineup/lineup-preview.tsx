@@ -107,7 +107,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
             </div>
 
             {/* 리그 텍스트 & STARTING LINEUP 타이틀 */}
-            <div className="absolute top-24 left-6 z-30">
+            <div className="absolute top-40 left-6 z-30">
               {leagueText && (
                 <p
                   className="font-bold text-2xl text-red-700 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-4"
