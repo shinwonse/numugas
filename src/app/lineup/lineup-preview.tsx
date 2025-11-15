@@ -10,6 +10,12 @@ interface PlayerPosition {
   battingOrder: number;
 }
 
+export interface ImageTransform {
+  scale: number;
+  positionX: number;
+  positionY: number;
+}
+
 interface LineupPreviewProps {
   lineup: PlayerPosition[];
   playerImage: string | null;
@@ -19,6 +25,8 @@ interface LineupPreviewProps {
   league?: string;
   disableTransform?: boolean;
   isExporting?: boolean;
+  imageTransform?: ImageTransform;
+  onTransformChange?: (transform: ImageTransform) => void;
 }
 
 export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
@@ -32,6 +40,8 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
       league,
       disableTransform = false,
       isExporting = false,
+      imageTransform,
+      onTransformChange,
     },
     ref,
   ) {
@@ -74,7 +84,9 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
             <div className="absolute inset-0 z-10">
               {playerImage && !disableTransform && (
                 <TransformWrapper
-                  initialScale={1}
+                  initialScale={imageTransform?.scale ?? 1}
+                  initialPositionX={imageTransform?.positionX ?? 0}
+                  initialPositionY={imageTransform?.positionY ?? 0}
                   minScale={0.1}
                   maxScale={4}
                   centerOnInit={false}
@@ -82,6 +94,15 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   alignmentAnimation={{ disabled: true }}
                   wheel={{ smoothStep: 0.01 }}
                   panning={{ disabled: false }}
+                  onTransformed={(ref) => {
+                    if (onTransformChange) {
+                      onTransformChange({
+                        scale: ref.state.scale,
+                        positionX: ref.state.positionX,
+                        positionY: ref.state.positionY,
+                      });
+                    }
+                  }}
                 >
                   <TransformComponent
                     wrapperClass="!w-full !h-full absolute inset-0"
@@ -95,7 +116,28 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   </TransformComponent>
                 </TransformWrapper>
               )}
-              {playerImage && disableTransform && (
+              {playerImage && disableTransform && imageTransform && (
+                <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                  <div
+                    style={{
+                      transform: `translate(${imageTransform.positionX}px, ${imageTransform.positionY}px) scale(${imageTransform.scale})`,
+                      transformOrigin: '0 0',
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={playerImage}
+                      alt="대표 선수"
+                      className="max-w-none h-full object-contain"
+                    />
+                  </div>
+                </div>
+              )}
+              {playerImage && disableTransform && !imageTransform && (
                 <div className="w-full h-full flex items-center justify-center">
                   <img
                     src={playerImage}

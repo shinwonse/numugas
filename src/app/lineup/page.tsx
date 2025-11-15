@@ -26,7 +26,7 @@ import {
 import { domToPng } from 'modern-screenshot';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import { LineupPreview } from './lineup-preview';
+import { ImageTransform, LineupPreview } from './lineup-preview';
 
 interface PlayerPosition {
   position: string;
@@ -64,6 +64,11 @@ export default function LineupPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [startingPitcher, setStartingPitcher] = useState('');
   const [isExporting, setIsExporting] = useState(false);
+  const [imageTransform, setImageTransform] = useState<ImageTransform>({
+    scale: 1,
+    positionX: 0,
+    positionY: 0,
+  });
   const [lineup, setLineup] = useState<PlayerPosition[]>([
     { position: '', name: '', battingOrder: 1 },
     { position: '', name: '', battingOrder: 2 },
@@ -128,6 +133,7 @@ export default function LineupPage() {
   const handleRemoveImage = () => {
     setPlayerImage(null);
     setPlayerImageName('');
+    setImageTransform({ scale: 1, positionX: 0, positionY: 0 });
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -140,6 +146,7 @@ export default function LineupPage() {
     setPlayerImage(null);
     setPlayerImageName('');
     setStartingPitcher('');
+    setImageTransform({ scale: 1, positionX: 0, positionY: 0 });
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -265,6 +272,8 @@ export default function LineupPage() {
                 league={league}
                 disableTransform={false}
                 isExporting={false}
+                imageTransform={imageTransform}
+                onTransformChange={setImageTransform}
               />
             </div>
 
@@ -287,6 +296,7 @@ export default function LineupPage() {
                   league={league}
                   disableTransform={true}
                   isExporting={true}
+                  imageTransform={imageTransform}
                 />
               </div>
             )}
