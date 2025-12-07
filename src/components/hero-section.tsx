@@ -34,12 +34,13 @@ export function HeroSection() {
             }}
           >
             <Image
-              src="title.png"
+              src="/title.png"
               alt="담장NUMUGAS"
               width={600}
               height={120}
               className="object-contain w-full max-w-2xl drop-shadow-[0_0_50px_rgba(239,68,68,0.5)]"
               priority
+              fetchPriority="high"
             />
           </motion.div>
         </div>
