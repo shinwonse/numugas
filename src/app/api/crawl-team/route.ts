@@ -1,3 +1,4 @@
+import { axiosInstance } from '@/lib/axios';
 import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
@@ -10,10 +11,7 @@ export async function GET() {
     const results = await Promise.all(
       SEASONS.map(async (season) => {
         const url = `http://www.gameone.kr/club/info/schedule/table?club_idx=${CLUB_IDX}&kind=&season=${season}`;
-        const res = await fetch(url, {
-          headers: { 'User-Agent': 'Mozilla/5.0' },
-        });
-        const html = await res.text();
+        const { data: html } = await axiosInstance.get(url);
         const $ = cheerio.load(html);
 
         const infoText = $('.game_tab_info .info').text();

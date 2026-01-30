@@ -1,5 +1,5 @@
+import { axiosInstance } from '@/lib/axios';
 import { supabase } from '@/lib/supabase';
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
 
@@ -62,9 +62,7 @@ async function getLastPageNumber($: cheerio.CheerioAPI) {
 export async function GET() {
   try {
     // 1. 첫 페이지에서 마지막 페이지 번호 추출
-    const { data: html } = await axios.get(SCHEDULE_URL, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-    });
+    const { data: html } = await axiosInstance.get(SCHEDULE_URL);
     const $ = cheerio.load(html);
     const lastPage = await getLastPageNumber($);
 
@@ -72,9 +70,7 @@ export async function GET() {
     let allGames: any[] = [];
     for (let page = 1; page <= lastPage; page++) {
       const url = `${SCHEDULE_URL}&page=${page}`;
-      const { data: pageHtml } = await axios.get(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
-      });
+      const { data: pageHtml } = await axiosInstance.get(url);
       const $$ = cheerio.load(pageHtml);
       const games = parseGames($$);
       allGames = allGames.concat(games);

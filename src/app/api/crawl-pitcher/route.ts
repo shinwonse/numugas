@@ -1,5 +1,5 @@
+import { axiosInstance } from '@/lib/axios';
 import { supabase } from '@/lib/supabase';
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
 
@@ -17,9 +17,7 @@ export async function GET() {
     const results = await Promise.all(
       SEASONS.map(async (season) => {
         let url = PITCHER_URL + `&season=${encodeURIComponent(season)}`;
-        const { data: html } = await axios.get(url, {
-          headers: { 'User-Agent': 'Mozilla/5.0' },
-        });
+        const { data: html } = await axiosInstance.get(url);
         const $ = cheerio.load(html);
         const rows = $('#require .ranking_table tbody tr');
         const pitchers: any[] = [];
