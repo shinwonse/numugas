@@ -10,9 +10,9 @@ import { YoutubeErrorFallback } from '@/components/youtube-section';
 import { YoutubeSectionWrapper } from '@/components/youtube-section-wrapper';
 import {
   fetchBattingCareerStats,
-  fetchBattingStats2025,
+  fetchBattingStats2026,
   fetchPitchingCareerStats,
-  fetchPitchingStats2025,
+  fetchPitchingStats2026,
   fetchTeamCareerStats,
   fetchTeamTotalStats,
 } from '@/lib/api';
@@ -47,8 +47,8 @@ interface TeamCareerStats {
 interface HomeProps {
   teamTotalStats: TeamTotalStats;
   teamCareerStats: TeamCareerStats;
-  battingStats2025: Stat[];
-  pitchingStats2025: Stat[];
+  battingStats2026: Stat[];
+  pitchingStats2026: Stat[];
   battingCareerStats: Stat[];
   pitchingCareerStats: Stat[];
 }
@@ -62,15 +62,15 @@ async function getHomeData(): Promise<HomeProps> {
     const [
       teamTotalStats,
       teamCareerStats,
-      battingStats2025,
-      pitchingStats2025,
+      battingStats2026,
+      pitchingStats2026,
       battingCareerStats,
       pitchingCareerStats,
     ] = await Promise.all([
       fetchTeamTotalStats(),
       fetchTeamCareerStats(),
-      fetchBattingStats2025(),
-      fetchPitchingStats2025(),
+      fetchBattingStats2026(),
+      fetchPitchingStats2026(),
       fetchBattingCareerStats(),
       fetchPitchingCareerStats(),
     ]);
@@ -83,8 +83,8 @@ async function getHomeData(): Promise<HomeProps> {
         win_rate: teamTotalStats.win_rate.toFixed(1),
       },
       teamCareerStats,
-      battingStats2025,
-      pitchingStats2025,
+      battingStats2026,
+      pitchingStats2026,
       battingCareerStats,
       pitchingCareerStats,
     };
@@ -105,8 +105,8 @@ async function getHomeData(): Promise<HomeProps> {
         hits: 0,
         strikeouts: 0,
       },
-      battingStats2025: [],
-      pitchingStats2025: [],
+      battingStats2026: [],
+      pitchingStats2026: [],
       battingCareerStats: [],
       pitchingCareerStats: [],
     };
@@ -129,8 +129,8 @@ export default async function Home() {
 
       <SectionDivider />
       <PlayerStatsSection
-        battingStats={data.battingStats2025}
-        pitchingStats={data.pitchingStats2025}
+        battingStats={data.battingStats2026}
+        pitchingStats={data.pitchingStats2026}
       />
 
       <SectionDivider />

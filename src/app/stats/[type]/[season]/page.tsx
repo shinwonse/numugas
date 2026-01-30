@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { StatsPageHeader } from './stats-page-header';
 import StatsTableClient from './stats-table-client';
 
-const SEASONS = ['통산', '2025', '2024', '2023', '2022', '2021', '2020'];
+const SEASONS = ['통산', '2026', '2025', '2024', '2023', '2022', '2021', '2020'];
 const TYPES = [
   { key: 'batter', label: '타자 기록' },
   { key: 'pitcher', label: '투수 기록' },

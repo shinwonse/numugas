@@ -39,7 +39,7 @@ export function Footer() {
 
         <div className="border-t border-white/5 mt-10 pt-6 text-center">
           <p className="text-xs text-gray-600">
-            © 2025 담장NUMUGAS. All rights reserved.
+            © 2026 담장NUMUGAS. All rights reserved.
           </p>
         </div>
       </div>

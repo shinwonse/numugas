@@ -21,7 +21,7 @@ import { useBattingStatsBySeason } from '@/hooks/use-batting-stats-by-season';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
-const SEASONS = ['통산', '2025', '2024', '2023', '2022', '2021', '2020'];
+const SEASONS = ['통산', '2026', '2025', '2024', '2023', '2022', '2021', '2020'];
 
 const COLUMNS = [
   { value: 'name', label: '선수명' },

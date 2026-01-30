@@ -13,13 +13,13 @@ export interface Stat {
   players: Player[];
 }
 
-export async function fetchPitchingStats2025(): Promise<Stat[]> {
+export async function fetchPitchingStats2026(): Promise<Stat[]> {
   try {
     // 직접 Supabase에서 데이터 가져오기
     const { data: seasonStats, error } = await supabase
       .from('pitcher_stats')
       .select('*')
-      .eq('season', '2025');
+      .eq('season', '2026');
 
     if (error) {
       console.error('Failed to fetch pitching stats from Supabase:', error);
@@ -91,7 +91,7 @@ export async function fetchPitchingStats2025(): Promise<Stat[]> {
 
     return stats;
   } catch (error) {
-    console.error('Failed to fetch pitching stats 2025:', error);
+    console.error('Failed to fetch pitching stats 2026:', error);
 
     // Return fallback empty stats
     return [
