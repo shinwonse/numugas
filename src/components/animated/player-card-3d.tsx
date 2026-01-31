@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 
 interface PlayerCard3DProps {
   player: {
@@ -17,8 +16,6 @@ interface PlayerCard3DProps {
 }
 
 export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -26,12 +23,7 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
     >
-      <Link
-        href={`/players/${player.number}`}
-        className="block"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <Link href={`/players/${player.number}`} className="block">
         <motion.div
           whileHover={{ y: -8 }}
           transition={{ duration: 0.3 }}
@@ -82,27 +74,6 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
                 </div>
               </div>
 
-              {/* Hover Arrow */}
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
-                transition={{ duration: 0.2 }}
-                className="absolute bottom-6 right-6"
-              >
-                <svg
-                  className="w-6 h-6 text-red-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
-              </motion.div>
             </div>
           </div>
 
