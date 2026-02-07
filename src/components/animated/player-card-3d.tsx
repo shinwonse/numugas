@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/cn';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -23,16 +24,16 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.05 }}
     >
-      <Link href={`/players/${player.number}`} className="block">
-        <motion.div
-          whileHover={{ y: -8 }}
-          transition={{ duration: 0.3 }}
-          className="relative group"
-        >
-          <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 via-black to-gray-900 border border-white/10 group-hover:border-red-500/50 transition-colors duration-500">
-            {/* Gradient Overlay on Hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
+      <Link href={`/players/${player.number}`} className="block cursor-pointer">
+        <div className="relative group transition-transform duration-300 ease-out hover:-translate-y-1.5">
+          <div
+            className={cn(
+              'relative rounded-2xl overflow-hidden',
+              'bg-[#0c0c12]',
+              'border border-white/[0.06]',
+              'shadow-[0_8px_32px_rgba(0,0,0,0.4)]',
+            )}
+          >
             {/* Image */}
             <div className="relative w-full aspect-square overflow-hidden">
               <Image
@@ -43,43 +44,42 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
                 }
                 alt={player.name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                className="object-cover"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
 
-              {/* Gradient Overlay on Hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Bottom gradient fade */}
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/60 to-transparent" />
             </div>
 
             {/* Info Section */}
-            <div className="relative p-6 bg-gradient-to-t from-black via-black/95 to-transparent">
+            <div className="relative px-5 pb-5 -mt-14">
               {/* Position Badge */}
-              <div className="absolute top-4 left-6">
-                <span className="px-3 py-1 text-xs font-semibold bg-red-500/20 text-red-400 rounded-full border border-red-500/30 backdrop-blur-sm">
-                  {player.position}
-                </span>
-              </div>
+              <span
+                className={cn(
+                  'inline-flex items-center px-2.5 py-0.5 mb-3',
+                  'text-[11px] font-semibold uppercase tracking-wider',
+                  'rounded-full',
+                  'bg-white/[0.08]',
+                  'border border-white/[0.08]',
+                  'text-red-400',
+                )}
+              >
+                {player.position}
+              </span>
 
               {/* Player Info */}
-              <div className="flex items-center justify-between mt-8">
-                <div>
-                  <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-red-400 transition-colors duration-300">
-                    {player.name}
-                  </h3>
-                </div>
-                <div className="text-right">
-                  <div className="text-4xl md:text-5xl font-black text-white/20 group-hover:text-red-500/30 transition-colors duration-300">
-                    {player.number}
-                  </div>
-                </div>
+              <div className="flex items-end justify-between">
+                <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-red-400 transition-colors duration-300">
+                  {player.name}
+                </h3>
+                <span className="text-3xl md:text-4xl font-black text-white/[0.08] group-hover:text-red-500/20 transition-colors duration-300 leading-none font-display">
+                  {player.number}
+                </span>
               </div>
-
             </div>
           </div>
-
-          {/* Shadow */}
-          <div className="absolute inset-0 rounded-2xl bg-red-500/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
-        </motion.div>
+        </div>
       </Link>
     </motion.div>
   );

@@ -1,4 +1,3 @@
-import { SectionBackground } from '@/components/animated/section-background';
 import { supabase } from '@/lib/supabase';
 import { unstable_cache } from 'next/cache';
 import PlayerPositionSection from './components/player-position-section';
@@ -42,12 +41,25 @@ export default async function PlayersPage() {
   const positions = ['전체', '투수', '포수', '내/외야수'];
 
   return (
-    <main className="relative min-h-screen bg-black text-white py-12 md:py-16 overflow-hidden">
-      <SectionBackground variant="gradient" />
+    <main className="relative min-h-screen text-white overflow-hidden">
+      {/* Apple-style mesh gradient orbs */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute -top-[30%] -left-[20%] h-[70vh] w-[70vh] rounded-full bg-red-600/15 blur-[120px]" />
+        <div className="absolute top-[20%] -right-[15%] h-[50vh] w-[50vh] rounded-full bg-rose-500/10 blur-[100px]" />
+        <div className="absolute -bottom-[20%] left-[30%] h-[60vh] w-[60vh] rounded-full bg-red-900/10 blur-[120px]" />
+      </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+      {/* Subtle noise texture overlay */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-24 pb-16 md:pt-28 md:pb-20">
         {error ? (
-          <div className="text-center text-red-500 py-12">{error}</div>
+          <div className="text-center text-red-400 py-12 text-sm">{error}</div>
         ) : (
           <PlayerPositionSection positions={positions} players={players} />
         )}
