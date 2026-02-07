@@ -49,19 +49,22 @@ function StatsTabButton({
       href={tab.href ?? '#'}
       onClick={onClick}
       className={cn(
-        'flex items-center justify-center h-full w-full text-center',
+        'relative flex items-center justify-center h-full w-full text-center cursor-pointer',
         'font-medium text-sm',
-        'transition-all duration-300 select-none',
-        'rounded-xl whitespace-nowrap px-4',
+        'transition-all duration-300 ease-out select-none',
+        'rounded-xl whitespace-nowrap px-5',
         isActive
-          ? 'bg-white/15 text-white shadow-[0_2px_8px_rgba(0,0,0,0.3)]'
-          : 'text-gray-400 hover:text-white hover:bg-white/5',
+          ? 'bg-white/[0.12] text-white shadow-[0_1px_8px_rgba(255,255,255,0.06),inset_0_1px_0_rgba(255,255,255,0.1)]'
+          : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]',
       )}
       tabIndex={isActive ? 0 : -1}
       aria-selected={isActive}
       role="tab"
     >
-      {tab.label}
+      {isActive && (
+        <span className="absolute inset-0 rounded-xl border border-white/[0.08]" />
+      )}
+      <span className="relative z-10">{tab.label}</span>
     </a>
   );
 }
@@ -77,12 +80,12 @@ export default function StatsTabs({
   return (
     <div
       className={cn(
-        'w-full max-w-md mx-auto',
-        'grid h-12 p-1.5 gap-1',
+        'w-full max-w-sm mx-auto',
+        'grid h-11 p-1 gap-1',
         'rounded-2xl',
-        'bg-black/40 backdrop-blur-xl backdrop-saturate-150',
-        'border border-white/10',
-        'shadow-[0_4px_24px_rgba(0,0,0,0.3)]',
+        'bg-white/[0.04] backdrop-blur-2xl backdrop-saturate-150',
+        'border border-white/[0.06]',
+        'shadow-[0_2px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.04)]',
         colClass,
         className,
       )}

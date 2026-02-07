@@ -1,4 +1,3 @@
-import { SectionBackground } from '@/components/animated/section-background';
 import { notFound } from 'next/navigation';
 import { StatsPageHeader } from './stats-page-header';
 import StatsTableClient from './stats-table-client';
@@ -33,10 +32,8 @@ export default async function StatsTypeSeasonPage({
   }));
 
   return (
-    <main className="relative flex flex-col py-12 md:py-16 min-h-screen overflow-hidden">
-      <SectionBackground variant="gradient" />
-
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
+    <main className="flex flex-col pt-24 pb-16 md:pt-28 md:pb-20 min-h-screen">
+      <div className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
         <StatsPageHeader tabList={tabList} currentType={type} />
         <StatsTableClient type={type} season={season} />
       </div>

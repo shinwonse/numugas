@@ -1,6 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -18,6 +17,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { usePitchingStatsBySeason } from '@/hooks/use-pitching-stats-by-season';
+import { cn } from '@/lib/cn';
+import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
@@ -100,149 +101,175 @@ export default function PitcherStatsTable({ season }: { season: string }) {
     }
   };
 
-  const getSortIcon = (colValue: string) => {
+  const SortIcon = ({ colValue }: { colValue: string }) => {
     if (sortBy !== colValue) return null;
-    return sortOrder === 'asc' ? '▲' : '▼';
+    return sortOrder === 'asc' ? (
+      <ChevronUp className="w-3.5 h-3.5 text-red-400" />
+    ) : (
+      <ChevronDown className="w-3.5 h-3.5 text-red-400" />
+    );
   };
 
   return (
-    <div className="w-full">
-      <Card className="bg-black/40 backdrop-blur-sm border-white/10 shadow-xl">
-        <CardHeader className="border-b border-white/5 pb-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <CardTitle className="text-2xl md:text-3xl font-bold text-white">
-                {season === '통산' ? '통산' : `${season} 시즌`} 투수 기록
-              </CardTitle>
-            </div>
+    <div className="w-full space-y-4">
+      {/* Controls bar */}
+      <div className="flex items-center justify-end gap-2">
+          <Select
+            value={season}
+            onValueChange={(value) => router.push(`/stats/pitcher/${value}`)}
+          >
+            <SelectTrigger
+              className={cn(
+                'w-28 h-9 text-sm',
+                'bg-white/[0.04] backdrop-blur-xl',
+                'border-white/[0.06] hover:border-white/[0.12]',
+                'rounded-xl transition-all duration-200',
+                'cursor-pointer',
+              )}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SEASONS.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {s}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-            <div className="flex flex-wrap gap-3">
-              <div className="relative">
-                <Select
-                  value={season}
-                  onValueChange={(value) =>
-                    router.push(`/stats/pitcher/${value}`)
-                  }
-                >
-                  <SelectTrigger className="w-32 bg-black/60 border-white/10 hover:border-red-500/50 transition-colors">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SEASONS.map((s) => (
-                      <SelectItem key={s} value={s}>
-                        {s}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="relative">
-                <Input
-                  className="w-48 bg-black/60 border-white/10 hover:border-red-500/50 focus:border-red-500 transition-colors pl-10"
-                  placeholder="선수명 검색"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-            </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <Input
+              className={cn(
+                'w-44 h-9 text-sm pl-9',
+                'bg-white/[0.04] backdrop-blur-xl',
+                'border-white/[0.06] hover:border-white/[0.12] focus:border-red-500/40',
+                'rounded-xl transition-all duration-200',
+                'placeholder:text-gray-600',
+              )}
+              placeholder="선수명 검색"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto w-full">
-            {isLoading ? (
-              <div className="text-center py-20">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent"></div>
-                <p className="mt-4 text-gray-400">불러오는 중...</p>
+      </div>
+
+      {/* Glass table card */}
+      <div
+        className={cn(
+          'rounded-2xl overflow-hidden',
+          'bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-150',
+          'border border-white/[0.06]',
+          'shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.04)]',
+        )}
+      >
+        <div className="overflow-x-auto w-full">
+          {isLoading ? (
+            <div className="text-center py-20">
+              <div className="relative inline-flex">
+                <div className="h-10 w-10 rounded-full border-2 border-white/10 border-t-red-500 animate-spin" />
               </div>
-            ) : error ? (
-              <div className="text-center py-20">
-                <div className="text-red-500 text-lg mb-2">⚠️ 오류 발생</div>
-                <p className="text-gray-400">{error.message}</p>
-              </div>
-            ) : (
-              <Table className="min-w-[600px] w-full">
-                <TableHeader>
-                  <TableRow className="border-b border-white/5 hover:bg-transparent">
-                    {COLUMNS.map((col, idx) => (
-                      <TableHead
-                        key={col.value}
-                        className={`whitespace-nowrap text-center cursor-pointer select-none transition-colors text-gray-400 hover:text-white ${idx === 0 ? 'sticky left-0 z-10 bg-black/80 backdrop-blur-sm' : ''}`}
-                        onClick={() => handleHeaderClick(col.value)}
-                      >
-                        <div className="flex items-center justify-center gap-1">
-                          {col.label}
-                          {getSortIcon(col.value) && (
-                            <span className="text-red-500">
-                              {getSortIcon(col.value)}
-                            </span>
-                          )}
-                        </div>
-                      </TableHead>
-                    ))}
+              <p className="mt-4 text-sm text-gray-600">불러오는 중...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-20">
+              <div className="text-red-400 text-sm mb-1">오류가 발생했습니다</div>
+              <p className="text-gray-600 text-sm">{error.message}</p>
+            </div>
+          ) : (
+            <Table className="min-w-[600px] w-full">
+              <TableHeader>
+                <TableRow className="border-b border-white/[0.04] hover:bg-transparent">
+                  {COLUMNS.map((col, idx) => (
+                    <TableHead
+                      key={col.value}
+                      className={cn(
+                        'whitespace-nowrap text-center cursor-pointer select-none',
+                        'text-[11px] uppercase tracking-wider font-semibold',
+                        'text-gray-600 hover:text-gray-300',
+                        'transition-colors duration-200',
+                        'h-10',
+                        idx === 0 && 'sticky left-0 z-10 bg-[#0a0a0f]/90 backdrop-blur-xl',
+                      )}
+                      onClick={() => handleHeaderClick(col.value)}
+                    >
+                      <div className="flex items-center justify-center gap-0.5">
+                        {col.label}
+                        <SortIcon colValue={col.value} />
+                      </div>
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.length === 0 ? (
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell
+                      colSpan={COLUMNS.length}
+                      className="text-center py-12 text-gray-600 text-sm"
+                    >
+                      검색 결과가 없습니다.
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.length === 0 ? (
-                    <TableRow className="hover:bg-transparent">
-                      <TableCell
-                        colSpan={COLUMNS.length}
-                        className="text-center py-12 text-gray-400"
-                      >
-                        검색 결과가 없습니다.
-                      </TableCell>
+                ) : (
+                  filtered.map((row: any, i: number) => (
+                    <TableRow
+                      key={row.name + row.season + i}
+                      className={cn(
+                        'border-b border-white/[0.03]',
+                        'transition-colors duration-150',
+                        'hover:bg-white/[0.03]',
+                        i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.01]',
+                      )}
+                    >
+                      {COLUMNS.map((col, idx) => {
+                        const isHighlight = [
+                          'name',
+                          'era',
+                          'wins',
+                          'strikeouts',
+                        ].includes(col.value);
+                        const isName = col.value === 'name';
+                        return (
+                          <TableCell
+                            key={col.value}
+                            className={cn(
+                              'whitespace-nowrap text-center text-sm',
+                              isName
+                                ? 'text-white font-semibold'
+                                : isHighlight
+                                  ? 'text-gray-200 font-medium'
+                                  : 'text-gray-400',
+                              idx === 0 && 'sticky left-0 z-10 bg-[#0a0a0f]/90 backdrop-blur-xl',
+                            )}
+                          >
+                            {col.value === 'winrate' &&
+                              typeof row[col.value] === 'number' ? (
+                              row[col.value].toFixed(3)
+                            ) : (
+                              row[col.value]
+                            )}
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
-                  ) : (
-                    filtered.map((row: any, i: number) => (
-                      <TableRow
-                        key={row.name + row.season + i}
-                        className="border-b border-white/5 hover:bg-red-500/5 transition-colors"
-                      >
-                        {COLUMNS.map((col, idx) => {
-                          const isHighlight = [
-                            'name',
-                            'era',
-                            'wins',
-                            'strikeouts',
-                          ].includes(col.value);
-                          return (
-                            <TableCell
-                              key={col.value}
-                              className={`whitespace-nowrap text-center ${
-                                isHighlight
-                                  ? 'text-white font-medium'
-                                  : 'text-gray-300'
-                              } ${idx === 0 ? 'sticky left-0 z-10 bg-black/80 backdrop-blur-sm' : ''}`}
-                            >
-                              {col.value === 'winrate' &&
-                              typeof row[col.value] === 'number'
-                                ? row[col.value].toFixed(3)
-                                : row[col.value]}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          )}
+        </div>
+      </div>
+
+      {/* Result count */}
+      {!isLoading && !error && (
+        <div className="text-right">
+          <span className="text-xs text-gray-600">
+            총 {filtered.length}명
+          </span>
+        </div>
+      )}
     </div>
   );
 }
