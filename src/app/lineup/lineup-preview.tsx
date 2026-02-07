@@ -20,6 +20,7 @@ interface LineupPreviewProps {
   lineup: PlayerPosition[];
   playerImage: string | null;
   startingPitcher?: string;
+  manager?: string;
   date?: string;
   location?: string;
   league?: string;
@@ -35,6 +36,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
       lineup,
       playerImage,
       startingPitcher,
+      manager,
       date,
       location,
       league,
@@ -79,188 +81,212 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
             className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: 'url(/background.png)' }}
           />
-          <div className="relative h-full z-10">
-            {/* 선수 이미지 영역 - 전체 배경 */}
-            <div className="absolute inset-0 z-10">
-              {playerImage && !disableTransform && (
-                <TransformWrapper
-                  initialScale={imageTransform?.scale ?? 1}
-                  initialPositionX={imageTransform?.positionX ?? 0}
-                  initialPositionY={imageTransform?.positionY ?? 0}
-                  minScale={0.1}
-                  maxScale={4}
-                  centerOnInit={false}
-                  limitToBounds={false}
-                  alignmentAnimation={{ disabled: true }}
-                  wheel={{ smoothStep: 0.01 }}
-                  panning={{ disabled: false }}
-                  onTransformed={(ref) => {
-                    if (onTransformChange) {
-                      onTransformChange({
-                        scale: ref.state.scale,
-                        positionX: ref.state.positionX,
-                        positionY: ref.state.positionY,
-                      });
-                    }
-                  }}
-                >
-                  <TransformComponent
-                    wrapperClass="!w-full !h-full absolute inset-0"
-                    contentClass="!w-full !h-full flex items-center justify-center"
-                  >
-                    <img
-                      src={playerImage}
-                      alt="대표 선수"
-                      className="max-w-none h-full object-contain"
-                    />
-                  </TransformComponent>
-                </TransformWrapper>
-              )}
-              {playerImage && disableTransform && imageTransform && (
-                <div className="w-full h-full flex items-center justify-center overflow-hidden">
-                  <div
-                    style={{
-                      transform: `translate(${imageTransform.positionX}px, ${imageTransform.positionY}px) scale(${imageTransform.scale})`,
-                      transformOrigin: '0 0',
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <img
-                      src={playerImage}
-                      alt="대표 선수"
-                      className="max-w-none h-full object-contain"
-                    />
-                  </div>
-                </div>
-              )}
-              {playerImage && disableTransform && !imageTransform && (
-                <div className="w-full h-full flex items-center justify-center">
-                  <img
-                    src={playerImage}
-                    alt="대표 선수"
-                    className="max-w-none h-full object-contain"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* 리그 텍스트 & STARTING LINEUP 타이틀 */}
-            <div className="absolute top-40 left-6 z-30">
-              {leagueText && (
-                <p
-                  className="font-bold text-2xl text-red-700 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-4"
-                  style={{ fontSize: '3rem' }}
-                >
-                  {leagueText}
-                </p>
-              )}
-              <h2
-                className="font-bold text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]"
-                style={{ fontSize: '5.5rem', lineHeight: '1.1' }}
+          <div className="relative h-full z-10 flex flex-col">
+            {/* 메인 컨텐츠 영역 */}
+            <div className="flex-1 flex min-h-0">
+              {/* 좌측 영역 (55%) - 라인업 정보 */}
+              <div
+                className="relative z-20 flex flex-col"
+                style={{ width: '55%' }}
               >
-                STARTING
-                <br /> LINEUP
-              </h2>
-            </div>
+                <div className="absolute inset-0 bg-black/85" />
+                <div className="relative z-10 flex flex-col h-full px-12 pt-16" style={{ paddingBottom: '240px' }}>
+                  {/* 팀 로고 */}
+                  <div className="flex items-start mb-6">
+                    <div className="w-32 h-32 relative">
+                      <img
+                        src="/logo.png"
+                        alt="Team Logo"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </div>
 
-            {/* 우측 영역 - 라인업 리스트 */}
-            <div className="absolute top-0 right-0 bottom-0 w-[40%] bg-black/80 p-6 flex flex-col z-20">
-              {/* 팀 로고 */}
-              <div className="flex items-center justify-center mb-8 pt-16">
-                <div className="w-48 h-48 relative">
-                  <img
-                    src="/logo.png"
-                    alt="Team Logo"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-              </div>
+                  {/* STARTING LINEUP 타이틀 */}
+                  <h2
+                    className="font-bold text-white leading-none mb-6"
+                    style={{ fontSize: '5rem' }}
+                  >
+                    STARTING
+                    <br />
+                    LINEUP
+                  </h2>
 
-              {/* 경기 정보 */}
-              <div className="text-center space-y-3 mb-8">
-                <p
-                  className="text-gray-400 font-bold font-aggravo leading-tight"
-                  style={{ fontSize: '2.5rem' }}
-                >
-                  {date || '날짜'}
-                </p>
-                <p
-                  className="text-gray-400 font-medium font-aggravo leading-tight"
-                  style={{ fontSize: '2.5rem' }}
-                >
-                  {location || '장소'}
-                </p>
-              </div>
+                  {/* 리그명 */}
+                  {leagueText && (
+                    <p
+                      className="font-bold text-red-600 mb-4"
+                      style={{ fontSize: '2.2rem' }}
+                    >
+                      {leagueText}
+                    </p>
+                  )}
 
-              {/* 선수 목록 */}
-              <div className="flex-1 flex flex-col justify-start overflow-y-auto">
-                <div className="space-y-4">
+                  {/* 경기 정보 */}
+                  <div className="mb-6">
+                    <p
+                      className="text-gray-400 font-bold font-aggravo leading-tight"
+                      style={{ fontSize: '2rem' }}
+                    >
+                      {date || '날짜'} / {location || '장소'}
+                    </p>
+                  </div>
+
+                  {/* 구분선 */}
+                  <div className="w-full h-px bg-white/20 mb-6" />
+
                   {/* 선발투수 */}
                   <div
-                    className="rounded-sm px-4 border-l-4 border-l-gray-400 backdrop-blur-sm"
-                    style={{
-                      padding: '24px 32px',
-                      boxShadow:
-                        '0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3)',
-                    }}
+                    className="border-l-4 border-l-gray-400 mb-3"
+                    style={{ padding: '16px 24px' }}
                   >
-                    <div className="flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-6">
                       <span
-                        className="text-gray-400 font-extrabold w-24 shrink-0 font-aggravo leading-none inline-block align-middle"
-                        style={{ fontSize: '2rem' }}
+                        className="text-gray-400 font-extrabold w-20 shrink-0 font-aggravo leading-none"
+                        style={{ fontSize: '1.8rem' }}
                       >
                         SP
                       </span>
                       <span
-                        className="text-white font-extrabold flex-1 text-right break-words font-aggravo leading-none inline-block align-middle"
-                        style={{ fontSize: '3rem' }}
+                        className="text-white font-extrabold flex-1 font-aggravo leading-none"
+                        style={{ fontSize: '2.6rem' }}
                       >
                         {startingPitcher || '이름'}
                       </span>
                     </div>
                   </div>
-                  {/* 타자 라인업 */}
-                  {lineup.map((player, index) => (
-                    <div
-                      key={index}
-                      className="rounded-sm px-4 border-l-4 border-l-red-700 backdrop-blur-sm hover:border-l-red-400 transition-all duration-200"
-                      style={{
-                        padding: '24px 32px',
-                        boxShadow:
-                          '0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3)',
-                      }}
-                    >
-                      <div className="flex items-center justify-between gap-6">
-                        <span
-                          className="text-red-700 font-extrabold w-24 shrink-0 font-aggravo leading-none inline-block align-middle"
-                          style={{ fontSize: '2rem' }}
-                        >
-                          {player.position || '-'}
-                        </span>
-                        <span
-                          className="text-white font-extrabold flex-1 text-right break-words font-aggravo leading-none inline-block align-middle"
-                          style={{ fontSize: '3rem' }}
-                        >
-                          {player.name || '이름'}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
 
-                  {/* 감독 정보 */}
-                  <div className="mt-6 pt-4 border-t border-white/10">
-                    <p
-                      className="text-white/70 font-bold text-right font-aggravo leading-tight"
-                      style={{ fontSize: '3rem' }}
-                    >
-                      감독 주형준
-                    </p>
+                  {/* 구분선 */}
+                  <div className="w-full h-px bg-white/20 mb-6" />
+
+                  {/* 타자 라인업 + 감독 */}
+                  <div className="flex-1 flex flex-col justify-between">
+                    {/* 타자 목록 */}
+                    <div className="flex flex-col space-y-7">
+                      {lineup.map((player, index) => (
+                        <div
+                          key={index}
+                          className="border-l-4 border-l-red-700"
+                          style={{ padding: '16px 24px' }}
+                        >
+                          <div className="flex items-center gap-6">
+                            <span
+                              className="text-red-700 font-extrabold w-20 shrink-0 font-aggravo leading-none"
+                              style={{ fontSize: '1.8rem' }}
+                            >
+                              {player.position || '-'}
+                            </span>
+                            <span
+                              className="text-white font-extrabold flex-1 font-aggravo leading-none"
+                              style={{ fontSize: '2.6rem' }}
+                            >
+                              {player.name || '이름'}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* 감독 정보 */}
+                    <div className="pt-8 border-t border-white/20">
+                      <p
+                        className="text-white/70 font-bold font-aggravo leading-tight"
+                        style={{ fontSize: '2.4rem' }}
+                      >
+                        감독 {manager || ''}
+                      </p>
+                    </div>
                   </div>
                 </div>
+              </div>
+
+              {/* 우측 영역 (45%) - 선수 사진 */}
+              <div
+                className="relative z-10"
+                style={{ width: '45%' }}
+              >
+                {playerImage && !disableTransform && (
+                  <TransformWrapper
+                    initialScale={imageTransform?.scale ?? 1}
+                    initialPositionX={imageTransform?.positionX ?? 0}
+                    initialPositionY={imageTransform?.positionY ?? 0}
+                    minScale={0.1}
+                    maxScale={4}
+                    centerOnInit={false}
+                    limitToBounds={false}
+                    alignmentAnimation={{ disabled: true }}
+                    wheel={{ smoothStep: 0.01 }}
+                    panning={{ disabled: false }}
+                    onTransformed={(ref) => {
+                      if (onTransformChange) {
+                        onTransformChange({
+                          scale: ref.state.scale,
+                          positionX: ref.state.positionX,
+                          positionY: ref.state.positionY,
+                        });
+                      }
+                    }}
+                  >
+                    <TransformComponent
+                      wrapperClass="!w-full !h-full absolute inset-0"
+                      contentClass="!w-full !h-full flex items-center justify-center"
+                    >
+                      <img
+                        src={playerImage}
+                        alt="대표 선수"
+                        className="max-w-none h-full object-contain"
+                      />
+                    </TransformComponent>
+                  </TransformWrapper>
+                )}
+                {playerImage && disableTransform && imageTransform && (
+                  <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                    <div
+                      style={{
+                        transform: `translate(${imageTransform.positionX}px, ${imageTransform.positionY}px) scale(${imageTransform.scale})`,
+                        transformOrigin: '0 0',
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <img
+                        src={playerImage}
+                        alt="대표 선수"
+                        className="max-w-none h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                )}
+                {playerImage && disableTransform && !imageTransform && (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <img
+                      src={playerImage}
+                      alt="대표 선수"
+                      className="max-w-none h-full object-contain"
+                    />
+                  </div>
+                )}
+
+                {/* 좌측 방향 그라디언트 오버레이 (사진 → 라인업 자연스러운 전환) */}
+                <div
+                  className="absolute inset-0 z-10 pointer-events-none"
+                  style={{
+                    background:
+                      'linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 30%, transparent 60%)',
+                  }}
+                />
+                {/* 하단 그라디언트 */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none"
+                  style={{
+                    height: '30%',
+                    background:
+                      'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)',
+                  }}
+                />
               </div>
             </div>
 

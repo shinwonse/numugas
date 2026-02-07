@@ -77,6 +77,7 @@ export default function LineupPage() {
   const [playerImageName, setPlayerImageName] = useState<string>('');
   const [isDragging, setIsDragging] = useState(false);
   const [startingPitcher, setStartingPitcher] = useState('');
+  const [manager, setManager] = useState('');
   const [isExporting, setIsExporting] = useState(false);
   const [imageTransform, setImageTransform] = useState<ImageTransform>({
     scale: 1,
@@ -160,6 +161,7 @@ export default function LineupPage() {
     setPlayerImage(null);
     setPlayerImageName('');
     setStartingPitcher('');
+    setManager('');
     setImageTransform({ scale: 1, positionX: 0, positionY: 0 });
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -311,6 +313,7 @@ export default function LineupPage() {
                 lineup={lineup}
                 playerImage={playerImage}
                 startingPitcher={startingPitcher}
+                manager={manager}
                 date={formatDate(date)}
                 location={location}
                 league={league}
@@ -335,6 +338,7 @@ export default function LineupPage() {
                   lineup={lineup}
                   playerImage={playerImage}
                   startingPitcher={startingPitcher}
+                  manager={manager}
                   date={formatDate(date)}
                   location={location}
                   league={league}
@@ -484,17 +488,30 @@ export default function LineupPage() {
                 </div>
               </div>
 
-              {/* 선발투수 입력 */}
-              <div className="mb-6 pb-6 border-b border-white/[0.06]">
-                <h3 className="text-sm font-semibold mb-3 text-gray-300">
-                  선발투수
-                </h3>
-                <Input
-                  value={startingPitcher}
-                  onChange={(e) => setStartingPitcher(e.target.value)}
-                  placeholder="선발투수 이름"
-                  className={glassInput}
-                />
+              {/* 선발투수 & 감독 입력 */}
+              <div className="mb-6 pb-6 border-b border-white/[0.06] space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold mb-3 text-gray-300">
+                    선발투수
+                  </h3>
+                  <Input
+                    value={startingPitcher}
+                    onChange={(e) => setStartingPitcher(e.target.value)}
+                    placeholder="선발투수 이름"
+                    className={glassInput}
+                  />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold mb-3 text-gray-300">
+                    감독
+                  </h3>
+                  <Input
+                    value={manager}
+                    onChange={(e) => setManager(e.target.value)}
+                    placeholder="감독 이름"
+                    className={glassInput}
+                  />
+                </div>
               </div>
 
               {/* 선수 입력 */}
