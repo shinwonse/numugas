@@ -200,94 +200,74 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                 </div>
               </div>
 
-              {/* 우측 영역 (45%) - 선수 사진 */}
-              <div
-                className="relative z-10"
-                style={{ width: '45%' }}
-              >
-                {playerImage && !disableTransform && (
-                  <TransformWrapper
-                    initialScale={imageTransform?.scale ?? 1}
-                    initialPositionX={imageTransform?.positionX ?? 0}
-                    initialPositionY={imageTransform?.positionY ?? 0}
-                    minScale={0.1}
-                    maxScale={4}
-                    centerOnInit={false}
-                    limitToBounds={false}
-                    alignmentAnimation={{ disabled: true }}
-                    wheel={{ smoothStep: 0.01 }}
-                    panning={{ disabled: false }}
-                    onTransformed={(ref) => {
-                      if (onTransformChange) {
-                        onTransformChange({
-                          scale: ref.state.scale,
-                          positionX: ref.state.positionX,
-                          positionY: ref.state.positionY,
-                        });
-                      }
+            </div>
+
+            {/* 선수 이미지 - 전체 캔버스에 자유 배치 (라인업 위, 띠 배너 아래) */}
+            <div className="absolute inset-0 z-[25]">
+              {playerImage && !disableTransform && (
+                <TransformWrapper
+                  initialScale={imageTransform?.scale ?? 1}
+                  initialPositionX={imageTransform?.positionX ?? 0}
+                  initialPositionY={imageTransform?.positionY ?? 0}
+                  minScale={0.1}
+                  maxScale={4}
+                  centerOnInit={false}
+                  limitToBounds={false}
+                  alignmentAnimation={{ disabled: true }}
+                  wheel={{ smoothStep: 0.01 }}
+                  panning={{ disabled: false }}
+                  onTransformed={(ref) => {
+                    if (onTransformChange) {
+                      onTransformChange({
+                        scale: ref.state.scale,
+                        positionX: ref.state.positionX,
+                        positionY: ref.state.positionY,
+                      });
+                    }
+                  }}
+                >
+                  <TransformComponent
+                    wrapperClass="!w-full !h-full absolute inset-0"
+                    contentClass="!w-full !h-full flex items-center justify-center"
+                  >
+                    <img
+                      src={playerImage}
+                      alt="대표 선수"
+                      className="max-w-none h-full object-contain"
+                    />
+                  </TransformComponent>
+                </TransformWrapper>
+              )}
+              {playerImage && disableTransform && imageTransform && (
+                <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                  <div
+                    style={{
+                      transform: `translate(${imageTransform.positionX}px, ${imageTransform.positionY}px) scale(${imageTransform.scale})`,
+                      transformOrigin: '0 0',
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
-                    <TransformComponent
-                      wrapperClass="!w-full !h-full absolute inset-0"
-                      contentClass="!w-full !h-full flex items-center justify-center"
-                    >
-                      <img
-                        src={playerImage}
-                        alt="대표 선수"
-                        className="max-w-none h-full object-contain"
-                      />
-                    </TransformComponent>
-                  </TransformWrapper>
-                )}
-                {playerImage && disableTransform && imageTransform && (
-                  <div className="w-full h-full flex items-center justify-center overflow-hidden">
-                    <div
-                      style={{
-                        transform: `translate(${imageTransform.positionX}px, ${imageTransform.positionY}px) scale(${imageTransform.scale})`,
-                        transformOrigin: '0 0',
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <img
-                        src={playerImage}
-                        alt="대표 선수"
-                        className="max-w-none h-full object-contain"
-                      />
-                    </div>
-                  </div>
-                )}
-                {playerImage && disableTransform && !imageTransform && (
-                  <div className="w-full h-full flex items-center justify-center">
                     <img
                       src={playerImage}
                       alt="대표 선수"
                       className="max-w-none h-full object-contain"
                     />
                   </div>
-                )}
-
-                {/* 좌측 방향 그라디언트 오버레이 (사진 → 라인업 자연스러운 전환) */}
-                <div
-                  className="absolute inset-0 z-10 pointer-events-none"
-                  style={{
-                    background:
-                      'linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 30%, transparent 60%)',
-                  }}
-                />
-                {/* 하단 그라디언트 */}
-                <div
-                  className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none"
-                  style={{
-                    height: '30%',
-                    background:
-                      'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)',
-                  }}
-                />
-              </div>
+                </div>
+              )}
+              {playerImage && disableTransform && !imageTransform && (
+                <div className="w-full h-full flex items-center justify-center">
+                  <img
+                    src={playerImage}
+                    alt="대표 선수"
+                    className="max-w-none h-full object-contain"
+                  />
+                </div>
+              )}
             </div>
 
             {/* 하단 띠 영역 */}
