@@ -49,8 +49,13 @@ function StatsTabButton({
       href={tab.href ?? '#'}
       onClick={onClick}
       className={cn(
-        'flex items-center justify-center h-full w-full text-center font-semibold text-sm transition-all duration-200 select-none rounded-lg whitespace-nowrap px-4',
-        isActive ? 'bg-red-500 text-white' : 'text-gray-400 hover:text-white',
+        'flex items-center justify-center h-full w-full text-center',
+        'font-medium text-sm',
+        'transition-all duration-300 select-none',
+        'rounded-xl whitespace-nowrap px-4',
+        isActive
+          ? 'bg-white/15 text-white shadow-[0_2px_8px_rgba(0,0,0,0.3)]'
+          : 'text-gray-400 hover:text-white hover:bg-white/5',
       )}
       tabIndex={isActive ? 0 : -1}
       aria-selected={isActive}
@@ -72,7 +77,12 @@ export default function StatsTabs({
   return (
     <div
       className={cn(
-        'w-full max-w-md mx-auto grid h-11 rounded-lg bg-black/40 border border-white/5 p-1 gap-1',
+        'w-full max-w-md mx-auto',
+        'grid h-12 p-1.5 gap-1',
+        'rounded-2xl',
+        'bg-black/40 backdrop-blur-xl backdrop-saturate-150',
+        'border border-white/10',
+        'shadow-[0_4px_24px_rgba(0,0,0,0.3)]',
         colClass,
         className,
       )}

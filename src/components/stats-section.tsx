@@ -6,6 +6,7 @@ import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { SpotlightCard } from '@/components/animated/spotlight-card';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCountAnimation } from '@/hooks/use-count-animation';
+import { cn } from '@/lib/cn';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
@@ -40,13 +41,37 @@ function StatCard({ name, value, index, isInView }: StatCardProps) {
   return (
     <ShimmerCard delay={index * 0.12}>
       <SpotlightCard>
-        <Card className="bg-black/20 border-white/5 hover:border-red-500/50 transition-all duration-500 group hover:shadow-[0_0_30px_rgba(239,68,68,0.3)]">
+        <Card
+          className={cn(
+            'group cursor-default',
+            'bg-white/5 backdrop-blur-xl backdrop-saturate-150',
+            'border border-white/10',
+            'rounded-2xl',
+            'transition-all duration-500',
+            'hover:bg-white/10 hover:border-white/20',
+            'hover:shadow-[0_8px_32px_rgba(239,68,68,0.15)]',
+          )}
+        >
           <CardContent className="p-8 md:p-10">
             <div className="flex flex-col gap-4">
-              <div className="text-5xl md:text-6xl font-bold text-white tracking-tighter group-hover:text-red-400 transition-colors duration-300">
+              <div
+                className={cn(
+                  'text-5xl md:text-6xl font-bold tracking-tighter',
+                  'text-white',
+                  'transition-colors duration-300',
+                  'group-hover:text-red-400',
+                )}
+              >
                 {animatedValue}
               </div>
-              <div className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider group-hover:text-gray-300 transition-colors duration-300">
+              <div
+                className={cn(
+                  'text-xs md:text-sm font-medium uppercase tracking-wider',
+                  'text-gray-400',
+                  'transition-colors duration-300',
+                  'group-hover:text-gray-200',
+                )}
+              >
                 {name}
               </div>
             </div>

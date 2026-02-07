@@ -4,6 +4,7 @@ import { SectionBackground } from '@/components/animated/section-background';
 import { SectionTitle } from '@/components/animated/section-title';
 import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/cn';
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import StatsTabs from './stats-tabs';
@@ -132,9 +133,18 @@ export function PlayerStatsSection({
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 {battingStats.map((stat, statIndex) => (
                   <ShimmerCard key={stat.category} delay={statIndex * 0.12}>
-                    <Card className="bg-black/20 border-white/5 hover:border-red-500/50 transition-all duration-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]">
-                      <CardHeader className="pb-4 border-b border-white/5">
-                        <CardTitle className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+                    <Card
+                      className={cn(
+                        'overflow-hidden rounded-2xl',
+                        'bg-white/5 backdrop-blur-xl backdrop-saturate-150',
+                        'border border-white/10',
+                        'transition-all duration-500',
+                        'hover:bg-white/10 hover:border-white/20',
+                        'hover:shadow-[0_8px_32px_rgba(239,68,68,0.1)]',
+                      )}
+                    >
+                      <CardHeader className="pb-4 border-b border-white/10">
+                        <CardTitle className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
                           {stat.category}
                         </CardTitle>
                       </CardHeader>
@@ -142,19 +152,23 @@ export function PlayerStatsSection({
                         {stat.players.map((player, playerIndex) => (
                           <div
                             key={`${stat.category}-${player.name}-batting`}
-                            className={`flex items-center justify-between px-6 py-5 ${
-                              playerIndex !== stat.players.length - 1
-                                ? 'border-b border-white/5'
-                                : ''
-                            } ${player.team === 'RED DRAGONS' ? 'bg-red-500/5' : ''} hover:bg-white/5 transition-colors`}
+                            className={cn(
+                              'flex items-center justify-between px-6 py-5',
+                              'transition-colors duration-200',
+                              'hover:bg-white/5',
+                              playerIndex !== stat.players.length - 1 &&
+                                'border-b border-white/5',
+                              player.team === 'RED DRAGONS' && 'bg-red-500/5',
+                            )}
                           >
                             <div className="flex items-center gap-4">
                               <div
-                                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                                className={cn(
+                                  'w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold',
                                   player.rank === 1
-                                    ? 'bg-red-500 text-white'
-                                    : 'bg-white/10 text-gray-500'
-                                }`}
+                                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                                    : 'bg-white/10 text-gray-400',
+                                )}
                               >
                                 {player.rank}
                               </div>
@@ -162,7 +176,7 @@ export function PlayerStatsSection({
                                 <p className="text-sm font-semibold text-white mb-0.5">
                                   {player.name}
                                 </p>
-                                <p className="text-xs text-gray-600">
+                                <p className="text-xs text-gray-500">
                                   {player.team}
                                 </p>
                               </div>
@@ -187,9 +201,18 @@ export function PlayerStatsSection({
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 {pitchingStats.map((stat, statIndex) => (
                   <ShimmerCard key={stat.category} delay={statIndex * 0.12}>
-                    <Card className="bg-black/20 border-white/5 hover:border-red-500/50 transition-all duration-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]">
-                      <CardHeader className="pb-4 border-b border-white/5">
-                        <CardTitle className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+                    <Card
+                      className={cn(
+                        'overflow-hidden rounded-2xl',
+                        'bg-white/5 backdrop-blur-xl backdrop-saturate-150',
+                        'border border-white/10',
+                        'transition-all duration-500',
+                        'hover:bg-white/10 hover:border-white/20',
+                        'hover:shadow-[0_8px_32px_rgba(239,68,68,0.1)]',
+                      )}
+                    >
+                      <CardHeader className="pb-4 border-b border-white/10">
+                        <CardTitle className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
                           {stat.category}
                         </CardTitle>
                       </CardHeader>
@@ -197,19 +220,23 @@ export function PlayerStatsSection({
                         {stat.players.map((player, playerIndex) => (
                           <div
                             key={`${stat.category}-${player.name}-pitching`}
-                            className={`flex items-center justify-between px-6 py-5 ${
-                              playerIndex !== stat.players.length - 1
-                                ? 'border-b border-white/5'
-                                : ''
-                            } ${player.team === 'RED DRAGONS' ? 'bg-red-500/5' : ''} hover:bg-white/5 transition-colors`}
+                            className={cn(
+                              'flex items-center justify-between px-6 py-5',
+                              'transition-colors duration-200',
+                              'hover:bg-white/5',
+                              playerIndex !== stat.players.length - 1 &&
+                                'border-b border-white/5',
+                              player.team === 'RED DRAGONS' && 'bg-red-500/5',
+                            )}
                           >
                             <div className="flex items-center gap-4">
                               <div
-                                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                                className={cn(
+                                  'w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold',
                                   player.rank === 1
-                                    ? 'bg-red-500 text-white'
-                                    : 'bg-white/10 text-gray-500'
-                                }`}
+                                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                                    : 'bg-white/10 text-gray-400',
+                                )}
                               >
                                 {player.rank}
                               </div>
@@ -217,7 +244,7 @@ export function PlayerStatsSection({
                                 <p className="text-sm font-semibold text-white mb-0.5">
                                   {player.name}
                                 </p>
-                                <p className="text-xs text-gray-600">
+                                <p className="text-xs text-gray-500">
                                   {player.team}
                                 </p>
                               </div>
