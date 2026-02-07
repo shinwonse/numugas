@@ -147,11 +147,7 @@ export function StatsSection({
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <SectionTitle
           subtitle="TEAM STATISTICS"
-          title={
-            <>
-              팀 <span className="text-red-500">통산 기록</span>
-            </>
-          }
+          title="팀 통산 기록"
           isInView={isInView}
         />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">

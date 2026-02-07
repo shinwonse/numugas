@@ -103,11 +103,7 @@ export function YoutubeSection() {
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <SectionTitle
           subtitle="GAME HIGHLIGHTS"
-          title={
-            <>
-              경기 <span className="text-red-500">하이라이트</span>
-            </>
-          }
+          title="경기 하이라이트"
           isInView={isInView}
         />
         <motion.div
