@@ -47,13 +47,13 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
-
-              {/* Bottom gradient fade */}
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/60 to-transparent" />
             </div>
 
+            {/* Bottom gradient fade - 카드 레벨에서 이미지/정보 경계를 덮음 */}
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/60 to-transparent pointer-events-none" />
+
             {/* Info Section */}
-            <div className="relative px-5 pb-5 -mt-14">
+            <div className="relative z-10 px-5 pb-5 -mt-14">
               {/* Position Badge */}
               <span
                 className={cn(
