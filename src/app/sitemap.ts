@@ -6,7 +6,7 @@ const TYPES = ['batter', 'pitcher'];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.vercel.app';
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.com';
 
   // 정적 페이지
   const staticPages: MetadataRoute.Sitemap = [

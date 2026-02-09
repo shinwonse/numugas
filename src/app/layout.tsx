@@ -21,7 +21,7 @@ const orbitron = Orbitron({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.vercel.app',
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.com',
   ),
   title: {
     default: '담장NUMUGAS - 야구 팀 통계 & 선수 정보',

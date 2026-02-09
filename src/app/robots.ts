@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.vercel.app';
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.com';
 
   return {
     rules: {
