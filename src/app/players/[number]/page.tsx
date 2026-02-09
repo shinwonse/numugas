@@ -1,10 +1,31 @@
 import { SectionBackground } from '@/components/animated/section-background';
 import { supabase } from '@/lib/supabase';
+import type { Metadata } from 'next/types';
 import { unstable_cache } from 'next/cache';
 import { PlayerDetailContent } from './player-detail-content';
 
 interface PlayerDetailPageProps {
   params: { number: string };
+}
+
+export async function generateMetadata({
+  params,
+}: PlayerDetailPageProps): Promise<Metadata> {
+  const { number } = await params;
+  const { data } = await supabase
+    .from('players')
+    .select('name, position, number')
+    .eq('number', number)
+    .single();
+
+  if (!data) {
+    return { title: '선수 정보' };
+  }
+
+  return {
+    title: `${data.name} (No.${data.number}) - ${data.position}`,
+    description: `담장NUMUGAS ${data.position} ${data.name} 선수의 상세 정보와 기록을 확인하세요.`,
+  };
 }
 
 interface Player {

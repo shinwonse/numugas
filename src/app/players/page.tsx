@@ -1,6 +1,13 @@
 import { supabase } from '@/lib/supabase';
+import type { Metadata } from 'next/types';
 import { unstable_cache } from 'next/cache';
 import PlayerPositionSection from './components/player-position-section';
+
+export const metadata: Metadata = {
+  title: '선수 명단',
+  description:
+    '담장NUMUGAS 야구팀 선수 명단입니다. 투수, 포수, 내야수, 외야수 포지션별 선수 정보를 확인하세요.',
+};
 
 // 선수 목록 데이터 캐싱 함수
 const getCachedPlayersData = unstable_cache(

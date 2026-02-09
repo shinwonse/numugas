@@ -21,15 +21,19 @@ const orbitron = Orbitron({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NODE_ENV === 'production'
-      ? process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'
-      : 'http://localhost:3000',
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.vercel.app',
   ),
-  title: '담장NUMUGAS',
-  description: '나는 내가 생각한 것보다 훨씬 강하다',
+  title: {
+    default: '담장NUMUGAS - 야구 팀 통계 & 선수 정보',
+    template: '%s | 담장NUMUGAS',
+  },
+  description:
+    '담장NUMUGAS 야구팀의 선수 정보, 타자/투수 기록, 팀 통계를 한눈에 확인하세요.',
+  keywords: ['담장NUMUGAS', '야구', '통계', '선수', '타자', '투수', '사회인야구'],
   openGraph: {
-    title: '담장NUMUGAS',
-    description: '나는 내가 생각한 것보다 훨씬 강하다',
+    title: '담장NUMUGAS - 야구 팀 통계 & 선수 정보',
+    description:
+      '담장NUMUGAS 야구팀의 선수 정보, 타자/투수 기록, 팀 통계를 한눈에 확인하세요.',
     images: [
       {
         url: '/opengraph.png',
@@ -41,6 +45,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ko_KR',
     siteName: '담장NUMUGAS',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '담장NUMUGAS - 야구 팀 통계 & 선수 정보',
+    description:
+      '담장NUMUGAS 야구팀의 선수 정보, 타자/투수 기록, 팀 통계를 한눈에 확인하세요.',
+    images: ['/opengraph.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 };
 

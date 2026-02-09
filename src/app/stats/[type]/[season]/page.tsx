@@ -1,3 +1,4 @@
+import type { Metadata } from 'next/types';
 import { notFound } from 'next/navigation';
 import { StatsPageHeader } from './stats-page-header';
 import StatsTableClient from './stats-table-client';
@@ -7,6 +8,25 @@ const TYPES = [
   { key: 'batter', label: '타자 기록' },
   { key: 'pitcher', label: '투수 기록' },
 ];
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { type: string; season: string };
+}): Promise<Metadata> {
+  const resolvedParams = await Promise.resolve(params);
+  const type = decodeURIComponent(resolvedParams.type);
+  const season = decodeURIComponent(resolvedParams.season);
+  const typeObj = TYPES.find((t) => t.key === type);
+
+  const label = typeObj?.label || '기록';
+  const seasonLabel = season === '통산' ? '통산' : `${season}시즌`;
+
+  return {
+    title: `${label} - ${seasonLabel}`,
+    description: `담장NUMUGAS ${seasonLabel} ${label}을 확인하세요.`,
+  };
+}
 
 export async function generateStaticParams() {
   return TYPES.flatMap((type) =>
