@@ -61,6 +61,11 @@ export const metadata: Metadata = {
       follow: true,
     },
   },
+  verification: {
+    other: {
+      'naver-site-verification': ['ab154e376d6703d2d1fbf18b3a59d9c902416bbf'],
+    },
+  },
 };
 
 const stagewiseConfig = {
