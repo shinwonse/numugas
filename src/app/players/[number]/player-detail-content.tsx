@@ -1,6 +1,7 @@
 'use client';
 
 import { SectionBackground } from '@/components/animated/section-background';
+import { cn } from '@/lib/cn';
 import { useBatterStats, usePitcherStats } from '@/hooks/use-player-stats';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -75,21 +76,23 @@ export function PlayerDetailContent({ player }: { player: Player }) {
           <div className="flex bg-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-1.5 shadow-xl">
             <button
               onClick={() => handleTabChange('batter')}
-              className={`relative px-8 py-4 rounded-xl transition-all duration-300 font-bold text-lg ${
+              className={cn(
+                'relative px-8 py-4 rounded-xl transition-all duration-300 font-bold text-lg',
                 activeTab === 'batter'
                   ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/50'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-              }`}
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800/50',
+              )}
             >
               타자 기록
             </button>
             <button
               onClick={() => handleTabChange('pitcher')}
-              className={`relative px-8 py-4 rounded-xl transition-all duration-300 font-bold text-lg ${
+              className={cn(
+                'relative px-8 py-4 rounded-xl transition-all duration-300 font-bold text-lg',
                 activeTab === 'pitcher'
                   ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/50'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
-              }`}
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800/50',
+              )}
             >
               투수 기록
             </button>

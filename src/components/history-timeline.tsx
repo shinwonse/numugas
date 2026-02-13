@@ -11,7 +11,7 @@ export function HistoryTimeline() {
       <div
         className={cn(
           'absolute top-0 bottom-0 w-px',
-          'left-6 md:left-1/2 md:-translate-x-px',
+          'left-6 md:left-1/2',
           'bg-gradient-to-b from-red-500/50 via-red-500/20 to-transparent',
         )}
       />
@@ -28,31 +28,24 @@ export function HistoryTimeline() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5 }}
-                className={cn(
-                  'flex items-center gap-4',
-                  'md:justify-center',
-                  'mb-8',
-                )}
+                className="relative mb-8"
               >
-                {/* Mobile: offset for left line */}
-                <div className="relative z-10 flex items-center">
-                  {/* Circle marker on the line */}
-                  <div
-                    className={cn(
-                      'absolute left-6 md:left-1/2 md:-translate-x-1/2',
-                      'w-4 h-4 rounded-full',
-                      'border-2 border-red-500',
-                      yearIndex === 0
-                        ? 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.8)]'
-                        : 'bg-black',
-                    )}
-                  />
-                </div>
-
-                {/* Year text */}
+                {/* Circle marker - same position ref as the line */}
                 <div
                   className={cn(
-                    'pl-16 md:pl-0',
+                    'absolute left-6 md:left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2',
+                    'z-10 w-4 h-4 rounded-full',
+                    'border-2 border-red-500',
+                    yearIndex === 0
+                      ? 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.8)]'
+                      : 'bg-black',
+                  )}
+                />
+
+                {/* Year text - always right of the marker */}
+                <div
+                  className={cn(
+                    'pl-14 md:pl-[calc(50%+1.5rem)]',
                     'font-orbitron text-3xl md:text-4xl font-bold',
                     'bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent',
                   )}
@@ -64,62 +57,62 @@ export function HistoryTimeline() {
               {/* Event cards */}
               <div className="space-y-4">
                 {item.events.map((event, eventIndex) => (
-                  <motion.div
-                    key={`${item.year}-${eventIndex}`}
-                    initial={{
-                      opacity: 0,
-                      x: isLeft ? -50 : 50,
-                    }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: '-50px' }}
-                    transition={{
-                      duration: 0.6,
-                      delay: eventIndex * 0.1,
-                      ease: 'easeOut',
-                    }}
-                    className={cn(
-                      // Mobile: always right of line
-                      'ml-16 md:ml-0',
-                      // Desktop: alternate sides
-                      'md:w-[calc(50%-2rem)]',
-                      isLeft ? 'md:mr-auto md:pr-4' : 'md:ml-auto md:pl-4',
-                    )}
-                  >
-                    {/* Small dot on the line for each event */}
+                  <div key={`${item.year}-${eventIndex}`} className="relative">
+                    {/* Small dot - same position ref as the line */}
                     <div
                       className={cn(
-                        'absolute left-[22px] md:left-1/2 md:-translate-x-[3px]',
-                        'w-1.5 h-1.5 rounded-full bg-red-500/60',
-                        'mt-5',
+                        'absolute left-6 md:left-1/2 -translate-x-1/2',
+                        'top-5 w-1.5 h-1.5 rounded-full bg-red-500/60',
                       )}
                     />
 
                     {/* Card */}
-                    <div
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        x: isLeft ? -50 : 50,
+                      }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: '-50px' }}
+                      transition={{
+                        duration: 0.6,
+                        delay: eventIndex * 0.1,
+                        ease: 'easeOut',
+                      }}
                       className={cn(
-                        'bg-black/40 backdrop-blur-xl',
-                        'border border-white/10 rounded-2xl',
-                        'p-5 md:p-6',
-                        'transition-all duration-300',
-                        'hover:border-red-500/30 hover:bg-black/50',
-                        'hover:shadow-[0_0_30px_rgba(239,68,68,0.1)]',
+                        // Mobile: always right of line
+                        'ml-14 md:ml-0',
+                        // Desktop: alternate sides
+                        'md:w-[calc(50%-2rem)]',
+                        isLeft ? 'md:mr-auto md:pr-4' : 'md:ml-auto md:pl-4',
                       )}
                     >
-                      {event.month && (
-                        <span className="text-xs font-medium text-red-400/80 tracking-wider uppercase">
-                          {event.month}월
-                        </span>
-                      )}
-                      <h3 className="text-lg font-semibold text-white mt-1">
-                        {event.title}
-                      </h3>
-                      {event.description && (
-                        <p className="text-sm text-gray-400 mt-2 leading-relaxed">
-                          {event.description}
-                        </p>
-                      )}
-                    </div>
-                  </motion.div>
+                      <div
+                        className={cn(
+                          'bg-black/40 backdrop-blur-xl',
+                          'border border-white/10 rounded-2xl',
+                          'p-5 md:p-6',
+                          'transition-all duration-300',
+                          'hover:border-red-500/30 hover:bg-black/50',
+                          'hover:shadow-[0_0_30px_rgba(239,68,68,0.1)]',
+                        )}
+                      >
+                        {event.month && (
+                          <span className="text-xs font-medium text-red-400/80 tracking-wider uppercase">
+                            {event.month}월
+                          </span>
+                        )}
+                        <h3 className="text-lg font-semibold text-white mt-1">
+                          {event.title}
+                        </h3>
+                        {event.description && (
+                          <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+                            {event.description}
+                          </p>
+                        )}
+                      </div>
+                    </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
