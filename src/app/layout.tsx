@@ -24,16 +24,23 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.com',
   ),
   title: {
-    default: '담장NUMUGAS - 야구 팀 통계 & 선수 정보',
+    default: '담장NUMUGAS',
     template: '%s | 담장NUMUGAS',
   },
-  description:
-    '담장NUMUGAS 야구팀의 선수 정보, 타자/투수 기록, 팀 통계를 한눈에 확인하세요.',
-  keywords: ['담장NUMUGAS', '야구', '통계', '선수', '타자', '투수', '사회인야구'],
+  description: '나는 내가 생각한 것보다 훨씬 강하다',
+  keywords: [
+    '담장NUMUGAS',
+    '담장너머가쓰',
+    '야구',
+    '통계',
+    '선수',
+    '타자',
+    '투수',
+    '사회인야구',
+  ],
   openGraph: {
-    title: '담장NUMUGAS - 야구 팀 통계 & 선수 정보',
-    description:
-      '담장NUMUGAS 야구팀의 선수 정보, 타자/투수 기록, 팀 통계를 한눈에 확인하세요.',
+    title: '담장NUMUGAS',
+    description: '나는 내가 생각한 것보다 훨씬 강하다',
     images: [
       {
         url: '/opengraph.png',
@@ -48,9 +55,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '담장NUMUGAS - 야구 팀 통계 & 선수 정보',
-    description:
-      '담장NUMUGAS 야구팀의 선수 정보, 타자/투수 기록, 팀 통계를 한눈에 확인하세요.',
+    title: '담장NUMUGAS',
+    description: '나는 내가 생각한 것보다 훨씬 강하다',
     images: ['/opengraph.png'],
   },
   robots: {
