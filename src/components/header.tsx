@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 const NAVIGATION_ITEMS = [
+  { label: '팀 소개', href: '/about' },
   { label: '기록', href: '/stats' },
   { label: '선수단', href: '/players' },
   { label: '라인업', href: '/lineup' },
