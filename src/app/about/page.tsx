@@ -28,12 +28,12 @@ export default function AboutPage() {
           </p>
           <h1 className="text-3xl md:text-5xl font-bold">
             <span className="bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent">
-              담장NUMUGAS의 발자취
+              담장NUMUGAS
             </span>
           </h1>
-          <p className="mt-4 text-sm md:text-base text-gray-400 max-w-md mx-auto">
+          {/* <p className="mt-4 text-sm md:text-base text-gray-400 max-w-md mx-auto">
             야구를 사랑하는 우리 팀의 이야기
-          </p>
+          </p> */}
         </div>
       </section>
 
