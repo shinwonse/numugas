@@ -55,7 +55,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
     })();
 
     const WIDTH = 1080;
-    const HEIGHT = 1920;
+    const HEIGHT = 1350;
     const SCALE = isExporting ? 1 : 0.5;
 
     return (
@@ -90,10 +90,10 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                 style={{ width: '55%' }}
               >
                 <div className="absolute inset-0 bg-black/85" />
-                <div className="relative z-10 flex flex-col h-full px-12 pt-16" style={{ paddingBottom: '240px' }}>
+                <div className="relative z-10 flex flex-col h-full px-10 pt-10" style={{ paddingBottom: '140px' }}>
                   {/* 팀 로고 */}
-                  <div className="flex items-start mb-6">
-                    <div className="w-32 h-32 relative">
+                  <div className="flex items-start mb-4">
+                    <div className="w-24 h-24 relative">
                       <img
                         src="/logo.png"
                         alt="Team Logo"
@@ -104,8 +104,8 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
 
                   {/* STARTING LINEUP 타이틀 */}
                   <h2
-                    className="font-bold text-white leading-none mb-6"
-                    style={{ fontSize: '5rem' }}
+                    className="font-bold text-white leading-none mb-4"
+                    style={{ fontSize: '3.8rem' }}
                   >
                     STARTING
                     <br />
@@ -115,41 +115,41 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   {/* 리그명 */}
                   {leagueText && (
                     <p
-                      className="font-bold text-red-600 mb-4"
-                      style={{ fontSize: '2.2rem' }}
+                      className="font-bold text-red-600 mb-2"
+                      style={{ fontSize: '1.8rem' }}
                     >
                       {leagueText}
                     </p>
                   )}
 
                   {/* 경기 정보 */}
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <p
                       className="text-gray-400 font-bold font-aggravo leading-tight"
-                      style={{ fontSize: '2rem' }}
+                      style={{ fontSize: '1.6rem' }}
                     >
                       {date || '날짜'} / {location || '장소'}
                     </p>
                   </div>
 
                   {/* 구분선 */}
-                  <div className="w-full h-px bg-white/20 mb-6" />
+                  <div className="w-full h-px bg-white/20 mb-4" />
 
                   {/* 선발투수 */}
                   <div
-                    className="border-l-4 border-l-gray-400 mb-3"
-                    style={{ padding: '16px 24px' }}
+                    className="border-l-4 border-l-gray-400 mb-2"
+                    style={{ padding: '12px 20px' }}
                   >
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-5">
                       <span
-                        className="text-gray-400 font-extrabold w-20 shrink-0 font-aggravo leading-none"
-                        style={{ fontSize: '1.8rem' }}
+                        className="text-gray-400 font-extrabold w-16 shrink-0 font-aggravo leading-none"
+                        style={{ fontSize: '1.5rem' }}
                       >
                         SP
                       </span>
                       <span
                         className="text-white font-extrabold flex-1 font-aggravo leading-none"
-                        style={{ fontSize: '2.6rem' }}
+                        style={{ fontSize: '2.2rem' }}
                       >
                         {startingPitcher || '이름'}
                       </span>
@@ -157,28 +157,28 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   </div>
 
                   {/* 구분선 */}
-                  <div className="w-full h-px bg-white/20 mb-6" />
+                  <div className="w-full h-px bg-white/20 mb-3" />
 
                   {/* 타자 라인업 + 감독 */}
-                  <div className="flex-1 flex flex-col justify-between">
+                  <div className="flex flex-col">
                     {/* 타자 목록 */}
-                    <div className="flex flex-col space-y-7">
+                    <div className="flex flex-col space-y-4">
                       {lineup.map((player, index) => (
                         <div
                           key={index}
                           className="border-l-4 border-l-red-700"
-                          style={{ padding: '16px 24px' }}
+                          style={{ padding: '12px 20px' }}
                         >
-                          <div className="flex items-center gap-6">
+                          <div className="flex items-center gap-5">
                             <span
-                              className="text-red-700 font-extrabold w-20 shrink-0 font-aggravo leading-none"
-                              style={{ fontSize: '1.8rem' }}
+                              className="text-red-700 font-extrabold w-16 shrink-0 font-aggravo leading-none"
+                              style={{ fontSize: '1.5rem' }}
                             >
                               {player.position || '-'}
                             </span>
                             <span
                               className="text-white font-extrabold flex-1 font-aggravo leading-none"
-                              style={{ fontSize: '2.6rem' }}
+                              style={{ fontSize: '2.2rem' }}
                             >
                               {player.name || '이름'}
                             </span>
@@ -188,10 +188,10 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                     </div>
 
                     {/* 감독 정보 */}
-                    <div className="pt-8 border-t border-white/20">
+                    <div className="mt-6 pt-4 border-t border-white/20">
                       <p
                         className="text-white/70 font-bold font-aggravo leading-tight"
-                        style={{ fontSize: '2.4rem' }}
+                        style={{ fontSize: '2rem' }}
                       >
                         감독 {manager || ''}
                       </p>
@@ -271,22 +271,22 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
             </div>
 
             {/* 하단 띠 영역 */}
-            <div className="absolute bottom-10 left-0 right-0 z-30 gap-4 flex flex-col">
+            <div className="absolute bottom-4 left-0 right-0 z-30 gap-3 flex flex-col">
               {/* 첫 번째 띠 */}
-              <div className="h-16 bg-black/70 flex items-center justify-start overflow-hidden">
+              <div className="h-10 bg-black/70 flex items-center justify-start overflow-hidden">
                 <p
                   className="text-white font-bold tracking-widest whitespace-nowrap"
-                  style={{ fontSize: '1rem' }}
+                  style={{ fontSize: '0.85rem' }}
                 >
                   NUMUGAS BASEBALL CLUB • DAMJANG NUMUGAS BASEBALL CLUB •
                   DAMJANG NUMUGAS BASEBALL CLUB • DAMJANG NUMUGAS BASEBALL CLUB
                 </p>
               </div>
               {/* 두 번째 띠 */}
-              <div className="h-16 bg-black/70 flex items-center justify-start overflow-hidden">
+              <div className="h-10 bg-black/70 flex items-center justify-start overflow-hidden">
                 <p
                   className="text-white font-bold tracking-widest whitespace-nowrap"
-                  style={{ fontSize: '1rem' }}
+                  style={{ fontSize: '0.85rem' }}
                 >
                   CLUB • DAMJANG NUMUGAS BASEBALL CLUB • DAMJANG NUMUGAS
                   BASEBALL CLUB • DAMJANG NUMUGAS BASEBALL CLUB
