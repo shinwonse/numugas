@@ -1,6 +1,7 @@
+import type { BatterStat } from '@/types/stats';
 import { useQuery } from '@tanstack/react-query';
 
-const fetchBattingStatsBySeason = async (season?: string) => {
+const fetchBattingStatsBySeason = async (season?: string): Promise<BatterStat[]> => {
   if (!season) {
     const res = await fetch(`/api/batter-career`);
     if (!res.ok) throw new Error('기록을 불러오지 못했습니다.');
@@ -15,9 +16,8 @@ const fetchBattingStatsBySeason = async (season?: string) => {
 };
 
 export function useBattingStatsBySeason(season?: string) {
-  return useQuery<any[], Error>({
+  return useQuery<BatterStat[], Error>({
     queryKey: ['battingStatsBySeason', season],
     queryFn: async () => fetchBattingStatsBySeason(season),
-    select: (stats) => stats,
   });
 }
