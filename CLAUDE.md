@@ -39,14 +39,15 @@ src/
 │   └── animated/          # Framer Motion animated components
 ├── hooks/                 # Custom React hooks (use-batting-stats, use-team, etc.)
 ├── lib/
-│   ├── api/              # Server-side data fetching functions
+│   ├── fetchers/         # Server-side data fetching functions (Supabase 직접 조회)
+│   ├── stats-utils.ts    # 통계 공통 유틸리티 (그룹화, 합산, TOP3 추출 등)
 │   ├── supabase.ts       # Supabase client
 │   └── cn.ts             # Tailwind class merging utility
 └── types/                 # TypeScript type definitions
 ```
 
 ### Data Flow
-- **Server Components**: Use `src/lib/api/*` functions that directly query Supabase
+- **Server Components**: Use `src/lib/fetchers/*` functions that directly query Supabase
 - **Client Components**: Use hooks from `src/hooks/*` that call API routes
 - **API Routes**: Located in `src/app/api/*`, handle data crawling and Supabase operations
 
