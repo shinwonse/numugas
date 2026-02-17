@@ -75,11 +75,6 @@ export function Footer() {
               <p className="text-xs text-gray-600">
                 © 2026 담장NUMUGAS. All rights reserved.
               </p>
-              <div className="flex items-center gap-1">
-                <span className="text-xs text-gray-700">Made with</span>
-                <span className="text-red-500 text-sm animate-pulse">♥</span>
-                <span className="text-xs text-gray-700">for baseball</span>
-              </div>
             </div>
           </div>
         </div>

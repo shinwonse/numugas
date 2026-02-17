@@ -4,7 +4,7 @@ import { SectionBackground } from '@/components/animated/section-background';
 import { cn } from '@/lib/cn';
 import { useBatterStats, usePitcherStats } from '@/hooks/use-player-stats';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Player {
   id: number;
@@ -17,6 +17,10 @@ interface Player {
 
 export function PlayerDetailContent({ player }: { player: Player }) {
   const [activeTab, setActiveTab] = useState<'batter' | 'pitcher'>('batter');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // React Query 훅 사용 - 필요할 때만 데이터 fetching
   const { data: batterStats, error: batterError } = useBatterStats(
