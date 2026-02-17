@@ -68,6 +68,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
+    google: ['BmUnEK4eiebYi0QfFxss18eGv65UJw34-VVjK4m6z6g'],
     other: {
       'naver-site-verification': ['ab154e376d6703d2d1fbf18b3a59d9c902416bbf'],
     },
@@ -78,6 +79,62 @@ const stagewiseConfig = {
   plugins: [],
 };
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://numugas.com';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${baseUrl}/#website`,
+      url: baseUrl,
+      name: '담장NUMUGAS',
+      description: '담장NUMUGAS 사회인 야구팀 - 선수 정보, 타자/투수 기록, 라인업',
+      inLanguage: 'ko',
+      publisher: {
+        '@id': `${baseUrl}/#organization`,
+      },
+    },
+    {
+      '@type': 'SportsTeam',
+      '@id': `${baseUrl}/#organization`,
+      name: '담장NUMUGAS',
+      alternateName: '담장너머가쓰',
+      url: baseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/opengraph.png`,
+      },
+      sport: '야구',
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      name: '선수 명단',
+      description: '담장NUMUGAS 야구팀 선수 명단 - 포지션별 선수 정보',
+      url: `${baseUrl}/players`,
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      name: '기록실',
+      description: '담장NUMUGAS 타자/투수 시즌별 통계 기록',
+      url: `${baseUrl}/stats`,
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      name: '라인업',
+      description: '담장NUMUGAS 경기 라인업 구성 및 추천',
+      url: `${baseUrl}/lineup`,
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      name: '팀 소개',
+      description: '담장NUMUGAS 야구팀 연혁과 역사',
+      url: `${baseUrl}/about`,
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -85,6 +142,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${montserrat.variable} ${orbitron.variable} ${aggravo.variable} font-sans antialiased`}
       >
