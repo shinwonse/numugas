@@ -1,7 +1,11 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -11,15 +15,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useLineupRecommend } from '@/hooks/use-lineup-recommend';
 import { useIsMobile } from '@/hooks/use-mobile';
+import type { LineupRecommendResponse } from '@/types/lineup';
 import { cn } from '@/lib/cn';
 import { motion } from 'framer-motion';
 import {
+  ChevronDown,
   Download,
   Home,
   Image as ImageIcon,
+  Loader2,
   Monitor,
   RotateCcw,
+  Sparkles,
   Upload,
   X,
 } from 'lucide-react';
@@ -97,6 +106,9 @@ export default function LineupPage() {
     { position: '', name: '', number: '', battingOrder: 8 },
     { position: '', name: '', number: '', battingOrder: 9 },
   ]);
+  const [aiReasoning, setAiReasoning] = useState<LineupRecommendResponse | null>(null);
+  const [isReasoningOpen, setIsReasoningOpen] = useState(false);
+  const lineupMutation = useLineupRecommend();
 
   const handlePositionChange = (index: number, position: string) => {
     const newLineup = [...lineup];
@@ -233,6 +245,25 @@ export default function LineupPage() {
     } finally {
       setIsExporting(false);
     }
+  };
+
+  const handleAIRecommend = () => {
+    lineupMutation.mutate(undefined, {
+      onSuccess: (data) => {
+        setLineup(
+          data.lineup.map((p) => ({
+            battingOrder: p.battingOrder,
+            position: '',
+            name: p.name,
+            number: p.number,
+          })),
+        );
+        setStartingPitcher(data.startingPitcher.name);
+        setStartingPitcherNumber(data.startingPitcher.number);
+        setAiReasoning(data);
+        setIsReasoningOpen(true);
+      },
+    });
   };
 
   return (
@@ -375,6 +406,107 @@ export default function LineupPage() {
               <h2 className="text-lg font-bold mb-5 text-white">
                 라인업 정보
               </h2>
+
+              {/* AI 라인업 추천 버튼 */}
+              <div className="mb-6 pb-6 border-b border-white/[0.06]">
+                <Button
+                  onClick={handleAIRecommend}
+                  disabled={lineupMutation.isPending}
+                  className={cn(
+                    'w-full cursor-pointer',
+                    'bg-gradient-to-r from-violet-600 to-purple-600',
+                    'hover:from-violet-500 hover:to-purple-500',
+                    'transition-all duration-200 text-white font-semibold',
+                    'shadow-[0_4px_16px_rgba(139,92,246,0.3)]',
+                    'hover:shadow-[0_4px_24px_rgba(139,92,246,0.4)]',
+                  )}
+                  size="lg"
+                >
+                  {lineupMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      AI 분석 중...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      AI 라인업 추천
+                    </>
+                  )}
+                </Button>
+
+                {lineupMutation.isError && (
+                  <p className="mt-2 text-xs text-red-400">
+                    {lineupMutation.error?.message || 'AI 추천에 실패했습니다.'}
+                  </p>
+                )}
+
+                {/* AI 추천 이유 패널 */}
+                {aiReasoning && (
+                  <Collapsible
+                    open={isReasoningOpen}
+                    onOpenChange={setIsReasoningOpen}
+                    className="mt-3"
+                  >
+                    <CollapsibleTrigger
+                      className={cn(
+                        'flex items-center justify-between w-full px-4 py-2.5',
+                        'rounded-xl text-sm font-medium',
+                        'bg-violet-500/10 border border-violet-500/20',
+                        'hover:bg-violet-500/15 transition-colors duration-200',
+                        'text-violet-300 cursor-pointer',
+                      )}
+                    >
+                      <span className="flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        AI 추천 이유 ({aiReasoning.seasonUsed} 시즌 기준)
+                      </span>
+                      <ChevronDown
+                        className={cn(
+                          'w-4 h-4 transition-transform duration-200',
+                          isReasoningOpen && 'rotate-180',
+                        )}
+                      />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div
+                        className={cn(
+                          'mt-2 p-4 rounded-xl text-sm leading-relaxed',
+                          'bg-white/[0.02] border border-white/[0.06]',
+                          'text-gray-400',
+                        )}
+                      >
+                        <p className="text-gray-300 font-medium mb-3">
+                          {aiReasoning.overallReasoning}
+                        </p>
+                        <div className="space-y-2">
+                          {aiReasoning.lineup.map((player) => (
+                            <div
+                              key={player.battingOrder}
+                              className="flex gap-2 text-xs"
+                            >
+                              <span className="text-violet-400 font-mono font-bold shrink-0">
+                                {player.battingOrder}번
+                              </span>
+                              <span className="text-gray-500">
+                                {player.name} — {player.reasoning}
+                              </span>
+                            </div>
+                          ))}
+                          <div className="flex gap-2 text-xs pt-2 border-t border-white/[0.06]">
+                            <span className="text-violet-400 font-mono font-bold shrink-0">
+                              SP
+                            </span>
+                            <span className="text-gray-500">
+                              {aiReasoning.startingPitcher.name} — {aiReasoning.startingPitcher.reasoning}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
+              </div>
 
               {/* 날짜, 장소, 리그, 이미지 입력 */}
               <div className="space-y-4 mb-6 pb-6 border-b border-white/[0.06]">
