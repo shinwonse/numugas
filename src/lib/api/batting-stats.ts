@@ -1,10 +1,16 @@
-import { calculateRankingsWithTies } from '@/lib/calculate-rankings-with-ties';
+import { createFallbackStats, extractTopPlayers } from '@/lib/stats-utils';
 import { supabase } from '@/lib/supabase';
 import type { Stat } from '@/types/stats';
 
+const SEASON_CATEGORIES = [
+  { category: '안타', key: 'hits' },
+  { category: '홈런', key: 'homeruns' },
+  { category: '타점', key: 'rbi' },
+  { category: '도루', key: 'stolenbases' },
+];
+
 export async function fetchBattingStats2026(): Promise<Stat[]> {
   try {
-    // 직접 Supabase에서 데이터 가져오기
     const { data: seasonStats, error } = await supabase
       .from('batter_stats')
       .select('*')
@@ -20,102 +26,13 @@ export async function fetchBattingStats2026(): Promise<Stat[]> {
       throw new Error('기록 데이터가 올바르지 않습니다.');
     }
 
-    // TOP3 계산
-    const categories = [
-      {
-        category: '안타',
-        key: 'hits',
-        sort: (a: any, b: any) => Number(b.hits) - Number(a.hits),
-        value: (p: any) => Number(p.hits),
-      },
-      {
-        category: '홈런',
-        key: 'homeruns',
-        sort: (a: any, b: any) => Number(b.homeruns) - Number(a.homeruns),
-        value: (p: any) => Number(p.homeruns),
-      },
-      {
-        category: '타점',
-        key: 'rbi',
-        sort: (a: any, b: any) => Number(b.rbi) - Number(a.rbi),
-        value: (p: any) => Number(p.rbi),
-      },
-      {
-        category: '도루',
-        key: 'stolenbases',
-        sort: (a: any, b: any) => Number(b.stolenbases) - Number(a.stolenbases),
-        value: (p: any) => Number(p.stolenbases),
-      },
-    ];
-
-    const teamMap = (p: any) => p.team || p.club || '';
-
-    const stats = categories.map(({ category, sort, value, key }) => {
-      // 1. value > 0 인 선수들을 정렬
-      const topPlayers = [...seasonStats]
-        .filter((p) => value(p) > 0 && p.name)
-        .sort(sort);
-
-      // 2. 부족하면 value==0 이고 이름순으로 채움 (중복X)
-      let allPlayers = [...topPlayers];
-      if (topPlayers.length < 3) {
-        const pickedNames = new Set(topPlayers.map((p) => p.name));
-        const fillers = [...seasonStats]
-          .filter((p) => value(p) === 0 && p.name && !pickedNames.has(p.name))
-          .sort((a, b) => (a.name > b.name ? 1 : a.name < b.name ? -1 : 0))
-          .slice(0, 3 - topPlayers.length);
-        allPlayers.push(...fillers);
-      }
-
-      // 3. 공동 기록을 고려한 순위 계산
-      const playersWithValue = allPlayers.map((p) => ({
-        name: p.name,
-        team: teamMap(p),
-        value: value(p),
-      }));
-
-      const players = calculateRankingsWithTies(playersWithValue);
-      return { category, players };
-    });
-
-    return stats;
+    return extractTopPlayers(
+      seasonStats,
+      SEASON_CATEGORIES,
+      (p) => p.team || p.club || '',
+    );
   } catch (error) {
     console.error('Failed to fetch batting stats 2026:', error);
-
-    // Return fallback empty stats
-    return [
-      {
-        category: '안타',
-        players: [
-          { rank: 1, name: '-', team: '', value: 0 },
-          { rank: 2, name: '-', team: '', value: 0 },
-          { rank: 3, name: '-', team: '', value: 0 },
-        ],
-      },
-      {
-        category: '홈런',
-        players: [
-          { rank: 1, name: '-', team: '', value: 0 },
-          { rank: 2, name: '-', team: '', value: 0 },
-          { rank: 3, name: '-', team: '', value: 0 },
-        ],
-      },
-      {
-        category: '타점',
-        players: [
-          { rank: 1, name: '-', team: '', value: 0 },
-          { rank: 2, name: '-', team: '', value: 0 },
-          { rank: 3, name: '-', team: '', value: 0 },
-        ],
-      },
-      {
-        category: '도루',
-        players: [
-          { rank: 1, name: '-', team: '', value: 0 },
-          { rank: 2, name: '-', team: '', value: 0 },
-          { rank: 3, name: '-', team: '', value: 0 },
-        ],
-      },
-    ];
+    return createFallbackStats(SEASON_CATEGORIES.map((c) => c.category));
   }
 }
