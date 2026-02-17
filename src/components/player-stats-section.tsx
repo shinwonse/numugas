@@ -5,21 +5,10 @@ import { SectionTitle } from '@/components/animated/section-title';
 import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/cn';
+import type { Stat } from '@/types/stats';
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import StatsTabs from './stats-tabs';
-
-interface Player {
-  rank: number;
-  name: string;
-  team: string;
-  value: number;
-}
-
-interface Stat {
-  category: string;
-  players: Player[];
-}
 
 interface PlayerStatsSectionProps {
   battingStats: Stat[];

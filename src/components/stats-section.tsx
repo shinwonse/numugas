@@ -7,6 +7,7 @@ import { SpotlightCard } from '@/components/animated/spotlight-card';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCountAnimation } from '@/hooks/use-count-animation';
 import { cn } from '@/lib/cn';
+import type { TeamCareerStats } from '@/types/stats';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
@@ -17,12 +18,7 @@ interface StatsSectionProps {
     lose: number;
     draw: number;
   };
-  teamCareerStats: {
-    homeruns: number;
-    totalbases: number;
-    hits: number;
-    strikeouts: number;
-  };
+  teamCareerStats: TeamCareerStats;
 }
 
 interface StatCardProps {

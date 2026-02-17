@@ -1,12 +1,5 @@
 import { supabase } from '@/lib/supabase';
-
-export type TeamTotalStats = {
-  win: number;
-  lose: number;
-  draw: number;
-  total_games: number;
-  win_rate: number; // %
-};
+import type { TeamTotalStats } from '@/types/stats';
 
 export async function fetchTeamTotalStats(): Promise<TeamTotalStats> {
   try {

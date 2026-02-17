@@ -1,11 +1,5 @@
 import { supabase } from '@/lib/supabase';
-
-export type TeamCareerStats = {
-  homeruns: number;
-  totalbases: number;
-  hits: number;
-  strikeouts: number;
-};
+import type { TeamCareerStats } from '@/types/stats';
 
 export async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
   try {

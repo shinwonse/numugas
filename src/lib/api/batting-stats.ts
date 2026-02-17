@@ -1,17 +1,6 @@
 import { calculateRankingsWithTies } from '@/lib/calculate-rankings-with-ties';
 import { supabase } from '@/lib/supabase';
-
-export interface Player {
-  rank: number;
-  name: string;
-  team: string;
-  value: number;
-}
-
-export interface Stat {
-  category: string;
-  players: Player[];
-}
+import type { Stat } from '@/types/stats';
 
 export async function fetchBattingStats2026(): Promise<Stat[]> {
   try {

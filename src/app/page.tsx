@@ -4,9 +4,17 @@ import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { HeroSection } from '@/components/hero-section';
 import { PlayerStatsSection } from '@/components/player-stats-section';
+import {
+  PlayerStatsSectionSkeleton,
+  StatsSectionSkeleton,
+  TotalStatsSectionSkeleton,
+} from '@/components/section-skeleton';
 import { StatsSection } from '@/components/stats-section';
 import { TotalStatsSection } from '@/components/total-stats-section';
-import { YoutubeErrorFallback } from '@/components/youtube-section';
+import {
+  YoutubeErrorFallback,
+  YoutubeLoadingFallback,
+} from '@/components/youtube-section';
 import { YoutubeSectionWrapper } from '@/components/youtube-section-wrapper';
 import {
   fetchBattingCareerStats,
@@ -18,130 +26,80 @@ import {
 } from '@/lib/api';
 import { Suspense } from 'react';
 
-interface Player {
-  rank: number;
-  name: string;
-  team: string;
-  value: number;
-}
-
-interface Stat {
-  category: string;
-  players: Player[];
-}
-
-interface TeamTotalStats {
-  win_rate: string;
-  win: number;
-  lose: number;
-  draw: number;
-}
-
-interface TeamCareerStats {
-  homeruns: number;
-  totalbases: number;
-  hits: number;
-  strikeouts: number;
-}
-
-interface HomeProps {
-  teamTotalStats: TeamTotalStats;
-  teamCareerStats: TeamCareerStats;
-  battingStats2026: Stat[];
-  pitchingStats2026: Stat[];
-  battingCareerStats: Stat[];
-  pitchingCareerStats: Stat[];
-}
-
 // Remove force-static and use dynamic rendering with caching
 export const revalidate = 3600; // Cache for 1 hour
 
-// 데이터를 가져오는 함수 with error handling
-async function getHomeData(): Promise<HomeProps> {
-  try {
-    const [
-      teamTotalStats,
-      teamCareerStats,
-      battingStats2026,
-      pitchingStats2026,
-      battingCareerStats,
-      pitchingCareerStats,
-    ] = await Promise.all([
-      fetchTeamTotalStats(),
-      fetchTeamCareerStats(),
-      fetchBattingStats2026(),
-      fetchPitchingStats2026(),
-      fetchBattingCareerStats(),
-      fetchPitchingCareerStats(),
-    ]);
+async function StatsSectionData() {
+  const [teamTotalStats, teamCareerStats] = await Promise.all([
+    fetchTeamTotalStats(),
+    fetchTeamCareerStats(),
+  ]);
 
-    return {
-      teamTotalStats: {
+  return (
+    <StatsSection
+      teamTotalStats={{
         win: teamTotalStats.win,
         lose: teamTotalStats.lose,
         draw: teamTotalStats.draw,
         win_rate: teamTotalStats.win_rate.toFixed(1),
-      },
-      teamCareerStats,
-      battingStats2026,
-      pitchingStats2026,
-      battingCareerStats,
-      pitchingCareerStats,
-    };
-  } catch (error) {
-    console.error('Failed to fetch home data:', error);
-
-    // Return fallback data structure
-    return {
-      teamTotalStats: {
-        win: 0,
-        lose: 0,
-        draw: 0,
-        win_rate: '0.0',
-      },
-      teamCareerStats: {
-        homeruns: 0,
-        totalbases: 0,
-        hits: 0,
-        strikeouts: 0,
-      },
-      battingStats2026: [],
-      pitchingStats2026: [],
-      battingCareerStats: [],
-      pitchingCareerStats: [],
-    };
-  }
+      }}
+      teamCareerStats={teamCareerStats}
+    />
+  );
 }
 
-export default async function Home() {
-  const data = await getHomeData();
+async function PlayerStatsSectionData() {
+  const [battingStats2026, pitchingStats2026] = await Promise.all([
+    fetchBattingStats2026(),
+    fetchPitchingStats2026(),
+  ]);
 
+  return (
+    <PlayerStatsSection
+      battingStats={battingStats2026}
+      pitchingStats={pitchingStats2026}
+    />
+  );
+}
+
+async function TotalStatsSectionData() {
+  const [battingCareerStats, pitchingCareerStats] = await Promise.all([
+    fetchBattingCareerStats(),
+    fetchPitchingCareerStats(),
+  ]);
+
+  return (
+    <TotalStatsSection
+      battingStats={battingCareerStats}
+      pitchingStats={pitchingCareerStats}
+    />
+  );
+}
+
+export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
       <Header />
       <HeroSection />
 
       <SectionDivider />
-      <StatsSection
-        teamTotalStats={data.teamTotalStats}
-        teamCareerStats={data.teamCareerStats}
-      />
+      <Suspense fallback={<StatsSectionSkeleton />}>
+        <StatsSectionData />
+      </Suspense>
 
       <SectionDivider />
-      <PlayerStatsSection
-        battingStats={data.battingStats2026}
-        pitchingStats={data.pitchingStats2026}
-      />
+      <Suspense fallback={<PlayerStatsSectionSkeleton />}>
+        <PlayerStatsSectionData />
+      </Suspense>
 
       <SectionDivider />
-      <TotalStatsSection
-        battingStats={data.battingCareerStats}
-        pitchingStats={data.pitchingCareerStats}
-      />
+      <Suspense fallback={<TotalStatsSectionSkeleton />}>
+        <TotalStatsSectionData />
+      </Suspense>
 
       <SectionDivider />
       <ErrorBoundary fallback={<YoutubeErrorFallback />}>
-        <Suspense>
+        <Suspense fallback={<YoutubeLoadingFallback />}>
           <YoutubeSectionWrapper />
         </Suspense>
       </ErrorBoundary>
