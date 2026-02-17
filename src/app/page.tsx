@@ -23,7 +23,7 @@ import {
   fetchPitchingStats2026,
   fetchTeamCareerStats,
   fetchTeamTotalStats,
-} from '@/lib/api';
+} from '@/lib/fetchers';
 import { Suspense } from 'react';
 
 // Remove force-static and use dynamic rendering with caching
