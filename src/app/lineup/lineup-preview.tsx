@@ -7,6 +7,7 @@ import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 interface PlayerPosition {
   position: string;
   name: string;
+  number: string;
   battingOrder: number;
 }
 
@@ -20,6 +21,7 @@ interface LineupPreviewProps {
   lineup: PlayerPosition[];
   playerImage: string | null;
   startingPitcher?: string;
+  startingPitcherNumber?: string;
   manager?: string;
   date?: string;
   location?: string;
@@ -36,6 +38,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
       lineup,
       playerImage,
       startingPitcher,
+      startingPitcherNumber,
       manager,
       date,
       location,
@@ -153,6 +156,14 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                       >
                         {startingPitcher || '이름'}
                       </span>
+                      {startingPitcherNumber && (
+                        <span
+                          className="text-white/15 font-extrabold font-aggravo leading-none shrink-0"
+                          style={{ fontSize: '3rem' }}
+                        >
+                          {startingPitcherNumber}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -182,6 +193,14 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                             >
                               {player.name || '이름'}
                             </span>
+                            {player.number && (
+                              <span
+                                className="text-white/15 font-extrabold font-aggravo leading-none shrink-0"
+                                style={{ fontSize: '3rem' }}
+                              >
+                                {player.number}
+                              </span>
+                            )}
                           </div>
                         </div>
                       ))}

@@ -31,6 +31,7 @@ import { ImageTransform, LineupPreview } from './lineup-preview';
 interface PlayerPosition {
   position: string;
   name: string;
+  number: string;
   battingOrder: number;
 }
 
@@ -77,6 +78,7 @@ export default function LineupPage() {
   const [playerImageName, setPlayerImageName] = useState<string>('');
   const [isDragging, setIsDragging] = useState(false);
   const [startingPitcher, setStartingPitcher] = useState('');
+  const [startingPitcherNumber, setStartingPitcherNumber] = useState('');
   const [manager, setManager] = useState('');
   const [isExporting, setIsExporting] = useState(false);
   const [imageTransform, setImageTransform] = useState<ImageTransform>({
@@ -85,15 +87,15 @@ export default function LineupPage() {
     positionY: 0,
   });
   const [lineup, setLineup] = useState<PlayerPosition[]>([
-    { position: '', name: '', battingOrder: 1 },
-    { position: '', name: '', battingOrder: 2 },
-    { position: '', name: '', battingOrder: 3 },
-    { position: '', name: '', battingOrder: 4 },
-    { position: '', name: '', battingOrder: 5 },
-    { position: '', name: '', battingOrder: 6 },
-    { position: '', name: '', battingOrder: 7 },
-    { position: '', name: '', battingOrder: 8 },
-    { position: '', name: '', battingOrder: 9 },
+    { position: '', name: '', number: '', battingOrder: 1 },
+    { position: '', name: '', number: '', battingOrder: 2 },
+    { position: '', name: '', number: '', battingOrder: 3 },
+    { position: '', name: '', number: '', battingOrder: 4 },
+    { position: '', name: '', number: '', battingOrder: 5 },
+    { position: '', name: '', number: '', battingOrder: 6 },
+    { position: '', name: '', number: '', battingOrder: 7 },
+    { position: '', name: '', number: '', battingOrder: 8 },
+    { position: '', name: '', number: '', battingOrder: 9 },
   ]);
 
   const handlePositionChange = (index: number, position: string) => {
@@ -105,6 +107,12 @@ export default function LineupPage() {
   const handleNameChange = (index: number, name: string) => {
     const newLineup = [...lineup];
     newLineup[index].name = name;
+    setLineup(newLineup);
+  };
+
+  const handleNumberChange = (index: number, number: string) => {
+    const newLineup = [...lineup];
+    newLineup[index].number = number;
     setLineup(newLineup);
   };
 
@@ -161,6 +169,7 @@ export default function LineupPage() {
     setPlayerImage(null);
     setPlayerImageName('');
     setStartingPitcher('');
+    setStartingPitcherNumber('');
     setManager('');
     setImageTransform({ scale: 1, positionX: 0, positionY: 0 });
     if (fileInputRef.current) {
@@ -170,6 +179,7 @@ export default function LineupPage() {
       Array.from({ length: 9 }, (_, i) => ({
         position: '',
         name: '',
+        number: '',
         battingOrder: i + 1,
       })),
     );
@@ -313,6 +323,7 @@ export default function LineupPage() {
                 lineup={lineup}
                 playerImage={playerImage}
                 startingPitcher={startingPitcher}
+                startingPitcherNumber={startingPitcherNumber}
                 manager={manager}
                 date={formatDate(date)}
                 location={location}
@@ -338,6 +349,7 @@ export default function LineupPage() {
                   lineup={lineup}
                   playerImage={playerImage}
                   startingPitcher={startingPitcher}
+                  startingPitcherNumber={startingPitcherNumber}
                   manager={manager}
                   date={formatDate(date)}
                   location={location}
@@ -494,12 +506,20 @@ export default function LineupPage() {
                   <h3 className="text-sm font-semibold mb-3 text-gray-300">
                     선발투수
                   </h3>
-                  <Input
-                    value={startingPitcher}
-                    onChange={(e) => setStartingPitcher(e.target.value)}
-                    placeholder="선발투수 이름"
-                    className={glassInput}
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      value={startingPitcher}
+                      onChange={(e) => setStartingPitcher(e.target.value)}
+                      placeholder="이름"
+                      className={cn(glassInput, 'flex-1')}
+                    />
+                    <Input
+                      value={startingPitcherNumber}
+                      onChange={(e) => setStartingPitcherNumber(e.target.value)}
+                      placeholder="등번호"
+                      className={cn(glassInput, 'w-20')}
+                    />
+                  </div>
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold mb-3 text-gray-300">
@@ -555,8 +575,16 @@ export default function LineupPage() {
                         onChange={(e) =>
                           handleNameChange(index, e.target.value)
                         }
-                        placeholder="선수 이름"
+                        placeholder="이름"
                         className={cn(glassInput, 'flex-1 h-9 text-sm')}
+                      />
+                      <Input
+                        value={player.number}
+                        onChange={(e) =>
+                          handleNumberChange(index, e.target.value)
+                        }
+                        placeholder="No."
+                        className={cn(glassInput, 'w-16 h-9 text-sm text-center')}
                       />
                     </div>
                   </div>
