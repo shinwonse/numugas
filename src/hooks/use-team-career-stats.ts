@@ -1,12 +1,6 @@
 import { supabase } from '@/lib/supabase';
+import type { TeamCareerStats } from '@/types/stats';
 import { useQuery } from '@tanstack/react-query';
-
-export type TeamCareerStats = {
-  homeruns: number;
-  totalbases: number;
-  hits: number;
-  strikeouts: number;
-};
 
 async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
   const { data: hitterData, error: hitterError } = await supabase
