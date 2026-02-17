@@ -141,7 +141,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   {/* 선발투수 */}
                   <div
                     className="border-l-4 border-l-gray-400 mb-2"
-                    style={{ padding: '12px 20px' }}
+                    style={{ padding: '8px 20px' }}
                   >
                     <div className="flex items-center gap-5">
                       <span
@@ -158,7 +158,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                       </span>
                       {startingPitcherNumber && (
                         <span
-                          className="text-white/15 font-extrabold font-aggravo leading-none shrink-0"
+                          className="text-white/15 font-extrabold font-aggravo leading-none shrink-0 tabular-nums"
                           style={{ fontSize: '3rem' }}
                         >
                           {startingPitcherNumber}
@@ -173,12 +173,12 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   {/* 타자 라인업 + 감독 */}
                   <div className="flex flex-col">
                     {/* 타자 목록 */}
-                    <div className="flex flex-col space-y-4">
+                    <div className="flex flex-col space-y-2.5">
                       {lineup.map((player, index) => (
                         <div
                           key={index}
                           className="border-l-4 border-l-red-700"
-                          style={{ padding: '12px 20px' }}
+                          style={{ padding: '8px 20px' }}
                         >
                           <div className="flex items-center gap-5">
                             <span
@@ -195,7 +195,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                             </span>
                             {player.number && (
                               <span
-                                className="text-white/15 font-extrabold font-aggravo leading-none shrink-0"
+                                className="text-white/15 font-extrabold font-aggravo leading-none shrink-0 tabular-nums"
                                 style={{ fontSize: '3rem' }}
                               >
                                 {player.number}
