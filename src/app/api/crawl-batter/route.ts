@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 const TARGET_URL =
   'http://www.gameone.kr/club/info/ranking/hitter?club_idx=35417';
 
-const SEASONS = ['2020', '2021', '2022', '2023', '2024', '2025'];
+const SEASONS = ['2020', '2021', '2022', '2023', '2024', '2025', '2026'];
 
 export async function GET() {
   try {

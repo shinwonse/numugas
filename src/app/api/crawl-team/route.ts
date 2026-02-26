@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
 
-const SEASONS = ['2020', '2021', '2022', '2023', '2024', '2025'];
+const SEASONS = ['2020', '2021', '2022', '2023', '2024', '2025', '2026'];
 const CLUB_IDX = '35417';
 
 export async function GET() {

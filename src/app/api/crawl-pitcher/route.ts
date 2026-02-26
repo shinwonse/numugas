@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 
 const PITCHER_URL =
   'http://www.gameone.kr/club/info/ranking/pitcher?club_idx=35417';
-const SEASONS = ['2020', '2021', '2022', '2023', '2024', '2025'];
+const SEASONS = ['2020', '2021', '2022', '2023', '2024', '2025', '2026'];
 
 function parseNumber(val: string, useNull = false) {
   if (val === '-' || val === '') return useNull ? null : 0;
