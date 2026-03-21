@@ -25,11 +25,11 @@ interface RefreshResponse {
   revalidated: string[];
 }
 
-const TARGETS: { key: CrawlTarget; label: string; icon: string }[] = [
-  { key: 'batter', label: '타자 기록', icon: '🏏' },
-  { key: 'pitcher', label: '투수 기록', icon: '⚾' },
-  { key: 'team', label: '팀 기록', icon: '📊' },
-  { key: 'schedule', label: '경기 일정', icon: '📅' },
+const TARGETS: { key: CrawlTarget; label: string }[] = [
+  { key: 'batter', label: '타자 기록' },
+  { key: 'pitcher', label: '투수 기록' },
+  { key: 'team', label: '팀 기록' },
+  { key: 'schedule', label: '경기 일정' },
 ];
 
 export default function AdminPage() {
@@ -211,8 +211,7 @@ export default function AdminPage() {
                   result && !result.success && 'border-red-500/30 bg-red-500/5',
                 )}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-lg">{target.icon}</span>
+                <div className="flex items-center justify-end mb-2">
                   {isTargetLoading && (
                     <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
                   )}
