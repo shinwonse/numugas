@@ -19,7 +19,6 @@ import { useLineupRecommend } from '@/hooks/use-lineup-recommend';
 import { useIsMobile } from '@/hooks/use-mobile';
 import type { LineupRecommendResponse } from '@/types/lineup';
 import { cn } from '@/lib/cn';
-import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import {
   ChevronDown,
   Download,
