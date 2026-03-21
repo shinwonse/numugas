@@ -21,8 +21,8 @@ const getCachedPlayersData = unstable_cache(
   },
   ['players-list'], // 캐시 키
   {
-    revalidate: 300, // 5분마다 재검증
-    tags: ['players'], // 태그로 무효화 가능
+    revalidate: false, // on-demand revalidation only
+    tags: ['players'],
   },
 );
 

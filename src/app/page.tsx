@@ -26,8 +26,8 @@ import {
 } from '@/lib/fetchers';
 import { Suspense } from 'react';
 
-// Remove force-static and use dynamic rendering with caching
-export const revalidate = 3600; // Cache for 1 hour
+// On-demand revalidation only — triggered from /admin page
+export const revalidate = false;
 
 async function StatsSectionData() {
   const [teamTotalStats, teamCareerStats] = await Promise.all([
