@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { ReactNode } from 'react';
 
 interface ShimmerCardProps {
@@ -14,20 +14,22 @@ export function ShimmerCard({
   className = '',
   delay = 0,
 }: ShimmerCardProps) {
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        duration: 0.7,
-        delay,
-        ease: 'backOut',
-      }}
-      viewport={{ once: true, amount: 0.2 }}
+    <div
+      ref={ref as React.RefObject<HTMLDivElement>}
       className={`relative overflow-hidden group ${className}`}
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView
+          ? 'translateY(0) scale(1)'
+          : 'translateY(40px) scale(0.95)',
+        transition: `opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${delay}s, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${delay}s`,
+      }}
     >
       <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-red-500/10 to-transparent group-hover:translate-x-full transition-transform duration-1000" />
       {children}
-    </motion.div>
+    </div>
   );
 }

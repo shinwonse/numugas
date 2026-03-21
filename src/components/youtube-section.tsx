@@ -4,9 +4,8 @@ import { SectionBackground } from '@/components/animated/section-background';
 import { SectionTitle } from '@/components/animated/section-title';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { useYouTubeLatest } from '@/hooks/use-youtube-latest';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
 
 function YoutubeVideoContent() {
   const { data: video } = useYouTubeLatest();
@@ -86,17 +85,17 @@ function YoutubeErrorFallback() {
 }
 
 export function YoutubeSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
 
   return (
-    <motion.section
-      ref={ref}
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1, ease: 'easeOut' }}
+    <section
+      ref={ref as React.RefObject<HTMLElement>}
       className="relative py-32 md:py-40 overflow-hidden"
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(80px)',
+        transition: 'opacity 1s ease-out, transform 1s ease-out',
+      }}
     >
       <SectionBackground variant="dots" />
 
@@ -106,15 +105,17 @@ export function YoutubeSection() {
           title="경기 하이라이트"
           isInView={isInView}
         />
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8 }}
+        <div
+          style={{
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(50px)',
+            transition: 'opacity 0.8s, transform 0.8s',
+          }}
         >
           <YoutubeVideoContent />
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 

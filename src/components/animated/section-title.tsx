@@ -1,7 +1,4 @@
-'use client';
-
 import { cn } from '@/lib/cn';
-import { motion } from 'framer-motion';
 
 interface SectionTitleProps {
   subtitle: string;
@@ -19,11 +16,13 @@ export function SectionTitle({
   return (
     <div className="text-center mb-16 md:mb-20">
       {/* Subtitle Badge */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-        transition={{ duration: 0.5 }}
+      <div
         className="mb-6 inline-flex"
+        style={{
+          opacity: isInView ? 1 : 0,
+          transform: isInView ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'opacity 0.5s, transform 0.5s',
+        }}
       >
         <span
           className={cn(
@@ -36,39 +35,44 @@ export function SectionTitle({
         >
           {subtitle}
         </span>
-      </motion.div>
+      </div>
 
       {/* Main Title */}
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
+      <h2
         className={cn(
           'text-3xl md:text-4xl lg:text-5xl',
           'font-bold tracking-tight',
           'text-white',
         )}
+        style={{
+          opacity: isInView ? 1 : 0,
+          transform: isInView ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'opacity 0.6s 0.1s, transform 0.6s 0.1s',
+        }}
       >
         {title}
-      </motion.h2>
+      </h2>
 
       {/* Gradient Underline */}
-      <motion.div
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={isInView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
+      <div
         className="mt-6 mx-auto h-0.5 w-16 bg-gradient-to-r from-red-500 via-red-400 to-red-500 rounded-full"
+        style={{
+          opacity: isInView ? 1 : 0,
+          transform: isInView ? 'scaleX(1)' : 'scaleX(0)',
+          transition: 'opacity 0.8s 0.2s, transform 0.8s 0.2s',
+        }}
       />
 
       {description && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+        <p
           className="mt-6 text-gray-400 text-base md:text-lg max-w-2xl mx-auto"
+          style={{
+            opacity: isInView ? 1 : 0,
+            transition: 'opacity 0.6s 0.3s',
+          }}
         >
           {description}
-        </motion.p>
+        </p>
       )}
     </div>
   );

@@ -6,10 +6,9 @@ import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { SpotlightCard } from '@/components/animated/spotlight-card';
 import { Card, CardContent } from '@/components/ui/card';
 import { useCountAnimation } from '@/hooks/use-count-animation';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { cn } from '@/lib/cn';
 import type { TeamCareerStats } from '@/types/stats';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
 
 interface StatsSectionProps {
   teamTotalStats: {
@@ -82,61 +81,29 @@ export function StatsSection({
   teamTotalStats,
   teamCareerStats,
 }: StatsSectionProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
 
   const teamStats = [
-    {
-      name: '승률',
-      value: teamTotalStats.win_rate,
-      description: '',
-    },
-    {
-      name: '승',
-      value: teamTotalStats.win,
-      description: '',
-    },
-    {
-      name: '패',
-      value: teamTotalStats.lose,
-      description: '',
-    },
-    {
-      name: '무',
-      value: teamTotalStats.draw,
-      description: '',
-    },
-    {
-      name: '팀통산홈런',
-      value: teamCareerStats.homeruns,
-      description: '',
-    },
-    {
-      name: '팀통산루타',
-      value: teamCareerStats.totalbases,
-      description: '',
-    },
-    {
-      name: '팀통산안타',
-      value: teamCareerStats.hits,
-      description: '',
-    },
-    {
-      name: '팀통산탈삼진',
-      value: teamCareerStats.strikeouts,
-      description: '',
-    },
+    { name: '승률', value: teamTotalStats.win_rate, description: '' },
+    { name: '승', value: teamTotalStats.win, description: '' },
+    { name: '패', value: teamTotalStats.lose, description: '' },
+    { name: '무', value: teamTotalStats.draw, description: '' },
+    { name: '팀통산홈런', value: teamCareerStats.homeruns, description: '' },
+    { name: '팀통산루타', value: teamCareerStats.totalbases, description: '' },
+    { name: '팀통산안타', value: teamCareerStats.hits, description: '' },
+    { name: '팀통산탈삼진', value: teamCareerStats.strikeouts, description: '' },
   ];
 
   return (
-    <motion.section
+    <section
       id="통계"
-      ref={ref}
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1, ease: 'easeOut' }}
+      ref={ref as React.RefObject<HTMLElement>}
       className="relative py-32 md:py-40 overflow-hidden"
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(80px)',
+        transition: 'opacity 1s ease-out, transform 1s ease-out',
+      }}
     >
       <SectionBackground variant="dots" />
 
@@ -158,6 +125,6 @@ export function StatsSection({
           ))}
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

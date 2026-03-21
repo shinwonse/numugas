@@ -19,7 +19,7 @@ import { useLineupRecommend } from '@/hooks/use-lineup-recommend';
 import { useIsMobile } from '@/hooks/use-mobile';
 import type { LineupRecommendResponse } from '@/types/lineup';
 import { cn } from '@/lib/cn';
-import { motion } from 'framer-motion';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import {
   ChevronDown,
   Download,
@@ -288,26 +288,20 @@ export default function LineupPage() {
           {/* Header Section */}
           <div className="text-center mb-10 md:mb-14">
             {/* Glass badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0 }}
-              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            <div
               className="mb-5 inline-flex"
+              style={{ animation: 'fade-in-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both' }}
             >
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/[0.08] text-xs md:text-sm font-semibold uppercase tracking-[0.25em] text-red-400">
                 <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
                 Lineup Generator
               </span>
-            </motion.div>
+            </div>
 
             {/* Title */}
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            <h1
               className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 font-display tracking-tight"
+              style={{ animation: 'fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both' }}
             >
               <span className="bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent">
                 라인업{' '}
@@ -315,38 +309,29 @@ export default function LineupPage() {
               <span className="bg-gradient-to-b from-red-400 to-red-600 bg-clip-text text-transparent">
                 작성
               </span>
-            </motion.h1>
+            </h1>
 
             {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0 }}
-              transition={{ duration: 0.6, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+            <p
               className="text-sm md:text-base text-gray-500 mb-8"
+              style={{ animation: 'fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s both' }}
             >
               라인업을 작성하고 이미지로 저장하세요
-            </motion.p>
+            </p>
 
             {/* Decorative line */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, amount: 0 }}
-              transition={{ duration: 0.8, delay: 0.25 }}
+            <div
               className="mx-auto h-px w-24 bg-gradient-to-r from-transparent via-red-500/60 to-transparent"
+              style={{ animation: 'scale-in-x 0.8s ease 0.25s both' }}
             />
           </div>
 
           {/* 고정 레이아웃 */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+          <div
             className={`flex gap-8 justify-center items-start overflow-x-auto ${
               isMobile ? 'blur-sm pointer-events-none select-none' : ''
             }`}
+            style={{ animation: 'fade-in-up 0.7s ease 0.3s both' }}
           >
             {/* 편집용 미리보기 (항상 표시) */}
             <div className="flex-shrink-0">
@@ -748,7 +733,7 @@ export default function LineupPage() {
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* 모바일 안내 메시지 */}
           {isMobile && (

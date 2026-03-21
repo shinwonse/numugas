@@ -1,7 +1,3 @@
-'use client';
-
-import { motion } from 'framer-motion';
-
 interface SectionBackgroundProps {
   variant?: 'dots' | 'lines' | 'gradient' | 'none';
 }
@@ -14,11 +10,9 @@ export function SectionBackground({
   if (variant === 'gradient') {
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
+        <div
           className="absolute inset-0 bg-gradient-to-b from-red-950/10 via-transparent to-transparent"
+          style={{ animation: 'fade-in-only 1.5s ease-in-out forwards' }}
         />
       </div>
     );

@@ -4,10 +4,10 @@ import { SectionBackground } from '@/components/animated/section-background';
 import { SectionTitle } from '@/components/animated/section-title';
 import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { cn } from '@/lib/cn';
 import type { Stat } from '@/types/stats';
-import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import StatsTabs from './stats-tabs';
 
 interface PlayerStatsSectionProps {
@@ -15,16 +15,13 @@ interface PlayerStatsSectionProps {
   pitchingStats: Stat[];
 }
 
-// 데이터가 비어있는지 확인하는 헬퍼 함수
 function isStatsEmpty(stats: Stat[]): boolean {
   if (!stats || stats.length === 0) return true;
-  // 모든 선수의 이름이 '-'이거나 value가 0인 경우도 빈 데이터로 처리
   return stats.every((stat) =>
     stat.players.every((player) => player.name === '-' || player.value === 0),
   );
 }
 
-// 시즌 준비 중 UI 컴포넌트
 function SeasonComingSoon() {
   return (
     <div className="flex flex-col items-center justify-center py-20 px-6">
@@ -66,10 +63,8 @@ export function PlayerStatsSection({
   battingStats,
   pitchingStats,
 }: PlayerStatsSectionProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
 
-  // 탭 상태 관리
   const [currentTab, setCurrentTab] = useState<'batting' | 'pitching'>(
     'batting',
   );
@@ -78,19 +73,19 @@ export function PlayerStatsSection({
     { key: 'pitching', label: '투수 기록' },
   ];
 
-  // 데이터 존재 여부 확인
   const isBattingEmpty = isStatsEmpty(battingStats);
   const isPitchingEmpty = isStatsEmpty(pitchingStats);
 
   return (
-    <motion.section
+    <section
       id="선수기록"
-      ref={ref}
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1, ease: 'easeOut' }}
+      ref={ref as React.RefObject<HTMLElement>}
       className="relative py-32 md:py-40 overflow-hidden"
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(80px)',
+        transition: 'opacity 1s ease-out, transform 1s ease-out',
+      }}
     >
       <SectionBackground variant="dots" />
 
@@ -100,10 +95,12 @@ export function PlayerStatsSection({
           title="2026 시즌 주요 기록"
           isInView={isInView}
         />
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8 }}
+        <div
+          style={{
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(50px)',
+            transition: 'opacity 0.8s, transform 0.8s',
+          }}
         >
           <StatsTabs
             tabs={tabs}
@@ -247,8 +244,8 @@ export function PlayerStatsSection({
                 ))}
               </div>
             ))}
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

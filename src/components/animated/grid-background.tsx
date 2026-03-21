@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 export function GridBackground() {
@@ -33,10 +32,9 @@ export function GridBackground() {
 
     const drawGrid = (offset: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = 'rgba(239, 68, 68, 0.1)'; // red-500 with opacity
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.1)';
       ctx.lineWidth = 1;
 
-      // Vertical lines
       for (let x = offset % gridSize; x < canvas.width; x += gridSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -44,7 +42,6 @@ export function GridBackground() {
         ctx.stroke();
       }
 
-      // Horizontal lines
       for (let y = offset % gridSize; y < canvas.height; y += gridSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -71,13 +68,13 @@ export function GridBackground() {
   if (!isClient) return null;
 
   return (
-    <motion.canvas
+    <canvas
       ref={canvasRef}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 2 }}
       className="absolute inset-0 pointer-events-none"
-      style={{ mixBlendMode: 'screen' }}
+      style={{
+        mixBlendMode: 'screen',
+        animation: 'fade-in-only 2s ease-in-out forwards',
+      }}
     />
   );
 }

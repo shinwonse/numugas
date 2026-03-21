@@ -4,10 +4,10 @@ import { SectionBackground } from '@/components/animated/section-background';
 import { SectionTitle } from '@/components/animated/section-title';
 import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { cn } from '@/lib/cn';
 import type { Stat } from '@/types/stats';
-import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import StatsTabs from './stats-tabs';
 
 interface TotalStatsSectionProps {
@@ -19,10 +19,8 @@ export function TotalStatsSection({
   battingStats,
   pitchingStats,
 }: TotalStatsSectionProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
 
-  // 탭 상태 관리
   const [currentTab, setCurrentTab] = useState<'batting' | 'pitching'>(
     'batting',
   );
@@ -32,14 +30,15 @@ export function TotalStatsSection({
   ];
 
   return (
-    <motion.section
+    <section
       id="통산기록"
-      ref={ref}
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1, ease: 'easeOut' }}
+      ref={ref as React.RefObject<HTMLElement>}
       className="relative py-32 md:py-40 overflow-hidden"
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(80px)',
+        transition: 'opacity 1s ease-out, transform 1s ease-out',
+      }}
     >
       <SectionBackground variant="dots" />
 
@@ -49,10 +48,12 @@ export function TotalStatsSection({
           title="역대 통산 기록"
           isInView={isInView}
         />
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8 }}
+        <div
+          style={{
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(50px)',
+            transition: 'opacity 0.8s, transform 0.8s',
+          }}
         >
           <StatsTabs
             tabs={tabs}
@@ -190,8 +191,8 @@ export function TotalStatsSection({
               ))}
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

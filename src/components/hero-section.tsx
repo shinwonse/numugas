@@ -2,7 +2,6 @@
 
 import { FloatingParticles } from '@/components/animated/floating-particles';
 import { GridBackground } from '@/components/animated/grid-background';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 export function HeroSection() {
@@ -17,21 +16,13 @@ export function HeroSection() {
       {/* Radial Gradient Overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/20 via-black to-black pointer-events-none" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      <div
         className="flex flex-col items-center gap-12 max-w-5xl mx-auto text-center -mt-20 relative z-10"
+        style={{ animation: 'hero-fade-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
       >
         <div className="flex flex-col items-center gap-8">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{
-              duration: 1.2,
-              delay: 0.3,
-              ease: [0.16, 1, 0.3, 1],
-            }}
+          <div
+            style={{ animation: 'hero-scale-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both' }}
           >
             <Image
               src="/title.png"
@@ -42,9 +33,9 @@ export function HeroSection() {
               priority
               fetchPriority="high"
             />
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -8,9 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { motion, useInView } from 'framer-motion';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { Calendar, Clock, MapPin } from 'lucide-react';
-import { useRef } from 'react';
 
 const upcomingGames = [
   {
@@ -48,49 +47,52 @@ const upcomingGames = [
 ];
 
 export function ScheduleSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
 
   return (
-    <motion.section
+    <section
       id="경기일정"
-      ref={ref}
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, ease: 'easeOut' }}
+      ref={ref as React.RefObject<HTMLElement>}
       className="py-24"
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(80px)',
+        transition: 'opacity 1s ease-out, transform 1s ease-out',
+      }}
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
+          <h2
             className="text-3xl md:text-5xl font-bold mb-4 font-display"
+            style={{
+              opacity: isInView ? 1 : 0,
+              transform: isInView ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 0.6s, transform 0.6s',
+            }}
           >
             <span className="text-red-600">경기</span> 일정
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          </h2>
+          <p
             className="text-gray-400 max-w-2xl mx-auto"
+            style={{
+              opacity: isInView ? 1 : 0,
+              transition: 'opacity 0.6s 0.2s',
+            }}
           >
             레드 드래곤즈의 다가오는 경기 일정을 확인하세요.
-          </motion.p>
+          </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {upcomingGames.map((game, index) => (
-            <motion.div
+            <div
               key={game.id}
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{
-                duration: 0.7,
-                delay: index * 0.12,
-                ease: 'backOut',
+              style={{
+                opacity: isInView ? 1 : 0,
+                transform: isInView
+                  ? 'translateY(0) scale(1)'
+                  : 'translateY(40px) scale(0.95)',
+                transition: `opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.12}s, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${index * 0.12}s`,
               }}
-              viewport={{ once: true, amount: 0.2 }}
             >
               <Card
                 className={`${
@@ -133,14 +135,16 @@ export function ScheduleSection() {
                   </div>
                 </CardFooter>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+        <div
           className="text-center mt-12"
+          style={{
+            opacity: isInView ? 1 : 0,
+            transform: isInView ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.6s 0.6s, transform 0.6s 0.6s',
+          }}
         >
           <Button
             variant="outline"
@@ -148,8 +152,8 @@ export function ScheduleSection() {
           >
             전체 일정 보기
           </Button>
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

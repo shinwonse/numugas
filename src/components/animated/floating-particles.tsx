@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 const PARTICLE_COUNT = 50;
@@ -18,7 +17,6 @@ export function FloatingParticles() {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    // Generate particles only on client side
     const generatedParticles = Array.from({ length: PARTICLE_COUNT }, () => ({
       size: Math.random() * 4 + 2,
       initialX: Math.random() * 100,
@@ -35,7 +33,7 @@ export function FloatingParticles() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {particles.map((particle, i) => (
-        <motion.div
+        <div
           key={i}
           className="absolute rounded-full bg-red-500/20"
           style={{
@@ -43,18 +41,10 @@ export function FloatingParticles() {
             height: particle.size,
             left: `${particle.initialX}%`,
             top: `${particle.initialY}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            x: [0, particle.xMovement, 0],
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: particle.duration,
-            repeat: Infinity,
-            delay: particle.delay,
-            ease: 'easeInOut',
-          }}
+            '--float-y': '-30px',
+            '--float-x': `${particle.xMovement}px`,
+            animation: `float-particle ${particle.duration}s ease-in-out ${particle.delay}s infinite`,
+          } as React.CSSProperties}
         />
       ))}
     </div>

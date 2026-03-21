@@ -1,34 +1,10 @@
-import { supabase } from '@/lib/supabase';
 import type { TeamCareerStats } from '@/types/stats';
 import { useQuery } from '@tanstack/react-query';
 
 async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
-  const { data: hitterData, error: hitterError } = await supabase
-    .from('batter_stats')
-    .select('homeruns, totalbases, hits');
-  if (hitterError) throw hitterError;
-
-  const { data: pitcherData, error: pitcherError } = await supabase
-    .from('pitcher_stats')
-    .select('strikeouts');
-  if (pitcherError) throw pitcherError;
-
-  const hitterStats = hitterData.reduce(
-    (acc, cur) => {
-      acc.homeruns += cur.homeruns;
-      acc.totalbases += cur.totalbases;
-      acc.hits += cur.hits;
-      return acc;
-    },
-    { homeruns: 0, totalbases: 0, hits: 0 },
-  );
-
-  const strikeouts = pitcherData.reduce((acc, cur) => acc + cur.strikeouts, 0);
-
-  return {
-    ...hitterStats,
-    strikeouts,
-  };
+  const res = await fetch('/api/team/career-stats');
+  if (!res.ok) throw new Error('Failed to fetch team career stats');
+  return res.json();
 }
 
 export function useTeamCareerStats() {

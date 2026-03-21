@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/cn';
-import { motion } from 'framer-motion';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -17,12 +17,16 @@ interface PlayerCard3DProps {
 }
 
 export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
+  const { ref, isInView } = useIntersectionObserver();
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
+    <div
+      ref={ref as React.RefObject<HTMLDivElement>}
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(20px)',
+        transition: `opacity 0.5s ${index * 0.05}s, transform 0.5s ${index * 0.05}s`,
+      }}
     >
       <Link href={`/players/${player.number}`} className="block cursor-pointer">
         <div className="relative group transition-transform duration-300 ease-out hover:-translate-y-1.5">
@@ -49,7 +53,7 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
               />
             </div>
 
-            {/* Bottom gradient fade - 카드 레벨에서 이미지/정보 경계를 덮음 */}
+            {/* Bottom gradient fade */}
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0c0c12] via-[#0c0c12]/60 to-transparent pointer-events-none" />
 
             {/* Info Section */}
@@ -81,6 +85,6 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

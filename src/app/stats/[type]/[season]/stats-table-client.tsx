@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import dynamic from 'next/dynamic';
 import { SwitchCase } from 'react-simplikit';
 
@@ -23,12 +23,16 @@ export default function StatsTableClient({
   type,
   season,
 }: StatsTableClientProps) {
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.1 });
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.7, delay: 0.2 }}
+    <div
+      ref={ref as React.RefObject<HTMLDivElement>}
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(40px)',
+        transition: 'opacity 0.7s 0.2s, transform 0.7s 0.2s',
+      }}
     >
       <SwitchCase
         value={type}
@@ -37,6 +41,6 @@ export default function StatsTableClient({
           pitcher: () => <PitcherStatsTable season={season} />,
         }}
       />
-    </motion.div>
+    </div>
   );
 }
