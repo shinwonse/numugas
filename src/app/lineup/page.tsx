@@ -15,33 +15,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { useLineupRecommend } from '@/hooks/use-lineup-recommend';
 import { useIsMobile } from '@/hooks/use-mobile';
-import type { LineupRecommendResponse } from '@/types/lineup';
+import type { LineupFormData } from '@/hooks/use-lineup-storage';
+import { useLineupStorage } from '@/hooks/use-lineup-storage';
+import type { ImageTransform, LineupRecommendResponse, PlayerPosition } from '@/types/lineup';
 import { cn } from '@/lib/cn';
 import {
   ChevronDown,
+  Clock,
   Download,
+  FolderOpen,
   Home,
   Image as ImageIcon,
   Loader2,
   Monitor,
   RotateCcw,
+  Save,
   Sparkles,
+  Trash2,
   Upload,
   X,
 } from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
-import { ImageTransform, LineupPreview } from './lineup-preview';
-
-interface PlayerPosition {
-  position: string;
-  name: string;
-  number: string;
-  battingOrder: number;
-}
+import { useCallback, useRef, useState } from 'react';
+import { LineupPreview } from './lineup-preview';
 
 const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'];
 
@@ -74,6 +80,15 @@ const glassSelect = cn(
   'rounded-xl transition-colors duration-200 text-white cursor-pointer',
 );
 
+const EMPTY_LINEUP: PlayerPosition[] = Array.from({ length: 9 }, (_, i) => ({
+  position: '',
+  name: '',
+  number: '',
+  battingOrder: i + 1,
+}));
+
+const DEFAULT_TRANSFORM: ImageTransform = { scale: 1, positionX: 0, positionY: 0 };
+
 export default function LineupPage() {
   const isMobile = useIsMobile();
   const router = useRouter();
@@ -89,25 +104,59 @@ export default function LineupPage() {
   const [startingPitcherNumber, setStartingPitcherNumber] = useState('');
   const [manager, setManager] = useState('');
   const [isExporting, setIsExporting] = useState(false);
-  const [imageTransform, setImageTransform] = useState<ImageTransform>({
-    scale: 1,
-    positionX: 0,
-    positionY: 0,
-  });
-  const [lineup, setLineup] = useState<PlayerPosition[]>([
-    { position: '', name: '', number: '', battingOrder: 1 },
-    { position: '', name: '', number: '', battingOrder: 2 },
-    { position: '', name: '', number: '', battingOrder: 3 },
-    { position: '', name: '', number: '', battingOrder: 4 },
-    { position: '', name: '', number: '', battingOrder: 5 },
-    { position: '', name: '', number: '', battingOrder: 6 },
-    { position: '', name: '', number: '', battingOrder: 7 },
-    { position: '', name: '', number: '', battingOrder: 8 },
-    { position: '', name: '', number: '', battingOrder: 9 },
-  ]);
+  const [imageTransform, setImageTransform] = useState<ImageTransform>(DEFAULT_TRANSFORM);
+  const [lineup, setLineup] = useState<PlayerPosition[]>(EMPTY_LINEUP);
   const [aiReasoning, setAiReasoning] = useState<LineupRecommendResponse | null>(null);
   const [isReasoningOpen, setIsReasoningOpen] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [saveName, setSaveName] = useState('');
   const lineupMutation = useLineupRecommend();
+
+  // localStorage 훅
+  const { savedLineups, isLoaded: storageLoaded, saveLineup, deleteLineup } = useLineupStorage();
+
+  // 현재 폼 데이터를 LineupFormData로 수집
+  const getFormData = useCallback((): LineupFormData => ({
+    date,
+    location,
+    league,
+    startingPitcher,
+    startingPitcherNumber,
+    manager,
+    lineup,
+    playerImage,
+    playerImageName,
+    imageTransform,
+  }), [date, location, league, startingPitcher, startingPitcherNumber, manager, lineup, playerImage, playerImageName, imageTransform]);
+
+  // 폼 데이터를 state에 적용
+  const applyFormData = useCallback((data: LineupFormData) => {
+    setDate(data.date);
+    setLocation(data.location);
+    setLeague(data.league);
+    setStartingPitcher(data.startingPitcher);
+    setStartingPitcherNumber(data.startingPitcherNumber);
+    setManager(data.manager);
+    setLineup(data.lineup);
+    setPlayerImage(data.playerImage);
+    setPlayerImageName(data.playerImageName);
+    setImageTransform(data.imageTransform);
+  }, []);
+
+  // 라인업 저장 핸들러
+  const handleSaveLineup = () => {
+    const name = saveName.trim() || undefined;
+    saveLineup(getFormData(), name);
+    setSaveName('');
+    setSaveDialogOpen(false);
+  };
+
+  // 저장된 라인업 불러오기
+  const handleLoadLineup = (data: LineupFormData) => {
+    applyFormData(data);
+    setSheetOpen(false);
+  };
 
   const handlePositionChange = (index: number, position: string) => {
     const newLineup = [...lineup];
@@ -182,18 +231,11 @@ export default function LineupPage() {
     setStartingPitcher('');
     setStartingPitcherNumber('');
     setManager('');
-    setImageTransform({ scale: 1, positionX: 0, positionY: 0 });
+    setImageTransform(DEFAULT_TRANSFORM);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    setLineup(
-      Array.from({ length: 9 }, (_, i) => ({
-        position: '',
-        name: '',
-        number: '',
-        battingOrder: i + 1,
-      })),
-    );
+    setLineup(EMPTY_LINEUP);
   };
 
   const handleDownloadImage = async () => {
@@ -707,7 +749,143 @@ export default function LineupPage() {
                 ))}
               </div>
 
-              <div className="flex gap-3 mt-6">
+              {/* 저장 / 불러오기 버튼 */}
+              <div className="flex gap-3 mt-6 mb-3">
+                {/* 저장 버튼 + 이름 입력 */}
+                {saveDialogOpen ? (
+                  <div className="flex-1 flex gap-2">
+                    <Input
+                      value={saveName}
+                      onChange={(e) => setSaveName(e.target.value)}
+                      placeholder="라인업 이름 (선택)"
+                      className={cn(glassInput, 'flex-1 h-9 text-sm')}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleSaveLineup();
+                        if (e.key === 'Escape') setSaveDialogOpen(false);
+                      }}
+                      autoFocus
+                    />
+                    <Button
+                      size="sm"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer h-9"
+                      onClick={handleSaveLineup}
+                    >
+                      확인
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="bg-white/[0.04] border-white/[0.06] hover:bg-white/[0.08] text-gray-300 cursor-pointer h-9"
+                      onClick={() => setSaveDialogOpen(false)}
+                    >
+                      취소
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    <Button
+                      className={cn(
+                        'flex-1 cursor-pointer',
+                        'bg-emerald-600/20 border border-emerald-500/30',
+                        'hover:bg-emerald-600/30',
+                        'transition-colors duration-200 text-emerald-400',
+                      )}
+                      variant="outline"
+                      onClick={() => setSaveDialogOpen(true)}
+                      disabled={isExporting}
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      저장
+                    </Button>
+
+                    {/* 불러오기 Sheet */}
+                    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                      <SheetTrigger asChild>
+                        <Button
+                          className={cn(
+                            'flex-1 cursor-pointer',
+                            'bg-blue-600/20 border border-blue-500/30',
+                            'hover:bg-blue-600/30',
+                            'transition-colors duration-200 text-blue-400',
+                          )}
+                          variant="outline"
+                          disabled={isExporting}
+                        >
+                          <FolderOpen className="w-4 h-4 mr-2" />
+                          불러오기
+                          {storageLoaded && savedLineups.length > 0 && (
+                            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] rounded-full bg-blue-500/20 text-blue-300">
+                              {savedLineups.length}
+                            </span>
+                          )}
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent className="bg-zinc-950 border-white/[0.06] text-white overflow-y-auto">
+                        <SheetHeader>
+                          <SheetTitle className="text-white">저장된 라인업</SheetTitle>
+                        </SheetHeader>
+                        <div className="mt-4 space-y-3">
+                          {savedLineups.length === 0 ? (
+                            <div className="text-center py-12 text-gray-500">
+                              <FolderOpen className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                              <p className="text-sm">저장된 라인업이 없습니다</p>
+                            </div>
+                          ) : (
+                            savedLineups.map((saved) => (
+                              <div
+                                key={saved.id}
+                                className={cn(
+                                  'group p-4 rounded-xl cursor-pointer',
+                                  'bg-white/[0.03] border border-white/[0.06]',
+                                  'hover:bg-white/[0.06] transition-colors duration-150',
+                                )}
+                                onClick={() => handleLoadLineup(saved)}
+                              >
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-semibold text-sm text-white truncate">
+                                      {saved.name}
+                                    </p>
+                                    <div className="flex items-center gap-1.5 mt-1 text-xs text-gray-500">
+                                      <Clock className="w-3 h-3" />
+                                      {new Date(saved.savedAt).toLocaleString('ko-KR', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                      })}
+                                    </div>
+                                    {/* 라인업 요약 */}
+                                    <p className="mt-2 text-xs text-gray-600 truncate">
+                                      {saved.lineup
+                                        .filter((p) => p.name)
+                                        .map((p) => p.name)
+                                        .join(', ') || '빈 라인업'}
+                                    </p>
+                                  </div>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-500 hover:text-red-400 hover:bg-red-500/10 cursor-pointer shrink-0"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deleteLineup(saved.id);
+                                    }}
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </SheetContent>
+                    </Sheet>
+                  </>
+                )}
+              </div>
+
+              <div className="flex gap-3">
                 <Button
                   className={cn(
                     'flex-1 cursor-pointer',

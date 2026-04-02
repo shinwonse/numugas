@@ -1,21 +1,9 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import type { ImageTransform, PlayerPosition } from '@/types/lineup';
 import { forwardRef } from 'react';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
-
-interface PlayerPosition {
-  position: string;
-  name: string;
-  number: string;
-  battingOrder: number;
-}
-
-export interface ImageTransform {
-  scale: number;
-  positionX: number;
-  positionY: number;
-}
 
 interface LineupPreviewProps {
   lineup: PlayerPosition[];
@@ -58,7 +46,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
     })();
 
     const WIDTH = 1080;
-    const HEIGHT = 1350;
+    const HEIGHT = 1440;
     const SCALE = isExporting ? 1 : 0.5;
 
     return (
@@ -116,14 +104,12 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   </h2>
 
                   {/* 리그명 */}
-                  {leagueText && (
-                    <p
-                      className="font-bold text-red-600 mb-2"
-                      style={{ fontSize: '1.8rem' }}
-                    >
-                      {leagueText}
-                    </p>
-                  )}
+                  <p
+                    className={`font-bold mb-2 ${leagueText ? 'text-red-600' : 'text-white/10'}`}
+                    style={{ fontSize: '1.8rem' }}
+                  >
+                    {leagueText || 'LEAGUE'}
+                  </p>
 
                   {/* 경기 정보 */}
                   <div className="mb-4">
@@ -173,7 +159,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
                   {/* 타자 라인업 + 감독 */}
                   <div className="flex flex-col">
                     {/* 타자 목록 */}
-                    <div className="flex flex-col space-y-2.5">
+                    <div className="flex flex-col space-y-4">
                       {lineup.map((player, index) => (
                         <div
                           key={index}
