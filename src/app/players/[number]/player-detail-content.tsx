@@ -3,6 +3,7 @@
 import { SectionBackground } from '@/components/animated/section-background';
 import { cn } from '@/lib/cn';
 import { useBatterStats, usePitcherStats } from '@/hooks/use-player-stats';
+import { BatterStatsChart, PitcherStatsChart } from './player-stats-chart';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +18,7 @@ interface Player {
 
 export function PlayerDetailContent({ player }: { player: Player }) {
   const [activeTab, setActiveTab] = useState<'batter' | 'pitcher'>('batter');
+  const [photoOpen, setPhotoOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -39,66 +41,55 @@ export function PlayerDetailContent({ player }: { player: Player }) {
     <main className="relative min-h-screen bg-black text-white py-8 md:py-16 px-4 sm:px-8 md:px-16 lg:px-32 overflow-hidden">
       <SectionBackground variant="dots" />
 
-      {/* Responsive Player Header: full width, flex on large screens */}
-      <section className="relative z-10 w-full mb-12">
-        <div className="bg-gradient-to-br from-red-950/30 to-black/50 backdrop-blur-sm border border-red-900/20 rounded-3xl p-8 md:p-12 shadow-2xl shadow-red-900/20">
-          <div className="flex flex-col md:flex-row items-center md:items-stretch gap-8">
-            <div className="flex-shrink-0 flex justify-center w-full md:w-auto relative">
-              <div className="w-40 h-40 md:w-48 md:h-48 relative rounded-full overflow-hidden border-4 border-red-500 shadow-2xl shadow-red-500/50">
-                <Image
-                  src={player.photo}
-                  alt={player.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 160px, 192px"
-                  priority
-                />
-              </div>
-              <div className="absolute -inset-2 bg-gradient-to-r from-red-600/20 to-transparent rounded-full blur-2xl -z-10" />
+      {/* Compact Player Header */}
+      <section className="relative z-10 w-full mb-6">
+        <div className="flex items-center gap-4 md:gap-6">
+          <button
+            onClick={() => setPhotoOpen(true)}
+            className="flex-shrink-0 relative group cursor-pointer"
+          >
+            <div className="w-24 h-24 md:w-28 md:h-28 relative rounded-full overflow-hidden border-2 border-red-500/60 transition-all duration-200 group-hover:border-red-400 group-hover:shadow-lg group-hover:shadow-red-500/30">
+              <Image
+                src={player.photo}
+                alt={player.name}
+                fill
+                className="object-cover transition-transform duration-200 group-hover:scale-105"
+                sizes="112px"
+                priority
+              />
             </div>
-            <div className="flex flex-col justify-center items-center md:items-start flex-1 text-center md:text-left">
-              <h1 className="text-4xl md:text-6xl font-bold mb-3 font-display flex flex-col md:flex-row items-center gap-3 md:gap-4">
-                <span className="text-red-500 text-5xl md:text-7xl">
-                  #{player.number}
-                </span>
-                <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                  {player.name}
-                </span>
-              </h1>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-950/50 border border-red-500/30 rounded-full text-lg md:text-xl text-red-300">
-                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          </button>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl md:text-3xl font-bold font-display flex items-baseline gap-2">
+              <span className="text-red-500">#{player.number}</span>
+              <span className="text-white truncate">{player.name}</span>
+              <span className="text-sm md:text-base font-normal text-gray-500 ml-1">
                 {player.position}
-              </div>
-            </div>
+              </span>
+            </h1>
           </div>
-        </div>
-      </section>
-
-      {/* Tab Navigation */}
-      <section className="relative z-10 w-full mb-8">
-        <div className="flex justify-center">
-          <div className="flex bg-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-1.5 shadow-xl">
+          <div className="flex bg-gray-900/80 border border-gray-700/50 rounded-xl p-1">
             <button
               onClick={() => handleTabChange('batter')}
               className={cn(
-                'relative px-8 py-4 rounded-xl transition-all duration-300 font-bold text-lg',
+                'px-4 py-2 rounded-lg transition-all duration-200 text-sm font-semibold',
                 activeTab === 'batter'
-                  ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/50'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-800/50',
+                  ? 'bg-red-600 text-white shadow-md shadow-red-500/40'
+                  : 'text-gray-400 hover:text-white',
               )}
             >
-              타자 기록
+              타자
             </button>
             <button
               onClick={() => handleTabChange('pitcher')}
               className={cn(
-                'relative px-8 py-4 rounded-xl transition-all duration-300 font-bold text-lg',
+                'px-4 py-2 rounded-lg transition-all duration-200 text-sm font-semibold',
                 activeTab === 'pitcher'
-                  ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg shadow-red-500/50'
-                  : 'text-gray-400 hover:text-white hover:bg-gray-800/50',
+                  ? 'bg-red-600 text-white shadow-md shadow-red-500/40'
+                  : 'text-gray-400 hover:text-white',
               )}
             >
-              투수 기록
+              투수
             </button>
           </div>
         </div>
@@ -116,40 +107,101 @@ export function PlayerDetailContent({ player }: { player: Player }) {
               </div>
             ) : (
               <>
-                {/* Highlight Stats Cards - 통산 기록이 있는 경우에만 표시 */}
+                {/* Career Stats Detailed Table */}
                 {batterStats && batterStats.careerStats && (
-                  <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
-                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
-                        {batterStats.careerStats.avg}
-                      </div>
-                      <div className="text-sm text-gray-400 font-semibold">
-                        타율
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
-                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
-                        {batterStats.careerStats.homeruns}
-                      </div>
-                      <div className="text-sm text-gray-400 font-semibold">
-                        홈런
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
-                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
-                        {batterStats.careerStats.rbi}
-                      </div>
-                      <div className="text-sm text-gray-400 font-semibold">
-                        타점
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
-                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
-                        {batterStats.careerStats.hits}
-                      </div>
-                      <div className="text-sm text-gray-400 font-semibold">
-                        안타
-                      </div>
+                  <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
+                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
+                      통산 기록
+                    </h2>
+                    <div className="overflow-x-auto w-full">
+                      <table className="w-full text-center min-w-[800px]">
+                        <thead>
+                          <tr className="border-b border-gray-700 text-gray-300">
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              경기
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              타율
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              출루율
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              장타율
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              타석
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              타수
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              안타
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              홈런
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              득점
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              타점
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              도루
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              볼넷
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              삼진
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-gray-800">
+                            <td className="py-4 px-3 font-bold text-white">
+                              {batterStats.careerStats.games}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {batterStats.careerStats.avg}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {batterStats.careerStats.onbasepercentage}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {batterStats.careerStats.sluggingpercentage}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {batterStats.careerStats.plateappearances}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {batterStats.careerStats.atbats}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white">
+                              {batterStats.careerStats.hits}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {batterStats.careerStats.homeruns}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {batterStats.careerStats.runs}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {batterStats.careerStats.rbi}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {batterStats.careerStats.stolenbases}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {batterStats.careerStats.walks}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {batterStats.careerStats.strikeouts}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </section>
                 )}
@@ -312,103 +364,9 @@ export function PlayerDetailContent({ player }: { player: Player }) {
                   )}
                 </section>
 
-                {/* Career Stats Detailed Table */}
-                {batterStats && batterStats.careerStats && (
-                  <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
-                      통산 기록
-                    </h2>
-                    <div className="overflow-x-auto w-full">
-                      <table className="w-full text-center min-w-[800px]">
-                        <thead>
-                          <tr className="border-b border-gray-700 text-gray-300">
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              경기
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              타율
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              출루율
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              장타율
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              타석
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              타수
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              안타
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              홈런
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              득점
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              타점
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              도루
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              볼넷
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              삼진
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-gray-800">
-                            <td className="py-4 px-3 font-bold text-white">
-                              {batterStats.careerStats.games}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {batterStats.careerStats.avg}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {batterStats.careerStats.onbasepercentage}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {batterStats.careerStats.sluggingpercentage}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {batterStats.careerStats.plateappearances}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {batterStats.careerStats.atbats}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white">
-                              {batterStats.careerStats.hits}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {batterStats.careerStats.homeruns}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {batterStats.careerStats.runs}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {batterStats.careerStats.rbi}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {batterStats.careerStats.stolenbases}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {batterStats.careerStats.walks}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {batterStats.careerStats.strikeouts}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </section>
+                {/* Stats Trend Chart */}
+                {batterStats && batterStats.seasonStats.length > 0 && (
+                  <BatterStatsChart seasonStats={batterStats.seasonStats} />
                 )}
               </>
             )}
@@ -426,40 +384,95 @@ export function PlayerDetailContent({ player }: { player: Player }) {
               </div>
             ) : (
               <>
-                {/* Pitcher Highlight Stats Cards */}
+                {/* Pitcher Career Stats Table */}
                 {pitcherStats && pitcherStats.careerStats && (
-                  <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
-                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
-                        {pitcherStats.careerStats.era}
-                      </div>
-                      <div className="text-sm text-gray-400 font-semibold">
-                        평균자책점
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
-                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
-                        {pitcherStats.careerStats.wins}
-                      </div>
-                      <div className="text-sm text-gray-400 font-semibold">
-                        승
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
-                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
-                        {pitcherStats.careerStats.strikeouts}
-                      </div>
-                      <div className="text-sm text-gray-400 font-semibold">
-                        삼진
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-950/40 to-black/40 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300">
-                      <div className="text-4xl md:text-5xl font-bold text-red-500 mb-2">
-                        {pitcherStats.careerStats.whip}
-                      </div>
-                      <div className="text-sm text-gray-400 font-semibold">
-                        WHIP
-                      </div>
+                  <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
+                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
+                      통산 기록
+                    </h2>
+                    <div className="overflow-x-auto w-full">
+                      <table className="w-full text-center min-w-[800px]">
+                        <thead>
+                          <tr className="border-b border-gray-700 text-gray-300">
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              경기
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              평균자책
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              승
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              패
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              세이브
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              홀드
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              승률
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              이닝
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              피안타
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              볼넷
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              삼진
+                            </th>
+                            <th className="py-3 px-3 text-sm font-semibold">
+                              WHIP
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-gray-800">
+                            <td className="py-4 px-3 font-bold text-white">
+                              {pitcherStats.careerStats.games}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {pitcherStats.careerStats.era}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {pitcherStats.careerStats.wins}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {pitcherStats.careerStats.losses}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {pitcherStats.careerStats.saves}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {pitcherStats.careerStats.holds}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {pitcherStats.careerStats.winrate}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white">
+                              {pitcherStats.careerStats.innings}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {pitcherStats.careerStats.hits}
+                            </td>
+                            <td className="py-4 px-3 font-semibold">
+                              {pitcherStats.careerStats.walks}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {pitcherStats.careerStats.strikeouts}
+                            </td>
+                            <td className="py-4 px-3 font-bold text-white text-lg">
+                              {pitcherStats.careerStats.whip}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </section>
                 )}
@@ -596,103 +609,33 @@ export function PlayerDetailContent({ player }: { player: Player }) {
                   </div>
                 </section>
 
-                {/* Pitcher Career Stats Detailed Table */}
-                {pitcherStats && pitcherStats.careerStats && (
-                  <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
-                      통산 기록
-                    </h2>
-                    <div className="overflow-x-auto w-full">
-                      <table className="w-full text-center min-w-[800px]">
-                        <thead>
-                          <tr className="border-b border-gray-700 text-gray-300">
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              경기
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              평균자책
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              승
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              패
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              세이브
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              홀드
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              승률
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              이닝
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              피안타
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              볼넷
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              삼진
-                            </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
-                              WHIP
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-gray-800">
-                            <td className="py-4 px-3 font-bold text-white">
-                              {pitcherStats.careerStats.games}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {pitcherStats.careerStats.era}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {pitcherStats.careerStats.wins}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {pitcherStats.careerStats.losses}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {pitcherStats.careerStats.saves}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {pitcherStats.careerStats.holds}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {pitcherStats.careerStats.winrate}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white">
-                              {pitcherStats.careerStats.innings}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {pitcherStats.careerStats.hits}
-                            </td>
-                            <td className="py-4 px-3 font-semibold">
-                              {pitcherStats.careerStats.walks}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {pitcherStats.careerStats.strikeouts}
-                            </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
-                              {pitcherStats.careerStats.whip}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </section>
+                {/* Pitcher Stats Trend Chart */}
+                {pitcherStats && pitcherStats.seasonStats.length > 0 && (
+                  <PitcherStatsChart seasonStats={pitcherStats.seasonStats} />
                 )}
               </>
             )}
           </>
         )}
       </div>
+
+      {/* Photo Lightbox */}
+      {photoOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={() => setPhotoOpen(false)}
+        >
+          <div className="relative w-[80vw] max-w-md aspect-square">
+            <Image
+              src={player.photo}
+              alt={player.name}
+              fill
+              className="object-cover rounded-2xl"
+              sizes="80vw"
+            />
+          </div>
+        </div>
+      )}
     </main>
   );
 }
