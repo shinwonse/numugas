@@ -28,6 +28,14 @@ export const metadata: Metadata = {
     template: '%s | 담장NUMUGAS',
   },
   description: '나는 내가 생각한 것보다 훨씬 강하다',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: '담장NUMUGAS',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
   keywords: [
     '담장NUMUGAS',
     '담장너머가쓰',
@@ -143,9 +151,22 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
+        <meta name="theme-color" content="#000000" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
         />
       </head>
       <body
