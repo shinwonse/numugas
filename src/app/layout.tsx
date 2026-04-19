@@ -1,4 +1,4 @@
-import { Header } from '@/components/header';
+import { FloatingNav } from '@/components/floating-nav';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
@@ -159,8 +159,8 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ViewTransitionLayout>
-              <Header />
-              <div className="pt-16">{children}</div>
+              <div className="pb-28">{children}</div>
+              <FloatingNav />
             </ViewTransitionLayout>
             <Toaster />
           </ThemeProvider>

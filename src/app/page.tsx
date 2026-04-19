@@ -1,7 +1,6 @@
 import { SectionDivider } from '@/components/animated/section-divider';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
-import { Header } from '@/components/header';
 import { HeroSection } from '@/components/hero-section';
 import { PlayerStatsSection } from '@/components/player-stats-section';
 import {
@@ -79,7 +78,6 @@ async function TotalStatsSectionData() {
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
-      <Header />
       <HeroSection />
 
       <SectionDivider />
