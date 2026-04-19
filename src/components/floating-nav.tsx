@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { BarChart3, Home, ListOrdered, Shield, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const NAV_ITEMS = [
   { label: 'HOME', href: '/', icon: Home },
@@ -27,6 +27,21 @@ export function FloatingNav() {
   );
 
   const displayIndex = hoverIndex ?? activeIndex;
+
+  const [blobPos, setBlobPos] = useState({ x: 0, width: 0 });
+
+  const updateBlobPos = useCallback((index: number) => {
+    const el = itemRefs.current[index];
+    const nav = navRef.current;
+    if (!el || !nav) return;
+    const navRect = nav.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    setBlobPos({ x: elRect.left - navRect.left, width: elRect.width });
+  }, []);
+
+  useEffect(() => {
+    if (displayIndex >= 0) updateBlobPos(displayIndex);
+  }, [displayIndex, updateBlobPos]);
 
   const getIndexFromPosition = useCallback(
     (clientX: number) => {
@@ -106,9 +121,9 @@ export function FloatingNav() {
               'bg-white/[0.12]',
               'shadow-[inset_0_0.5px_0_rgba(255,255,255,0.15),0_0_12px_rgba(255,255,255,0.04)]',
             )}
-            style={{ width: '3.5rem' }}
             animate={{
-              x: displayIndex * (56 + 2),
+              x: blobPos.x,
+              width: blobPos.width,
               scale: isDragging ? 1.08 : 1,
               opacity: isDragging ? 0.22 : 0.12,
             }}
@@ -134,7 +149,7 @@ export function FloatingNav() {
               }}
               className={cn(
                 'relative z-10 flex flex-col items-center justify-center',
-                'w-14 py-1.5 rounded-xl',
+                'w-14 md:w-20 py-1.5 rounded-xl',
                 'transition-colors duration-200',
                 isActive || isHovered
                   ? 'text-white'
