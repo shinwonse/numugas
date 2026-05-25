@@ -40,7 +40,10 @@ export const LEAGUE_PARAMS: Record<
     JUNGNANG: [{ lig_idx: 10345, group: 17, part: 1 }],
   },
   '2024': {
-    NOWON: [{ lig_idx: 237, group: 45, part: 0 }],
+    NOWON: [
+      { lig_idx: 237, group: 45, part: 0 },
+      { lig_idx: 237, group: 48, part: 0 },
+    ],
     MYUNGPUM: [{ lig_idx: 10750, group: 26, part: 0 }],
   },
   '2023': {
