@@ -18,6 +18,7 @@ interface LineupPreviewProps {
   isExporting?: boolean;
   imageTransform?: ImageTransform;
   onTransformChange?: (transform: ImageTransform) => void;
+  displayScale?: number;
 }
 
 export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
@@ -35,6 +36,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
       isExporting = false,
       imageTransform,
       onTransformChange,
+      displayScale,
     },
     ref,
   ) {
@@ -47,7 +49,7 @@ export const LineupPreview = forwardRef<HTMLDivElement, LineupPreviewProps>(
 
     const WIDTH = 1080;
     const HEIGHT = 1440;
-    const SCALE = isExporting ? 1 : 0.5;
+    const SCALE = isExporting ? 1 : (displayScale ?? 0.5);
 
     return (
       <div

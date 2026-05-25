@@ -23,7 +23,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useLineupRecommend } from '@/hooks/use-lineup-recommend';
-import { useIsMobile } from '@/hooks/use-mobile';
 import type { LineupFormData } from '@/hooks/use-lineup-storage';
 import { useLineupStorage } from '@/hooks/use-lineup-storage';
 import type { ImageTransform, LineupRecommendResponse, PlayerPosition } from '@/types/lineup';
@@ -33,10 +32,8 @@ import {
   Clock,
   Download,
   FolderOpen,
-  Home,
   Image as ImageIcon,
   Loader2,
-  Monitor,
   RotateCcw,
   Save,
   Sparkles,
@@ -45,8 +42,7 @@ import {
   X,
 } from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
-import { useRouter } from 'next/navigation';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { LineupPreview } from './lineup-preview';
 
 const POSITIONS = ['P', 'C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'];
@@ -90,9 +86,23 @@ const EMPTY_LINEUP: PlayerPosition[] = Array.from({ length: 9 }, (_, i) => ({
 const DEFAULT_TRANSFORM: ImageTransform = { scale: 1, positionX: 0, positionY: 0 };
 
 export default function LineupPage() {
-  const isMobile = useIsMobile();
-  const router = useRouter();
   const previewRef = useRef<HTMLDivElement>(null);
+  const [previewScale, setPreviewScale] = useState(0.5);
+
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth >= 768) {
+        setPreviewScale(0.5);
+        return;
+      }
+      const usable = window.innerWidth - 32;
+      setPreviewScale(Math.min(usable / 1080, 0.5));
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
@@ -367,11 +377,9 @@ export default function LineupPage() {
             />
           </div>
 
-          {/* 고정 레이아웃 */}
+          {/* 반응형 레이아웃 - 모바일은 세로 스택, 데스크탑은 가로 정렬 */}
           <div
-            className={`flex gap-8 justify-center items-start overflow-x-auto ${
-              isMobile ? 'blur-sm pointer-events-none select-none' : ''
-            }`}
+            className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center items-center md:items-start"
             style={{ animation: 'fade-in-up 0.7s ease 0.3s both' }}
           >
             {/* 편집용 미리보기 (항상 표시) */}
@@ -389,6 +397,7 @@ export default function LineupPage() {
                 isExporting={false}
                 imageTransform={imageTransform}
                 onTransformChange={setImageTransform}
+                displayScale={previewScale}
               />
             </div>
 
@@ -421,13 +430,12 @@ export default function LineupPage() {
             {/* 라인업 입력 폼 */}
             <div
               className={cn(
-                'flex-shrink-0 p-6',
+                'flex-shrink-0 p-6 w-full max-w-[500px] md:w-[500px]',
                 'rounded-2xl',
                 'bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-150',
                 'border border-white/[0.06]',
                 'shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.04)]',
               )}
-              style={{ width: '500px' }}
             >
               <h2 className="text-lg font-bold mb-5 text-white">
                 라인업 정보
@@ -912,45 +920,6 @@ export default function LineupPage() {
             </div>
           </div>
 
-          {/* 모바일 안내 메시지 */}
-          {isMobile && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-              <div
-                className={cn(
-                  'max-w-md p-8 text-center space-y-4',
-                  'rounded-2xl',
-                  'bg-white/[0.04] backdrop-blur-2xl',
-                  'border border-white/[0.08]',
-                  'shadow-[0_8px_32px_rgba(0,0,0,0.5)]',
-                )}
-              >
-                <div className="flex justify-center mb-4">
-                  <div className="p-4 bg-white/[0.06] rounded-full">
-                    <Monitor className="w-12 h-12 text-red-400" />
-                  </div>
-                </div>
-                <h2 className="text-2xl font-bold text-white">
-                  데스크톱에서 이용해주세요
-                </h2>
-                <p className="text-gray-400 text-sm">
-                  라인업 작성 기능은 더 나은 경험을 위해
-                  <br />
-                  데스크톱 환경에서만 지원됩니다.
-                </p>
-                <p className="text-xs text-gray-600">
-                  PC 또는 태블릿의 가로 모드로 접속해주세요.
-                </p>
-                <Button
-                  onClick={() => router.push('/')}
-                  className="w-full mt-4 bg-red-500 hover:bg-red-600 transition-colors text-white cursor-pointer"
-                  size="lg"
-                >
-                  <Home className="w-4 h-4 mr-2" />
-                  홈으로 돌아가기
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
       </main>
     </>
