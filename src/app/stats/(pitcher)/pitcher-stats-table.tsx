@@ -16,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { usePitchingStatsBySeason } from '@/hooks/use-pitching-stats-by-season';
 import { cn } from '@/lib/cn';
 import {
   LEAGUES,
@@ -59,7 +58,13 @@ const COLUMNS = [
   { value: 'strikeout_rate', label: '탈삼진%' },
 ];
 
-export default function PitcherStatsTable({ season }: { season: string }) {
+export default function PitcherStatsTable({
+  season,
+  initialData,
+}: {
+  season: string;
+  initialData: any[];
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const leagueParam = searchParams.get('league');
@@ -69,10 +74,7 @@ export default function PitcherStatsTable({ season }: { season: string }) {
     leagueParam && availableLeagues.includes(leagueParam as League)
       ? (leagueParam as League)
       : undefined;
-  const { data, isLoading, error } = usePitchingStatsBySeason(
-    season === '통산' ? undefined : season,
-    league,
-  );
+  const data = initialData;
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'games' | string>('games');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
@@ -211,19 +213,6 @@ export default function PitcherStatsTable({ season }: { season: string }) {
         )}
       >
         <div className="overflow-x-auto w-full">
-          {isLoading ? (
-            <div className="text-center py-20">
-              <div className="relative inline-flex">
-                <div className="h-10 w-10 rounded-full border-2 border-white/10 border-t-red-500 animate-spin" />
-              </div>
-              <p className="mt-4 text-sm text-gray-600">불러오는 중...</p>
-            </div>
-          ) : error ? (
-            <div className="text-center py-20">
-              <div className="text-red-400 text-sm mb-1">오류가 발생했습니다</div>
-              <p className="text-gray-600 text-sm">{error.message}</p>
-            </div>
-          ) : (
             <Table className="min-w-[600px] w-full">
               <TableHeader>
                 <TableRow className="border-b border-white/[0.04] hover:bg-transparent">
@@ -304,18 +293,13 @@ export default function PitcherStatsTable({ season }: { season: string }) {
                 )}
               </TableBody>
             </Table>
-          )}
         </div>
       </div>
 
       {/* Result count */}
-      {!isLoading && !error && (
-        <div className="text-right">
-          <span className="text-xs text-gray-600">
-            총 {filtered.length}명
-          </span>
-        </div>
-      )}
+      <div className="text-right">
+        <span className="text-xs text-gray-600">총 {filtered.length}명</span>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,14 @@
+import {
+  fetchBattingStatsBySeason,
+  fetchPitchingStatsBySeason,
+} from '@/lib/fetchers/season-stats';
+import { LEAGUES, type League } from '@/lib/leagues';
 import type { Metadata } from 'next/types';
 import { notFound } from 'next/navigation';
 import { StatsPageHeader } from './stats-page-header';
 import StatsTableClient from './stats-table-client';
+
+export const revalidate = 300;
 
 const SEASONS = ['통산', '2026', '2025', '2024', '2023', '2022', '2021', '2020'];
 const TYPES = [
@@ -36,14 +43,29 @@ export async function generateStaticParams() {
 
 export default async function StatsTypeSeasonPage({
   params,
+  searchParams,
 }: {
   params: { type: string; season: string };
+  searchParams: { league?: string };
 }) {
   const resolvedParams = await Promise.resolve(params);
+  const resolvedSearch = await Promise.resolve(searchParams);
   const type = decodeURIComponent(resolvedParams.type);
   const season = decodeURIComponent(resolvedParams.season);
   const typeObj = TYPES.find((t) => t.key === type);
   if (!typeObj || !SEASONS.includes(season)) notFound();
+
+  const leagueParam = resolvedSearch?.league;
+  const league =
+    leagueParam && (LEAGUES as readonly string[]).includes(leagueParam)
+      ? (leagueParam as League)
+      : undefined;
+
+  const seasonArg = season === '통산' ? undefined : season;
+  const data =
+    type === 'batter'
+      ? await fetchBattingStatsBySeason(seasonArg, league)
+      : await fetchPitchingStatsBySeason(seasonArg, league);
 
   const tabList = TYPES.map((t) => ({
     key: t.key,
@@ -55,7 +77,7 @@ export default async function StatsTypeSeasonPage({
     <main className="flex flex-col pt-24 pb-16 md:pt-28 md:pb-20 min-h-screen">
       <div className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
         <StatsPageHeader tabList={tabList} currentType={type} />
-        <StatsTableClient type={type} season={season} />
+        <StatsTableClient type={type} season={season} initialData={data} />
       </div>
     </main>
   );

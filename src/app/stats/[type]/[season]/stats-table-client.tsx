@@ -1,27 +1,20 @@
 'use client';
 
+import BatterStatsTable from '@/app/stats/(batter)/batter-stats-table';
+import PitcherStatsTable from '@/app/stats/(pitcher)/pitcher-stats-table';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
-import dynamic from 'next/dynamic';
 import { SwitchCase } from 'react-simplikit';
-
-const BatterStatsTable = dynamic(
-  () => import('@/app/stats/(batter)/batter-stats-table'),
-  { ssr: false },
-);
-
-const PitcherStatsTable = dynamic(
-  () => import('@/app/stats/(pitcher)/pitcher-stats-table'),
-  { ssr: false },
-);
 
 interface StatsTableClientProps {
   type: string;
   season: string;
+  initialData: any[];
 }
 
 export default function StatsTableClient({
   type,
   season,
+  initialData,
 }: StatsTableClientProps) {
   const { ref, isInView } = useIntersectionObserver({ threshold: 0.1 });
 
@@ -37,8 +30,12 @@ export default function StatsTableClient({
       <SwitchCase
         value={type}
         caseBy={{
-          batter: () => <BatterStatsTable season={season} />,
-          pitcher: () => <PitcherStatsTable season={season} />,
+          batter: () => (
+            <BatterStatsTable season={season} initialData={initialData} />
+          ),
+          pitcher: () => (
+            <PitcherStatsTable season={season} initialData={initialData} />
+          ),
         }}
       />
     </div>
