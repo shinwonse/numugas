@@ -1,4 +1,5 @@
 import { formatInning, parseInning } from '@/lib/inning';
+import { OVERALL_LEAGUE } from '@/lib/leagues';
 import {
   createFallbackStats,
   extractTopPlayers,
@@ -81,7 +82,10 @@ function aggregateCareerStats(data: Record<string, any>[]) {
 
 export async function fetchPitchingCareerStats(): Promise<Stat[]> {
   try {
-    const { data, error } = await supabase.from('pitcher_stats').select('*');
+    const { data, error } = await supabase
+      .from('pitcher_stats')
+      .select('*')
+      .eq('league', OVERALL_LEAGUE);
 
     if (error) {
       console.error(

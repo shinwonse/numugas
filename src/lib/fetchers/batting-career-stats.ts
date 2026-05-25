@@ -1,3 +1,4 @@
+import { OVERALL_LEAGUE } from '@/lib/leagues';
 import {
   createFallbackStats,
   extractTopPlayers,
@@ -70,7 +71,10 @@ function aggregateCareerStats(data: Record<string, any>[]) {
 
 export async function fetchBattingCareerStats(): Promise<Stat[]> {
   try {
-    const { data, error } = await supabase.from('batter_stats').select('*');
+    const { data, error } = await supabase
+      .from('batter_stats')
+      .select('*')
+      .eq('league', OVERALL_LEAGUE);
 
     if (error) {
       console.error(

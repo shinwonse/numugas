@@ -10,6 +10,10 @@ export type League = (typeof LEAGUES)[number];
 
 export const LEGACY_LEAGUE = 'LEGACY';
 
+// 게임원 club 전체 ranking (kind/lig_idx 없이) 결과를 저장하는 식별자.
+// 정규 리그 + 대회 + 원외 경기를 모두 포함하므로 "전체 리그" 표시와 통산 집계에 사용.
+export const OVERALL_LEAGUE = 'OVERALL';
+
 export const LEAGUE_LABELS: Record<League | typeof LEGACY_LEAGUE, string> = {
   ECOKING: '에코킹리그',
   JUNGNANG: '중랑리그',

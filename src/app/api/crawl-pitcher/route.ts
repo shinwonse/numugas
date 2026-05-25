@@ -1,12 +1,17 @@
 import { axiosInstance } from '@/lib/axios';
 import { formatInning, parseInning } from '@/lib/inning';
-import { LEAGUE_PARAMS, type LeagueParams, type League } from '@/lib/leagues';
+import {
+  LEAGUE_PARAMS,
+  OVERALL_LEAGUE,
+  type LeagueParams,
+  type League,
+} from '@/lib/leagues';
 import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
 
-const PITCHER_URL =
-  'http://www.gameone.kr/club/info/ranking/pitcher?club_idx=35417&kind=5';
+const BASE_URL =
+  'http://www.gameone.kr/club/info/ranking/pitcher?club_idx=35417';
 
 const NUMERIC_FIELDS = [
   'games',
@@ -31,11 +36,17 @@ const NUMERIC_FIELDS = [
   'earnedruns',
 ];
 
-type CrawlTask = {
-  season: string;
-  league: League;
-  paramsList: LeagueParams[];
-};
+type CrawlTask =
+  | {
+      kind: 'league';
+      season: string;
+      league: League;
+      paramsList: LeagueParams[];
+    }
+  | {
+      kind: 'overall';
+      season: string;
+    };
 
 function buildTasks(): CrawlTask[] {
   const tasks: CrawlTask[] = [];
@@ -43,11 +54,13 @@ function buildTasks(): CrawlTask[] {
     for (const [league, paramsArr] of Object.entries(leagueMap)) {
       if (!paramsArr || paramsArr.length === 0) continue;
       tasks.push({
+        kind: 'league',
         season,
         league: league as League,
         paramsList: paramsArr,
       });
     }
+    tasks.push({ kind: 'overall', season });
   }
   return tasks;
 }
@@ -57,16 +70,7 @@ function parseNumber(val: string, useNull = false) {
   return isNaN(Number(val)) ? (useNull ? null : 0) : Number(val);
 }
 
-async function fetchRows(
-  season: string,
-  league: League,
-  params: LeagueParams,
-) {
-  const url =
-    PITCHER_URL +
-    `&season=${encodeURIComponent(season)}` +
-    `&lig_idx=${params.lig_idx}&group=${params.group}&part=${params.part}`;
-  const { data: html } = await axiosInstance.get(url);
+function parseRows(html: string, season: string, league: string) {
   const $ = cheerio.load(html);
   const rows = $('#require .ranking_table tbody tr');
   const pitchers: any[] = [];
@@ -116,6 +120,25 @@ async function fetchRows(
     });
   });
   return pitchers;
+}
+
+async function fetchLeagueRows(
+  season: string,
+  league: League,
+  params: LeagueParams,
+) {
+  const url =
+    BASE_URL +
+    `&kind=5&season=${encodeURIComponent(season)}` +
+    `&lig_idx=${params.lig_idx}&group=${params.group}&part=${params.part}`;
+  const { data: html } = await axiosInstance.get(url);
+  return parseRows(html, season, league);
+}
+
+async function fetchOverallRows(season: string) {
+  const url = BASE_URL + `&season=${encodeURIComponent(season)}`;
+  const { data: html } = await axiosInstance.get(url);
+  return parseRows(html, season, OVERALL_LEAGUE);
 }
 
 function mergeByName(rows: any[]): any[] {
@@ -175,28 +198,32 @@ export async function GET() {
     const tasks = buildTasks();
     const results = await Promise.all(
       tasks.map(async (task) => {
-        const allRows: any[] = [];
-        for (const params of task.paramsList) {
-          const rows = await fetchRows(task.season, task.league, params);
-          allRows.push(...rows);
+        let pitchers: any[] = [];
+        let label: string;
+
+        if (task.kind === 'league') {
+          const all: any[] = [];
+          for (const params of task.paramsList) {
+            all.push(...(await fetchLeagueRows(task.season, task.league, params)));
+          }
+          pitchers = task.paramsList.length > 1 ? mergeByName(all) : all;
+          label = task.league;
+        } else {
+          pitchers = await fetchOverallRows(task.season);
+          label = OVERALL_LEAGUE;
         }
-        const pitchers =
-          task.paramsList.length > 1 ? mergeByName(allRows) : allRows;
+
         if (pitchers.length > 0) {
           const { error } = await supabase
             .from('pitcher_stats')
             .upsert(pitchers, { onConflict: 'season,name,league' });
           if (error) {
             throw new Error(
-              `Supabase upsert error (${task.season} ${task.league}): ${error.message}`,
+              `Supabase upsert error (${task.season} ${label}): ${error.message}`,
             );
           }
         }
-        return {
-          season: task.season,
-          league: task.league,
-          count: pitchers.length,
-        };
+        return { season: task.season, league: label, count: pitchers.length };
       }),
     );
     return NextResponse.json({ results });

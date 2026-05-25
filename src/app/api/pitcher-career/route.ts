@@ -1,4 +1,5 @@
 import { formatInning, parseInning } from '@/lib/inning';
+import { OVERALL_LEAGUE } from '@/lib/leagues';
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
@@ -6,10 +7,12 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const league = searchParams.get('league');
 
-  // 1. 모든 시즌 데이터 조회 (옵션: 리그 필터)
-  let q = supabase.from('pitcher_stats').select('*');
-  if (league) q = q.eq('league', league);
-  const { data, error } = await q;
+  // 1. 모든 시즌 데이터 조회 (league 미지정 시 OVERALL row 사용)
+  const leagueFilter = league || OVERALL_LEAGUE;
+  const { data, error } = await supabase
+    .from('pitcher_stats')
+    .select('*')
+    .eq('league', leagueFilter);
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

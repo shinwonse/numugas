@@ -1,3 +1,4 @@
+import { OVERALL_LEAGUE } from '@/lib/leagues';
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
@@ -81,27 +82,17 @@ export async function GET(req: Request) {
   }
 
   if (season) {
-    let query = supabase
+    const leagueFilter = league || OVERALL_LEAGUE;
+    const { data, error } = await supabase
       .from('batter_stats')
       .select('*')
-      .eq('season', season);
-    if (league) {
-      query = query.eq('league', league);
-      const { data, error } = await query.order('avg', { ascending: false });
-      if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-      }
-      return NextResponse.json({ seasonStats: data });
-    }
-    const { data, error } = await query;
+      .eq('season', season)
+      .eq('league', leagueFilter)
+      .order('avg', { ascending: false });
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    const aggregated = aggregateByName(data ?? []);
-    aggregated.sort(
-      (a: any, b: any) => Number(b.avg ?? 0) - Number(a.avg ?? 0),
-    );
-    return NextResponse.json({ seasonStats: aggregated });
+    return NextResponse.json({ seasonStats: data });
   }
 
   return NextResponse.json(

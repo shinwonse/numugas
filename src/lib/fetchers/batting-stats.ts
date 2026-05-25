@@ -1,9 +1,5 @@
-import {
-  createFallbackStats,
-  extractTopPlayers,
-  groupByField,
-  sumNumericFields,
-} from '@/lib/stats-utils';
+import { OVERALL_LEAGUE } from '@/lib/leagues';
+import { createFallbackStats, extractTopPlayers } from '@/lib/stats-utils';
 import { supabase } from '@/lib/supabase';
 import type { Stat } from '@/types/stats';
 
@@ -14,14 +10,13 @@ const SEASON_CATEGORIES = [
   { category: '도루', key: 'stolenbases' },
 ];
 
-const SUM_KEYS = SEASON_CATEGORIES.map((c) => c.key);
-
 export async function fetchBattingStats2026(): Promise<Stat[]> {
   try {
     const { data: seasonStats, error } = await supabase
       .from('batter_stats')
       .select('*')
-      .eq('season', '2026');
+      .eq('season', '2026')
+      .eq('league', OVERALL_LEAGUE);
 
     if (error) {
       console.error('Failed to fetch batting stats from Supabase:', error);
@@ -33,13 +28,7 @@ export async function fetchBattingStats2026(): Promise<Stat[]> {
       throw new Error('기록 데이터가 올바르지 않습니다.');
     }
 
-    const grouped = groupByField(seasonStats, 'name');
-    const aggregated = Object.entries(grouped).map(([name, records]) => ({
-      name,
-      ...sumNumericFields(records, SUM_KEYS),
-    }));
-
-    return extractTopPlayers(aggregated, SEASON_CATEGORIES);
+    return extractTopPlayers(seasonStats, SEASON_CATEGORIES);
   } catch (error) {
     console.error('Failed to fetch batting stats 2026:', error);
     return createFallbackStats(SEASON_CATEGORIES.map((c) => c.category));

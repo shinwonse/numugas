@@ -1,3 +1,4 @@
+import { OVERALL_LEAGUE } from '@/lib/leagues';
 import { supabase } from '@/lib/supabase';
 import type { TeamCareerStats } from '@/types/stats';
 
@@ -5,7 +6,8 @@ export async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
   try {
     const { data: hitterData, error: hitterError } = await supabase
       .from('batter_stats')
-      .select('homeruns, totalbases, hits');
+      .select('homeruns, totalbases, hits')
+      .eq('league', OVERALL_LEAGUE);
 
     if (hitterError) {
       console.error('Supabase error fetching hitter stats:', hitterError);
@@ -14,7 +16,8 @@ export async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
 
     const { data: pitcherData, error: pitcherError } = await supabase
       .from('pitcher_stats')
-      .select('strikeouts');
+      .select('strikeouts')
+      .eq('league', OVERALL_LEAGUE);
 
     if (pitcherError) {
       console.error('Supabase error fetching pitcher stats:', pitcherError);

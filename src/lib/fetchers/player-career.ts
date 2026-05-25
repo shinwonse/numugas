@@ -1,4 +1,5 @@
 import { formatInning, parseInning } from '@/lib/inning';
+import { OVERALL_LEAGUE } from '@/lib/leagues';
 import { supabase } from '@/lib/supabase';
 import { unstable_cache } from 'next/cache';
 
@@ -132,6 +133,7 @@ export const fetchBatterCareerByNumber = unstable_cache(
       .from('batter_stats')
       .select('*')
       .eq('back_number', number)
+      .eq('league', OVERALL_LEAGUE)
       .order('season', { ascending: true });
 
     if (error || !data || data.length === 0) {
@@ -172,6 +174,7 @@ export const fetchPitcherCareerByNumber = unstable_cache(
       .from('pitcher_stats')
       .select('*')
       .eq('back_number', number)
+      .eq('league', OVERALL_LEAGUE)
       .order('season', { ascending: true });
 
     if (error || !data || data.length === 0) {
