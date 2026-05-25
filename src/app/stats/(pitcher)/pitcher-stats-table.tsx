@@ -18,8 +18,14 @@ import {
 } from '@/components/ui/table';
 import { usePitchingStatsBySeason } from '@/hooks/use-pitching-stats-by-season';
 import { cn } from '@/lib/cn';
+import {
+  LEAGUES,
+  LEAGUE_LABELS,
+  getLeaguesForSeason,
+  type League,
+} from '@/lib/leagues';
 import { ChevronDown, ChevronUp, Search } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 const SEASONS = ['통산', '2026', '2025', '2024', '2023', '2022', '2021', '2020'];
@@ -54,13 +60,22 @@ const COLUMNS = [
 ];
 
 export default function PitcherStatsTable({ season }: { season: string }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const leagueParam = searchParams.get('league');
+  const availableLeagues: League[] =
+    season === '통산' ? [...LEAGUES] : getLeaguesForSeason(season);
+  const league =
+    leagueParam && availableLeagues.includes(leagueParam as League)
+      ? (leagueParam as League)
+      : undefined;
   const { data, isLoading, error } = usePitchingStatsBySeason(
     season === '통산' ? undefined : season,
+    league,
   );
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'games' | string>('games');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const router = useRouter();
 
   const filtered = useMemo(() => {
     let rows = data ?? [];
@@ -76,19 +91,18 @@ export default function PitcherStatsTable({ season }: { season: string }) {
 
   function sortData(rows: any[], sortBy: string, sortOrder: 'asc' | 'desc') {
     return [...rows].sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
-      }
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
+      if (sortBy === 'name') {
+        const aS = String(a[sortBy] ?? '');
+        const bS = String(b[sortBy] ?? '');
         return sortOrder === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
+          ? aS.localeCompare(bS)
+          : bS.localeCompare(aS);
       }
-      if (aValue == null) return 1;
-      if (bValue == null) return -1;
-      return 0;
+      const aN = Number(a[sortBy]);
+      const bN = Number(b[sortBy]);
+      const aV = Number.isFinite(aN) ? aN : -Infinity;
+      const bV = Number.isFinite(bN) ? bN : -Infinity;
+      return sortOrder === 'asc' ? aV - bV : bV - aV;
     });
   }
 
@@ -137,6 +151,38 @@ export default function PitcherStatsTable({ season }: { season: string }) {
               ))}
             </SelectContent>
           </Select>
+
+          {availableLeagues.length > 0 && (
+            <Select
+              value={league ?? 'ALL'}
+              onValueChange={(value) => {
+                const base = `/stats/pitcher/${season}`;
+                router.push(
+                  value === 'ALL' ? base : `${base}?league=${value}`,
+                );
+              }}
+            >
+              <SelectTrigger
+                className={cn(
+                  'w-28 h-9 text-sm',
+                  'bg-white/[0.04] backdrop-blur-xl',
+                  'border-white/[0.06] hover:border-white/[0.12]',
+                  'rounded-xl transition-all duration-200',
+                  'cursor-pointer',
+                )}
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">전체 리그</SelectItem>
+                {availableLeagues.map((l) => (
+                  <SelectItem key={l} value={l}>
+                    {LEAGUE_LABELS[l]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
 
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />

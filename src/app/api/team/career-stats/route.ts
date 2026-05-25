@@ -20,15 +20,18 @@ export async function GET() {
 
   const hitterStats = hitterData.reduce(
     (acc, cur) => {
-      acc.homeruns += cur.homeruns;
-      acc.totalbases += cur.totalbases;
-      acc.hits += cur.hits;
+      acc.homeruns += Number(cur.homeruns) || 0;
+      acc.totalbases += Number(cur.totalbases) || 0;
+      acc.hits += Number(cur.hits) || 0;
       return acc;
     },
     { homeruns: 0, totalbases: 0, hits: 0 },
   );
 
-  const strikeouts = pitcherData.reduce((acc, cur) => acc + cur.strikeouts, 0);
+  const strikeouts = pitcherData.reduce(
+    (acc, cur) => acc + (Number(cur.strikeouts) || 0),
+    0,
+  );
 
   return NextResponse.json({
     ...hitterStats,

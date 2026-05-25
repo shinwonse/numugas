@@ -1,9 +1,14 @@
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
-  // 1. 모든 시즌 데이터 조회
-  const { data, error } = await supabase.from('pitcher_stats').select('*');
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const league = searchParams.get('league');
+
+  // 1. 모든 시즌 데이터 조회 (옵션: 리그 필터)
+  let q = supabase.from('pitcher_stats').select('*');
+  if (league) q = q.eq('league', league);
+  const { data, error } = await q;
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

@@ -4,21 +4,25 @@ import { NextResponse } from 'next/server';
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const playerName = searchParams.get('name');
+  const league = searchParams.get('league');
 
   if (playerName) {
-    const { data, error } = await supabase
+    let q = supabase
       .from('batter_stats')
       .select('*')
-      .eq('name', playerName)
-      .order('season', { ascending: true });
+      .eq('name', playerName);
+    if (league) q = q.eq('league', league);
+    const { data, error } = await q.order('season', { ascending: true });
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json({ seasonStats: data });
   }
 
-  // 1. 모든 시즌 데이터 조회
-  const { data, error } = await supabase.from('batter_stats').select('*');
+  // 1. 모든 시즌 데이터 조회 (옵션: 리그 필터)
+  let q = supabase.from('batter_stats').select('*');
+  if (league) q = q.eq('league', league);
+  const { data, error } = await q;
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

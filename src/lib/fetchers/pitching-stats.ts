@@ -1,4 +1,9 @@
-import { createFallbackStats, extractTopPlayers } from '@/lib/stats-utils';
+import {
+  createFallbackStats,
+  extractTopPlayers,
+  groupByField,
+  sumNumericFields,
+} from '@/lib/stats-utils';
 import { supabase } from '@/lib/supabase';
 import type { Stat } from '@/types/stats';
 
@@ -8,6 +13,14 @@ const SEASON_CATEGORIES = [
   { category: '탈삼진', key: 'strikeouts' },
   { category: '세이브', key: 'saves' },
 ];
+
+const NUMERIC_SUM_KEYS = ['wins', 'strikeouts', 'saves'];
+
+function parseInning(inn: string | number) {
+  if (!inn) return 0;
+  const [whole, frac] = String(inn).split('.');
+  return Number(whole) + (frac ? Number(frac) / 3 : 0);
+}
 
 export async function fetchPitchingStats2026(): Promise<Stat[]> {
   try {
@@ -26,11 +39,21 @@ export async function fetchPitchingStats2026(): Promise<Stat[]> {
       throw new Error('기록 데이터가 올바르지 않습니다.');
     }
 
-    return extractTopPlayers(
-      seasonStats,
-      SEASON_CATEGORIES,
-      (p) => p.team || p.club || '',
-    );
+    const grouped = groupByField(seasonStats, 'name');
+    const aggregated = Object.entries(grouped).map(([name, records]) => {
+      const numericTotals = sumNumericFields(records, NUMERIC_SUM_KEYS);
+      const totalInnings = records.reduce(
+        (acc, cur) => acc + parseInning(cur.innings),
+        0,
+      );
+      return {
+        name,
+        ...numericTotals,
+        innings: totalInnings,
+      };
+    });
+
+    return extractTopPlayers(aggregated, SEASON_CATEGORIES);
   } catch (error) {
     console.error('Failed to fetch pitching stats 2026:', error);
     return createFallbackStats(SEASON_CATEGORIES.map((c) => c.category));
