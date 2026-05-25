@@ -1,8 +1,14 @@
 import { SectionBackground } from '@/components/animated/section-background';
+import {
+  fetchBatterCareerByNumber,
+  fetchPitcherCareerByNumber,
+} from '@/lib/fetchers/player-career';
 import { supabase } from '@/lib/supabase';
 import type { Metadata } from 'next/types';
 import { unstable_cache } from 'next/cache';
 import { PlayerDetailContent } from './player-detail-content';
+
+export const revalidate = 300;
 
 interface PlayerDetailPageProps {
   params: { number: string };
@@ -60,11 +66,14 @@ export default async function PlayerDetailPage({
 }: PlayerDetailPageProps) {
   const { number } = await params;
 
-  // 캐시된 데이터 가져오기
-  const { data, error } = await getCachedPlayerData(number);
+  // 선수 메타데이터 + 타자/투수 기록을 모두 서버에서 fetch
+  const [{ data, error }, batterCareer, pitcherCareer] = await Promise.all([
+    getCachedPlayerData(number),
+    fetchBatterCareerByNumber(number),
+    fetchPitcherCareerByNumber(number),
+  ]);
 
   if (error || !data) {
-    // Show not found or error state
     return (
       <main className="relative min-h-screen flex flex-col items-center justify-center bg-black text-white overflow-hidden">
         <SectionBackground variant="gradient" />
@@ -89,5 +98,11 @@ export default async function PlayerDetailPage({
     stats: {},
   };
 
-  return <PlayerDetailContent player={player} />;
+  return (
+    <PlayerDetailContent
+      player={player}
+      batterCareer={batterCareer}
+      pitcherCareer={pitcherCareer}
+    />
+  );
 }

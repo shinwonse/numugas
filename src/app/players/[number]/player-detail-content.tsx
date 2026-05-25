@@ -2,7 +2,6 @@
 
 import { SectionBackground } from '@/components/animated/section-background';
 import { cn } from '@/lib/cn';
-import { useBatterStats, usePitcherStats } from '@/hooks/use-player-stats';
 import { BatterStatsChart, PitcherStatsChart } from './player-stats-chart';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -16,7 +15,22 @@ interface Player {
   stats: Record<string, number>;
 }
 
-export function PlayerDetailContent({ player }: { player: Player }) {
+interface CareerData {
+  seasonStats: any[];
+  careerStats: Record<string, any> | null;
+}
+
+interface PlayerDetailContentProps {
+  player: Player;
+  batterCareer: CareerData;
+  pitcherCareer: CareerData;
+}
+
+export function PlayerDetailContent({
+  player,
+  batterCareer,
+  pitcherCareer,
+}: PlayerDetailContentProps) {
   const [activeTab, setActiveTab] = useState<'batter' | 'pitcher'>('batter');
   const [photoOpen, setPhotoOpen] = useState(false);
 
@@ -24,14 +38,10 @@ export function PlayerDetailContent({ player }: { player: Player }) {
     window.scrollTo(0, 0);
   }, []);
 
-  // React Query 훅 사용 - 필요할 때만 데이터 fetching
-  const { data: batterStats, error: batterError } = useBatterStats(
-    player.number,
-  );
-
-  const { data: pitcherStats, error: pitcherError } = usePitcherStats(
-    player.number,
-  );
+  const batterStats = batterCareer;
+  const pitcherStats = pitcherCareer;
+  const batterError: Error | null = null;
+  const pitcherError: Error | null = null;
 
   const handleTabChange = (tab: 'batter' | 'pitcher') => {
     setActiveTab(tab);
