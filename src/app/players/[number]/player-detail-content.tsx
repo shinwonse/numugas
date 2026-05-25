@@ -69,38 +69,38 @@ export function PlayerDetailContent({
               />
             </div>
           </button>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl md:text-3xl font-bold font-display flex items-baseline gap-2">
+          <div className="flex-1 min-w-0 flex flex-col gap-3">
+            <h1 className="text-2xl md:text-3xl font-bold font-display flex items-baseline gap-2 flex-wrap">
               <span className="text-red-500">#{player.number}</span>
               <span className="text-white truncate">{player.name}</span>
-              <span className="text-sm md:text-base font-normal text-gray-500 ml-1">
+              <span className="text-sm md:text-base font-normal text-gray-500 ml-1 whitespace-nowrap break-keep">
                 {player.position}
               </span>
             </h1>
-          </div>
-          <div className="flex bg-gray-900/80 border border-gray-700/50 rounded-xl p-1">
-            <button
-              onClick={() => handleTabChange('batter')}
-              className={cn(
-                'px-4 py-2 rounded-lg transition-all duration-200 text-sm font-semibold',
-                activeTab === 'batter'
-                  ? 'bg-red-600 text-white shadow-md shadow-red-500/40'
-                  : 'text-gray-400 hover:text-white',
-              )}
-            >
-              타자
-            </button>
-            <button
-              onClick={() => handleTabChange('pitcher')}
-              className={cn(
-                'px-4 py-2 rounded-lg transition-all duration-200 text-sm font-semibold',
-                activeTab === 'pitcher'
-                  ? 'bg-red-600 text-white shadow-md shadow-red-500/40'
-                  : 'text-gray-400 hover:text-white',
-              )}
-            >
-              투수
-            </button>
+            <div className="flex bg-gray-900/80 border border-gray-700/50 rounded-xl p-1 self-start">
+              <button
+                onClick={() => handleTabChange('batter')}
+                className={cn(
+                  'px-4 py-2 rounded-lg transition-all duration-200 text-sm font-semibold',
+                  activeTab === 'batter'
+                    ? 'bg-red-600 text-white shadow-md shadow-red-500/40'
+                    : 'text-gray-400 hover:text-white',
+                )}
+              >
+                타자
+              </button>
+              <button
+                onClick={() => handleTabChange('pitcher')}
+                className={cn(
+                  'px-4 py-2 rounded-lg transition-all duration-200 text-sm font-semibold',
+                  activeTab === 'pitcher'
+                    ? 'bg-red-600 text-white shadow-md shadow-red-500/40'
+                    : 'text-gray-400 hover:text-white',
+                )}
+              >
+                투수
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -124,46 +124,46 @@ export function PlayerDetailContent({
                       통산 기록
                     </h2>
                     <div className="overflow-x-auto w-full">
-                      <table className="w-full text-center min-w-[800px]">
+                      <table className="w-full text-center text-xs md:text-base min-w-[800px]">
                         <thead>
                           <tr className="border-b border-gray-700 text-gray-300">
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               경기
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               타율
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               출루율
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               장타율
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               타석
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               타수
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               안타
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               홈런
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               득점
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               타점
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               도루
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               볼넷
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               삼진
                             </th>
                           </tr>
@@ -173,13 +173,13 @@ export function PlayerDetailContent({
                             <td className="py-4 px-3 font-bold text-white">
                               {batterStats.careerStats.games}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {batterStats.careerStats.avg}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {batterStats.careerStats.onbasepercentage}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {batterStats.careerStats.sluggingpercentage}
                             </td>
                             <td className="py-4 px-3 font-semibold">
@@ -191,13 +191,13 @@ export function PlayerDetailContent({
                             <td className="py-4 px-3 font-bold text-white">
                               {batterStats.careerStats.hits}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {batterStats.careerStats.homeruns}
                             </td>
                             <td className="py-4 px-3 font-semibold">
                               {batterStats.careerStats.runs}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {batterStats.careerStats.rbi}
                             </td>
                             <td className="py-4 px-3 font-semibold">
@@ -223,64 +223,64 @@ export function PlayerDetailContent({
                   </h2>
                   {batterStats && batterStats.seasonStats.length > 0 ? (
                     <div className="overflow-x-auto w-full">
-                      <table className="w-full text-center min-w-[1200px]">
+                      <table className="w-full text-center text-xs md:text-base min-w-[1200px]">
                         <thead>
                           <tr className="border-b border-gray-700 text-gray-300">
-                            <th className="py-3 px-2 text-sm font-semibold sticky left-0 bg-black/80">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold sticky left-0 bg-black/80">
                               연도
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               경기
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               타율
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               출루율
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               장타율
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               타석
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               타수
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               안타
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               1루타
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               2루타
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               3루타
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               홈런
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               득점
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               타점
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               루타
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               도루
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               도루실패
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               볼넷
                             </th>
-                            <th className="py-3 px-2 text-sm font-semibold">
+                            <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                               삼진
                             </th>
                           </tr>
@@ -401,43 +401,43 @@ export function PlayerDetailContent({
                       통산 기록
                     </h2>
                     <div className="overflow-x-auto w-full">
-                      <table className="w-full text-center min-w-[800px]">
+                      <table className="w-full text-center text-xs md:text-base min-w-[800px]">
                         <thead>
                           <tr className="border-b border-gray-700 text-gray-300">
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               경기
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               평균자책
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               승
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               패
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               세이브
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               홀드
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               승률
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               이닝
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               피안타
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               볼넷
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               삼진
                             </th>
-                            <th className="py-3 px-3 text-sm font-semibold">
+                            <th className="py-3 px-3 text-xs md:text-sm font-semibold">
                               WHIP
                             </th>
                           </tr>
@@ -447,16 +447,16 @@ export function PlayerDetailContent({
                             <td className="py-4 px-3 font-bold text-white">
                               {pitcherStats.careerStats.games}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {pitcherStats.careerStats.era}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {pitcherStats.careerStats.wins}
                             </td>
                             <td className="py-4 px-3 font-semibold">
                               {pitcherStats.careerStats.losses}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {pitcherStats.careerStats.saves}
                             </td>
                             <td className="py-4 px-3 font-semibold">
@@ -474,10 +474,10 @@ export function PlayerDetailContent({
                             <td className="py-4 px-3 font-semibold">
                               {pitcherStats.careerStats.walks}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {pitcherStats.careerStats.strikeouts}
                             </td>
-                            <td className="py-4 px-3 font-bold text-white text-lg">
+                            <td className="py-4 px-3 font-bold text-white text-sm md:text-lg">
                               {pitcherStats.careerStats.whip}
                             </td>
                           </tr>
@@ -493,61 +493,61 @@ export function PlayerDetailContent({
                     연도별 기록
                   </h2>
                   <div className="overflow-x-auto w-full">
-                    <table className="w-full text-center min-w-[1400px]">
+                    <table className="w-full text-center text-xs md:text-base min-w-[1400px]">
                       <thead>
                         <tr className="border-b border-gray-700 text-gray-300">
-                          <th className="py-3 px-2 text-sm font-semibold sticky left-0 bg-black/80">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold sticky left-0 bg-black/80">
                             연도
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             경기
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             평균자책
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             승
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             패
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             세이브
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             홀드
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             승률
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             이닝
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             타자
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             투구수
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             피안타
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             피홈런
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             볼넷
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             삼진
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             실점
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             자책
                           </th>
-                          <th className="py-3 px-2 text-sm font-semibold">
+                          <th className="py-3 px-2 text-xs md:text-sm font-semibold">
                             WHIP
                           </th>
                         </tr>
