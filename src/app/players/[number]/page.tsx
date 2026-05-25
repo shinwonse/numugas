@@ -10,6 +10,11 @@ import { PlayerDetailContent } from './player-detail-content';
 
 export const revalidate = 300;
 
+export async function generateStaticParams() {
+  const { data } = await supabase.from('players').select('number');
+  return (data ?? []).map((p) => ({ number: String(p.number) }));
+}
+
 interface PlayerDetailPageProps {
   params: { number: string };
 }
