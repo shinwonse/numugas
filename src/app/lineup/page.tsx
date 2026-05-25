@@ -87,7 +87,11 @@ const DEFAULT_TRANSFORM: ImageTransform = { scale: 1, positionX: 0, positionY: 0
 
 export default function LineupPage() {
   const previewRef = useRef<HTMLDivElement>(null);
-  const [previewScale, setPreviewScale] = useState(0.5);
+  const [previewScale, setPreviewScale] = useState<number>(() => {
+    if (typeof window === 'undefined') return 0.5;
+    if (window.innerWidth >= 768) return 0.5;
+    return Math.min((window.innerWidth - 32) / 1080, 0.5);
+  });
 
   useEffect(() => {
     const update = () => {
@@ -98,7 +102,6 @@ export default function LineupPage() {
       const usable = window.innerWidth - 32;
       setPreviewScale(Math.min(usable / 1080, 0.5));
     };
-    update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
