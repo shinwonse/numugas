@@ -1,6 +1,63 @@
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
+const SUM_FIELDS = [
+  'games',
+  'plateappearances',
+  'atbats',
+  'runs',
+  'hits',
+  'singles',
+  'doubles',
+  'triples',
+  'homeruns',
+  'totalbases',
+  'rbi',
+  'stolenbases',
+  'caughtstealing',
+  'sacrificehits',
+  'sacrificeflies',
+  'walks',
+  'intentionalwalks',
+  'hitbypitch',
+  'strikeouts',
+  'doubleplays',
+];
+
+function aggregateBySeason(rows: any[]) {
+  const grouped: Record<string, any[]> = {};
+  for (const row of rows) {
+    (grouped[row.season] ??= []).push(row);
+  }
+  return Object.entries(grouped)
+    .map(([season, recs]) => {
+      const total: Record<string, number> = {};
+      for (const f of SUM_FIELDS) {
+        total[f] = recs.reduce(
+          (acc, cur) => acc + (Number(cur[f]) || 0),
+          0,
+        );
+      }
+      const avg = total.atbats ? total.hits / total.atbats : 0;
+      const obpDen =
+        total.atbats + total.walks + total.hitbypitch + total.sacrificeflies;
+      const obp = obpDen
+        ? (total.hits + total.walks + total.hitbypitch) / obpDen
+        : 0;
+      const slg = total.atbats ? total.totalbases / total.atbats : 0;
+      return {
+        season: Number(season),
+        back_number: recs[0]?.back_number ?? null,
+        name: recs[0]?.name ?? '',
+        ...total,
+        avg: avg.toFixed(3),
+        onbasepercentage: obp.toFixed(3),
+        sluggingpercentage: slg.toFixed(3),
+      };
+    })
+    .sort((a, b) => a.season - b.season);
+}
+
 export async function GET(
   req: Request,
   { params }: { params: { number: string } },
@@ -8,35 +65,17 @@ export async function GET(
   const { number } = await params;
   const playerNumber = parseInt(number);
 
-  console.log('Searching for player number:', playerNumber);
-
-  // 테이블 존재 여부와 첫 번째 행 확인
-  const { data: testData, error: testError } = await supabase
-    .from('batter_stats')
-    .select('*')
-    .limit(1);
-
-  console.log('Test query to check table structure:', { testData, testError });
-
-  // 1. 연도별 기록
-  const { data: seasonStats, error: seasonError } = await supabase
+  const { data: rawStats, error: seasonError } = await supabase
     .from('batter_stats')
     .select('*')
     .eq('back_number', playerNumber)
     .order('season', { ascending: true });
 
-  console.log('Season stats result:', {
-    data: seasonStats,
-    error: seasonError,
-    length: seasonStats?.length || 0,
-  });
-
   if (seasonError) {
     return NextResponse.json({ error: seasonError.message }, { status: 500 });
   }
 
-  if (!seasonStats || seasonStats.length === 0) {
-    console.log('No season stats found for player number:', playerNumber);
+  if (!rawStats || rawStats.length === 0) {
     return NextResponse.json({
       seasonStats: [],
       careerStats: null,
@@ -44,57 +83,30 @@ export async function GET(
     });
   }
 
-  // 2. 통산 기록 집계
-  const sumFields = [
-    'games',
-    'plateappearances',
-    'atbats',
-    'runs',
-    'hits',
-    'singles',
-    'doubles',
-    'triples',
-    'homeruns',
-    'totalbases',
-    'rbi',
-    'stolenbases',
-    'caughtstealing',
-    'sacrificehits',
-    'sacrificeflies',
-    'walks',
-    'intentionalwalks',
-    'hitbypitch',
-    'strikeouts',
-    'doubleplays',
-  ];
+  const seasonStats = aggregateBySeason(rawStats);
+
   const total: Record<string, number> = {};
-  for (const field of sumFields) {
-    total[field] = seasonStats.reduce(
-      (acc, cur) => acc + Number(cur[field] ?? 0),
+  for (const f of SUM_FIELDS) {
+    total[f] = rawStats.reduce(
+      (acc, cur) => acc + (Number(cur[f]) || 0),
       0,
     );
   }
-  // 타율, 출루율, 장타율 계산
-  const avg = total['atbats'] ? total['hits'] / total['atbats'] : 0;
-  const onbase =
-    total['atbats'] +
-    total['walks'] +
-    total['hitbypitch'] +
-    total['sacrificeflies'];
-  const onbasepercentage = onbase
-    ? (total['hits'] + total['walks'] + total['hitbypitch']) / onbase
+  const avg = total.atbats ? total.hits / total.atbats : 0;
+  const obpDen =
+    total.atbats + total.walks + total.hitbypitch + total.sacrificeflies;
+  const obp = obpDen
+    ? (total.hits + total.walks + total.hitbypitch) / obpDen
     : 0;
-  const sluggingpercentage = total['atbats']
-    ? total['totalbases'] / total['atbats']
-    : 0;
+  const slg = total.atbats ? total.totalbases / total.atbats : 0;
 
   const careerStats = {
     number: playerNumber,
-    name: seasonStats[0]?.name || '',
+    name: rawStats[0]?.name || '',
     ...total,
     avg: avg.toFixed(3),
-    onbasepercentage: onbasepercentage.toFixed(3),
-    sluggingpercentage: sluggingpercentage.toFixed(3),
+    onbasepercentage: obp.toFixed(3),
+    sluggingpercentage: slg.toFixed(3),
   };
 
   return NextResponse.json({ seasonStats, careerStats });
