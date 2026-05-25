@@ -1,4 +1,5 @@
 import { axiosInstance } from '@/lib/axios';
+import { formatInning, parseInning } from '@/lib/inning';
 import { LEAGUE_PARAMS, type LeagueParams, type League } from '@/lib/leagues';
 import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
@@ -54,21 +55,6 @@ function buildTasks(): CrawlTask[] {
 function parseNumber(val: string, useNull = false) {
   if (val === '-' || val === '') return useNull ? null : 0;
   return isNaN(Number(val)) ? (useNull ? null : 0) : Number(val);
-}
-
-function parseInning(inn: string | number | null | undefined) {
-  if (!inn) return 0;
-  const [whole, frac] = String(inn).split('.');
-  return Number(whole) + (frac ? Number(frac) / 3 : 0);
-}
-
-function formatInning(decimalInnings: number): string {
-  const whole = Math.floor(decimalInnings);
-  const fracDec = decimalInnings - whole;
-  const thirds = Math.round(fracDec * 3);
-  if (thirds === 0) return `${whole}.0`;
-  if (thirds === 3) return `${whole + 1}.0`;
-  return `${whole}.${thirds}`;
 }
 
 async function fetchRows(

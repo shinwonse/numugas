@@ -1,3 +1,4 @@
+import { formatInning, parseInning } from '@/lib/inning';
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
@@ -53,12 +54,6 @@ export async function GET(req: Request) {
       );
     }
 
-    // 이닝 합산 (ex: "12.2" -> 12 + 2/3)
-    function parseInning(inn: string) {
-      if (!inn) return 0;
-      const [whole, frac] = String(inn).split('.');
-      return Number(whole) + (frac ? Number(frac) / 3 : 0);
-    }
     const totalInnings = records.reduce(
       (acc, cur) => acc + parseInning(cur.innings),
       0,
@@ -81,7 +76,7 @@ export async function GET(req: Request) {
     return {
       name,
       ...total,
-      innings: totalInnings.toFixed(1),
+      innings: formatInning(totalInnings),
       era: era.toFixed(2),
       whip: whip.toFixed(3),
       winrate: winrate.toFixed(3),

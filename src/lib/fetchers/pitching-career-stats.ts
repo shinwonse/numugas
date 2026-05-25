@@ -1,3 +1,4 @@
+import { formatInning, parseInning } from '@/lib/inning';
 import {
   createFallbackStats,
   extractTopPlayers,
@@ -37,12 +38,6 @@ const CAREER_CATEGORIES = [
   { category: '세이브', key: 'saves' },
 ];
 
-function parseInning(inn: string) {
-  if (!inn) return 0;
-  const [whole, frac] = String(inn).split('.');
-  return Number(whole) + (frac ? Number(frac) / 3 : 0);
-}
-
 function calculatePitchingRates(
   total: Record<string, number>,
   totalInnings: number,
@@ -61,7 +56,7 @@ function calculatePitchingRates(
     : 0;
 
   return {
-    innings: totalInnings.toFixed(1),
+    innings: formatInning(totalInnings),
     era: era.toFixed(2),
     whip: whip.toFixed(2),
     winrate: winRate.toFixed(3),

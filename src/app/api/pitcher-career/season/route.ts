@@ -1,3 +1,4 @@
+import { formatInning, parseInning } from '@/lib/inning';
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
@@ -23,12 +24,6 @@ const SUM_FIELDS = [
   'runs',
   'earnedruns',
 ];
-
-function parseInning(inn: string) {
-  if (!inn) return 0;
-  const [whole, frac] = String(inn).split('.');
-  return Number(whole) + (frac ? Number(frac) / 3 : 0);
-}
 
 function aggregateByName(rows: any[]) {
   const playerMap: Record<string, any[]> = {};
@@ -66,7 +61,7 @@ function aggregateByName(rows: any[]) {
       back_number: records[0]?.back_number ?? null,
       season: records[0]?.season ?? null,
       ...total,
-      innings: totalInnings.toFixed(1),
+      innings: formatInning(totalInnings),
       era: era.toFixed(2),
       whip: whip.toFixed(3),
       winrate: winrate.toFixed(3),
