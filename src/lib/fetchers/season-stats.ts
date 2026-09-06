@@ -124,7 +124,7 @@ export const fetchBattingStatsBySeason = unstable_cache(
         .from('batter_stats')
         .select('*')
         .eq('league', leagueFilter);
-      if (error) return [];
+      if (error) throw new Error(`batter career (${leagueFilter}): ${error.message}`);
       return aggregateBatterCareer(data ?? []);
     }
 
@@ -134,7 +134,8 @@ export const fetchBattingStatsBySeason = unstable_cache(
       .eq('season', season)
       .eq('league', leagueFilter)
       .order('avg', { ascending: false });
-    if (error) return [];
+    if (error)
+      throw new Error(`batter ${season} (${leagueFilter}): ${error.message}`);
     return data ?? [];
   },
   ['batting-stats-by-season'],
@@ -150,7 +151,7 @@ export const fetchPitchingStatsBySeason = unstable_cache(
         .from('pitcher_stats')
         .select('*')
         .eq('league', leagueFilter);
-      if (error) return [];
+      if (error) throw new Error(`pitcher career (${leagueFilter}): ${error.message}`);
       return aggregatePitcherCareer(data ?? []);
     }
 
@@ -161,7 +162,8 @@ export const fetchPitchingStatsBySeason = unstable_cache(
       .eq('league', leagueFilter)
       .order('earnedruns', { ascending: true })
       .order('hits', { ascending: true });
-    if (error) return [];
+    if (error)
+      throw new Error(`pitcher ${season} (${leagueFilter}): ${error.message}`);
     return data ?? [];
   },
   ['pitching-stats-by-season'],

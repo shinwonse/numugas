@@ -136,7 +136,8 @@ export const fetchBatterCareerByNumber = unstable_cache(
       .eq('league', OVERALL_LEAGUE)
       .order('season', { ascending: true });
 
-    if (error || !data || data.length === 0) {
+    if (error) throw new Error(`batter career #${number}: ${error.message}`);
+    if (!data || data.length === 0) {
       return { seasonStats: [], careerStats: null };
     }
 
@@ -177,7 +178,8 @@ export const fetchPitcherCareerByNumber = unstable_cache(
       .eq('league', OVERALL_LEAGUE)
       .order('season', { ascending: true });
 
-    if (error || !data || data.length === 0) {
+    if (error) throw new Error(`pitcher career #${number}: ${error.message}`);
+    if (!data || data.length === 0) {
       return { seasonStats: [], careerStats: null };
     }
 

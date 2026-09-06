@@ -35,6 +35,8 @@ export async function generateMetadata({
   };
 }
 
+const NO_ROWS: any[] = [];
+
 export async function generateStaticParams() {
   return TYPES.flatMap((type) =>
     SEASONS.map((season) => ({ type: type.key, season })),
@@ -62,10 +64,16 @@ export default async function StatsTypeSeasonPage({
       : undefined;
 
   const seasonArg = season === '통산' ? undefined : season;
-  const data =
-    type === 'batter'
-      ? await fetchBattingStatsBySeason(seasonArg, league)
-      : await fetchPitchingStatsBySeason(seasonArg, league);
+  // 조회 실패는 캐시하지 않는다 (fetcher가 throw). 여기서만 빈 테이블로 흡수한다.
+  let data = NO_ROWS;
+  try {
+    data =
+      type === 'batter'
+        ? await fetchBattingStatsBySeason(seasonArg, league)
+        : await fetchPitchingStatsBySeason(seasonArg, league);
+  } catch (e) {
+    console.error(`[stats] ${type}/${season} 조회 실패`, e);
+  }
 
   const tabList = TYPES.map((t) => ({
     key: t.key,

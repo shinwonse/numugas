@@ -8,6 +8,7 @@ import {
 } from '@/lib/leagues';
 import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
+import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 const BASE_URL =
@@ -226,6 +227,8 @@ export async function GET() {
         return { season: task.season, league: label, count: pitchers.length };
       }),
     );
+    // 갱신된 기록이 5분 캐시를 기다리지 않고 바로 노출되도록 무효화
+    revalidateTag('stats');
     return NextResponse.json({ results });
   } catch (e) {
     return NextResponse.json(

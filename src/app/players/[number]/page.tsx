@@ -57,6 +57,10 @@ const getCachedPlayerData = unstable_cache(
       .eq('number', number)
       .single();
 
+    // PGRST116 = 결과 없음. 그 외 에러는 캐시하지 않도록 throw.
+    if (error && error.code !== 'PGRST116') {
+      throw new Error(`player #${number}: ${error.message}`);
+    }
     return { data, error };
   },
   ['player-data'], // 캐시 키
@@ -66,16 +70,28 @@ const getCachedPlayerData = unstable_cache(
   },
 );
 
+const EMPTY_CAREER = { seasonStats: [], careerStats: null };
+
 export default async function PlayerDetailPage({
   params,
 }: PlayerDetailPageProps) {
   const { number } = await params;
 
   // 선수 메타데이터 + 타자/투수 기록을 모두 서버에서 fetch
+  // 기록 조회 실패는 캐시되지 않게 fetcher가 throw한다. 여기서 빈 기록으로 흡수.
   const [{ data, error }, batterCareer, pitcherCareer] = await Promise.all([
-    getCachedPlayerData(number),
-    fetchBatterCareerByNumber(number),
-    fetchPitcherCareerByNumber(number),
+    getCachedPlayerData(number).catch((e: unknown) => {
+      console.error(`[players] 선수 조회 실패 #${number}`, e);
+      return { data: null, error: e as { message: string } };
+    }),
+    fetchBatterCareerByNumber(number).catch((e: unknown) => {
+      console.error(`[players] 타자 기록 조회 실패 #${number}`, e);
+      return EMPTY_CAREER;
+    }),
+    fetchPitcherCareerByNumber(number).catch((e: unknown) => {
+      console.error(`[players] 투수 기록 조회 실패 #${number}`, e);
+      return EMPTY_CAREER;
+    }),
   ]);
 
   if (error || !data) {
