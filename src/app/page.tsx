@@ -7,11 +7,9 @@ import {
   PlayerStatsSectionSkeleton,
   StatsSectionSkeleton,
   TotalStatsSectionSkeleton,
-  UpcomingScheduleSectionSkeleton,
 } from '@/components/section-skeleton';
 import { StatsSection } from '@/components/stats-section';
 import { TotalStatsSection } from '@/components/total-stats-section';
-import { UpcomingScheduleSection } from '@/components/upcoming-schedule-section';
 import {
   YoutubeErrorFallback,
   YoutubeLoadingFallback,
@@ -25,16 +23,10 @@ import {
   fetchTeamCareerStats,
   fetchTeamTotalStats,
 } from '@/lib/fetchers';
-import { fetchUpcomingItems } from '@/lib/fetchers/calendar';
 import { Suspense } from 'react';
 
 // On-demand revalidation only — triggered from /admin page
 export const revalidate = false;
-
-async function UpcomingScheduleSectionData() {
-  const items = await fetchUpcomingItems();
-  return <UpcomingScheduleSection items={items} renderedAt={Date.now()} />;
-}
 
 async function StatsSectionData() {
   const [teamTotalStats, teamCareerStats] = await Promise.all([
@@ -87,11 +79,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white overflow-hidden">
       <HeroSection />
-
-      <SectionDivider />
-      <Suspense fallback={<UpcomingScheduleSectionSkeleton />}>
-        <UpcomingScheduleSectionData />
-      </Suspense>
 
       <SectionDivider />
       <Suspense fallback={<StatsSectionSkeleton />}>

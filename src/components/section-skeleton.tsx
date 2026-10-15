@@ -70,21 +70,3 @@ export function TotalStatsSectionSkeleton() {
     </section>
   );
 }
-
-export function UpcomingScheduleSectionSkeleton() {
-  return (
-    <section className="relative py-32 md:py-40 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
-        <div className="text-center mb-16">
-          <Skeleton className="h-4 w-32 mx-auto mb-4 bg-white/10" />
-          <Skeleton className="h-8 w-48 mx-auto bg-white/10" />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-28 rounded-2xl bg-white/5" />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}

@@ -138,23 +138,3 @@ export function buildMonthGrid(year: number, month: number): (string | null)[][]
   for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
   return weeks;
 }
-
-/** 진행 중인 경기도 홈에 남도록 시작 후 이 시간까지는 '다가오는 일정'으로 본다 */
-const IN_PROGRESS_GRACE_MS = 3 * 60 * 60 * 1000;
-
-/**
- * 아직 끝나지 않은 일정인지. 종일 일정은 해당 날짜(KST)가 지나기 전까지,
- * 종료 시각이 있으면 종료 전까지, 없으면 시작 후 3시간까지.
- */
-export function isUpcoming(
-  item: { startsAt: string; endsAt?: string | null; allDay?: boolean },
-  now: number,
-): boolean {
-  if (item.allDay) {
-    return toKstDateKey(item.startsAt) >= toKstDateKey(new Date(now).toISOString());
-  }
-  const end = item.endsAt
-    ? new Date(item.endsAt).getTime()
-    : new Date(item.startsAt).getTime() + IN_PROGRESS_GRACE_MS;
-  return end > now;
-}

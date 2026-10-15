@@ -83,37 +83,3 @@ export async function fetchCalendarMonth(
     ...(eventsRes.data as ClubEvent[]).map(eventToItem),
   ].sort(byStartsAt);
 }
-
-/**
- * 렌더 시점 기준 하루 전 이후의 일정을 넉넉히(limit개씩) 가져온다.
- * 홈은 on-demand 재검증이라 오래 캐시될 수 있으므로, 지난 일정은
- * 클라이언트에서 isUpcoming으로 걸러낸다. 실패 시 throw.
- */
-export async function fetchUpcomingItems(limit = 10): Promise<CalendarItem[]> {
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-
-  const [gamesRes, eventsRes] = await Promise.all([
-    supabase
-      .from('schedule')
-      .select(GAME_COLUMNS)
-      .gte('game_at', since)
-      .order('game_at', { ascending: true })
-      .limit(limit),
-    supabase
-      .from('club_events')
-      .select('*')
-      .gte('starts_at', since)
-      .order('starts_at', { ascending: true })
-      .limit(limit),
-  ]);
-
-  if (gamesRes.error) throw gamesRes.error;
-  if (eventsRes.error) throw eventsRes.error;
-
-  return [
-    ...(gamesRes.data as GameRow[]).map(gameToItem),
-    ...(eventsRes.data as ClubEvent[]).map(eventToItem),
-  ]
-    .sort(byStartsAt)
-    .slice(0, limit);
-}
