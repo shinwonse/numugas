@@ -125,3 +125,22 @@ test('buildMonthGrid starts on Sunday and pads to full weeks', () => {
   // 2026-09-30 is a Wednesday, so the last week is padded
   assert.deepEqual(utils.buildMonthGrid(2026, 9).at(-1).slice(3), ['2026-09-30', null, null, null]);
 });
+
+test('isUpcoming keeps in-progress and same-day all-day items', () => {
+  const now = new Date('2026-10-15T10:00:00+09:00').getTime();
+  // 1시간 전에 시작한 경기(종료 시각 없음) → 아직 진행 중
+  assert.equal(utils.isUpcoming({ startsAt: '2026-10-15T09:00:00+09:00' }, now), true);
+  // 4시간 전 시작 → 끝남
+  assert.equal(utils.isUpcoming({ startsAt: '2026-10-15T06:00:00+09:00' }, now), false);
+  // 종료 시각이 지난 일정
+  assert.equal(
+    utils.isUpcoming(
+      { startsAt: '2026-10-15T08:00:00+09:00', endsAt: '2026-10-15T09:30:00+09:00' },
+      now,
+    ),
+    false,
+  );
+  // 오늘 종일 일정은 남고, 어제 종일 일정은 빠짐
+  assert.equal(utils.isUpcoming({ startsAt: '2026-10-15T00:00:00+09:00', allDay: true }, now), true);
+  assert.equal(utils.isUpcoming({ startsAt: '2026-10-14T00:00:00+09:00', allDay: true }, now), false);
+});

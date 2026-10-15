@@ -67,6 +67,7 @@ async function authorize(req: NextRequest) {
 
 function done(data: unknown) {
   revalidatePath('/calendar', 'layout');
+  revalidatePath('/');
   return NextResponse.json({ success: true, data });
 }
 
