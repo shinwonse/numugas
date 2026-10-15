@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type MouseEvent,
+  type SyntheticEvent,
 } from 'react';
 import { useDrivePhoto } from '@/hooks/use-player-photos';
 import {
@@ -59,6 +60,23 @@ function PlayerOriginalImage({
   const handleError = useCallback(() => {
     setDecodeError(true);
   }, []);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const originalReady = Boolean(src) && loadedSrc === src;
+  const handleLoad = useCallback(
+    (event: SyntheticEvent<HTMLImageElement>) => {
+      const image = event.currentTarget;
+      const loaded = image.src;
+      // 큰 원본은 onLoad 이후에도 디코딩이 남아 있을 수 있어 decode()까지 기다린다
+      image
+        .decode()
+        .catch(() => undefined)
+        .finally(() => {
+          setLoadedSrc(loaded);
+        });
+    },
+    [],
+  );
+  const fit = enlarged ? 'object-contain' : 'object-cover';
 
   return (
     <div
@@ -77,26 +95,33 @@ function PlayerOriginalImage({
             {isFetching ? '불러오는 중…' : '다시 시도'}
           </button>
         </div>
-      ) : src ? (
-        // Blob URLs keep the image bytes entirely off the Next.js image proxy.
-        <img
-          src={src}
-          alt={photo.name}
-          decoding="async"
-          onError={handleError}
-          className={`h-full w-full ${enlarged ? 'object-contain' : 'object-cover'}`}
-        />
       ) : (
-        <div className="h-full w-full" role="status">
+        // 미리보기를 깔아둔 채 원본을 위에 겹쳐, 원본 디코딩이 끝난 뒤에만 보이게 한다.
+        // (요소를 교체하면 그 사이 한 프레임 이상 빈 배경이 보여 깜빡인다)
+        <div className="relative h-full w-full">
           {photo.thumbnailLink && (
             <img
               src={drivePreviewUrl(photo)}
               alt=""
+              aria-hidden
               referrerPolicy="no-referrer"
-              className="h-full w-full object-contain"
+              className={`absolute inset-0 h-full w-full ${fit}`}
             />
           )}
-          <span className="sr-only">사진 불러오는 중</span>
+          {src && (
+            // Blob URLs keep the image bytes entirely off the Next.js image proxy.
+            <img
+              src={src}
+              alt={photo.name}
+              decoding="async"
+              onLoad={handleLoad}
+              onError={handleError}
+              className={`absolute inset-0 h-full w-full ${fit} transition-opacity duration-300 motion-reduce:transition-none ${
+                originalReady ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          )}
+          {!originalReady && <span className="sr-only">사진 불러오는 중</span>}
         </div>
       )}
     </div>
