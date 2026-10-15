@@ -4,8 +4,16 @@ import { buildMonthGrid, toKstDateKey, toKstTime } from '@/lib/calendar-utils';
 import { itemColors, itemLabel, RESULT_STYLES } from '@/lib/calendar-styles';
 import { cn } from '@/lib/cn';
 import type { CalendarItem } from '@/types/calendar';
-import { ExternalLink, MapPin } from 'lucide-react';
+import {
+  ExternalLink,
+  Lock,
+  MapPin,
+  Pencil,
+  Plus,
+  Trash2,
+} from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { useCalendarAdmin } from './calendar-admin';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -46,9 +54,51 @@ export function CalendarView({
   }, [weeks]);
 
   const selectedItems = selected ? (itemsByDate.get(selected) ?? []) : [];
+  const admin = useCalendarAdmin();
+  // 툴바의 '일정 추가'는 선택한 날짜 → 오늘 → 이번 달 1일 순으로 기본값을 잡는다
+  const defaultDate =
+    selected ??
+    (todayKey && weeks.flat().includes(todayKey) ? todayKey : null) ??
+    `${year}-${String(month).padStart(2, '0')}-01`;
 
   return (
     <div className="space-y-6">
+      <div className="-mt-2 flex min-h-9 items-center justify-end gap-2">
+        {admin.isAdmin ? (
+          <>
+            <span className="mr-auto rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium text-red-300">
+              관리 모드
+            </span>
+            <button
+              type="button"
+              onClick={admin.lock}
+              className="cursor-pointer rounded-xl px-3 py-2 text-xs text-white/50 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              관리 종료
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                admin.openCreate(defaultDate);
+              }}
+              className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-red-500 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-red-600"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              일정 추가
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            onClick={admin.openUnlock}
+            className="flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-2 text-xs text-white/40 transition-colors hover:bg-white/5 hover:text-white/80"
+          >
+            <Lock className="h-3.5 w-3.5" />
+            일정 관리
+          </button>
+        )}
+      </div>
+
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
         <div className="grid grid-cols-7 border-b border-white/10">
           {WEEKDAYS.map((day, i) => (
@@ -147,10 +197,23 @@ export function CalendarView({
 
       <section aria-live="polite">
         {selected && (
-          <h3 className="mb-3 text-sm font-medium text-white/60">
-            {month}월 {Number(selected.slice(8))}일 (
-            {WEEKDAYS[new Date(`${selected}T00:00:00Z`).getUTCDay()]})
-          </h3>
+          <div className="mb-3 flex min-h-8 items-center justify-between gap-2">
+            <h3 className="text-sm font-medium text-white/60">
+              {month}월 {Number(selected.slice(8))}일 (
+              {WEEKDAYS[new Date(`${selected}T00:00:00Z`).getUTCDay()]})
+            </h3>
+            {admin.isAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  admin.openCreate(selected);
+                }}
+                className="flex cursor-pointer items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs text-red-300 transition-colors hover:bg-red-500/10 hover:text-red-200"
+              >
+                <Plus className="h-3.5 w-3.5" />이 날 일정 추가
+              </button>
+            )}
+          </div>
         )}
         {selectedItems.length === 0 ? (
           <p className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-8 text-center text-sm text-white/40">
@@ -163,7 +226,24 @@ export function CalendarView({
         ) : (
           <ul className="space-y-3">
             {selectedItems.map((item) => (
-              <CalendarItemCard key={item.id} item={item} />
+              <CalendarItemCard
+                key={item.id}
+                item={item}
+                onEdit={
+                  admin.isAdmin && item.kind === 'event'
+                    ? () => {
+                        admin.openEdit(item);
+                      }
+                    : undefined
+                }
+                onDelete={
+                  admin.isAdmin && item.kind === 'event'
+                    ? () => {
+                        admin.openDelete(item);
+                      }
+                    : undefined
+                }
+              />
             ))}
           </ul>
         )}
@@ -172,7 +252,15 @@ export function CalendarView({
   );
 }
 
-function CalendarItemCard({ item }: { item: CalendarItem }) {
+function CalendarItemCard({
+  item,
+  onEdit,
+  onDelete,
+}: {
+  item: CalendarItem;
+  onEdit?: () => void;
+  onDelete?: () => void;
+}) {
   const label = itemLabel(item);
 
   return (
@@ -227,6 +315,30 @@ function CalendarItemCard({ item }: { item: CalendarItem }) {
             </a>
           )}
         </div>
+        {(onEdit ?? onDelete) && (
+          <div className="-mr-1 -mt-1 flex shrink-0 gap-0.5">
+            {onEdit && (
+              <button
+                type="button"
+                onClick={onEdit}
+                aria-label={`${item.title} 수정`}
+                className="cursor-pointer rounded-lg p-2.5 text-white/40 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <Pencil className="h-4 w-4" />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                type="button"
+                onClick={onDelete}
+                aria-label={`${item.title} 삭제`}
+                className="cursor-pointer rounded-lg p-2.5 text-white/40 transition-colors hover:bg-red-500/10 hover:text-red-400"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </li>
   );

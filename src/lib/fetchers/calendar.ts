@@ -38,6 +38,7 @@ function eventToItem(event: ClubEvent): CalendarItem {
   return {
     kind: 'event',
     id: `event-${event.id}`,
+    eventId: event.id,
     startsAt: event.starts_at,
     endsAt: event.ends_at,
     allDay: event.all_day,

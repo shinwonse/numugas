@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { CalendarAdminProvider } from './calendar-admin';
 
 export default function CalendarLayout({ children }: { children: ReactNode }) {
   return (
@@ -9,7 +10,9 @@ export default function CalendarLayout({ children }: { children: ReactNode }) {
         <div className="absolute -bottom-[20%] left-[30%] h-[60vh] w-[60vh] rounded-full bg-red-900/10 blur-[120px]" />
       </div>
 
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10">
+        <CalendarAdminProvider>{children}</CalendarAdminProvider>
+      </div>
     </div>
   );
 }

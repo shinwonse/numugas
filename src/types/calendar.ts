@@ -37,6 +37,8 @@ export type CalendarItem =
   | {
       kind: 'event';
       id: string;
+      /** club_events.id (수정/삭제용) */
+      eventId: string;
       startsAt: string;
       endsAt: string | null;
       allDay: boolean;
