@@ -24,8 +24,10 @@ import {
   type League,
 } from '@/lib/leagues';
 import { ChevronDown, ChevronUp, Search } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
+import { StatsTableRowsSkeleton } from '../stats-skeleton';
+import { useStatsNavigation } from '../use-stats-navigation';
 
 const SEASONS = ['통산', '2026', '2025', '2024', '2023', '2022', '2021', '2020'];
 
@@ -63,7 +65,6 @@ export default function BatterStatsTable({
   season: string;
   initialData: any[];
 }) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const leagueParam = searchParams.get('league');
   const availableLeagues: League[] =
@@ -72,6 +73,8 @@ export default function BatterStatsTable({
     leagueParam && availableLeagues.includes(leagueParam as League)
       ? (leagueParam as League)
       : undefined;
+  const { isPending, shownSeason, shownLeague, changeSeason, changeLeague } =
+    useStatsNavigation('batter', season, league);
   const data = initialData;
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'plateappearances' | string>(
@@ -131,8 +134,8 @@ export default function BatterStatsTable({
       {/* Controls bar */}
       <div className="flex items-center justify-end gap-2">
           <Select
-            value={season}
-            onValueChange={(value) => router.push(`/stats/batter/${value}`)}
+            value={shownSeason}
+            onValueChange={changeSeason}
           >
             <SelectTrigger
               className={cn(
@@ -156,13 +159,8 @@ export default function BatterStatsTable({
 
           {availableLeagues.length > 0 && (
             <Select
-              value={league ?? 'ALL'}
-              onValueChange={(value) => {
-                const base = `/stats/batter/${season}`;
-                router.push(
-                  value === 'ALL' ? base : `${base}?league=${value}`,
-                );
-              }}
+              value={shownLeague}
+              onValueChange={changeLeague}
             >
               <SelectTrigger
                 className={cn(
@@ -237,8 +235,10 @@ export default function BatterStatsTable({
                   ))}
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                {filtered.length === 0 ? (
+              <TableBody aria-busy={isPending}>
+                {isPending ? (
+                  <StatsTableRowsSkeleton columns={COLUMNS.length} />
+                ) : filtered.length === 0 ? (
                   <TableRow className="hover:bg-transparent">
                     <TableCell
                       colSpan={COLUMNS.length}
@@ -293,7 +293,9 @@ export default function BatterStatsTable({
 
       {/* Result count */}
       <div className="text-right">
-        <span className="text-xs text-gray-600">총 {filtered.length}명</span>
+        <span className="text-xs text-gray-600">
+          {isPending ? '불러오는 중' : `총 ${filtered.length}명`}
+        </span>
       </div>
     </div>
   );

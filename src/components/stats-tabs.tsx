@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/cn';
+import Link from 'next/link';
 
 interface StatsTab {
   key: string;
@@ -43,28 +44,50 @@ function StatsTabButton({
   isActive: boolean;
   onClick?: (e: React.MouseEvent) => void;
 }) {
-  return (
-    <a
-      key={tab.key}
-      href={tab.href ?? '#'}
-      onClick={onClick}
-      className={cn(
-        'relative flex items-center justify-center h-full w-full text-center cursor-pointer',
-        'font-medium text-sm',
-        'transition-all duration-300 ease-out select-none',
-        'rounded-xl whitespace-nowrap px-5',
-        isActive
-          ? 'bg-white/[0.12] text-white shadow-[0_1px_8px_rgba(255,255,255,0.06),inset_0_1px_0_rgba(255,255,255,0.1)]'
-          : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]',
-      )}
-      tabIndex={isActive ? 0 : -1}
-      aria-selected={isActive}
-      role="tab"
-    >
+  const className = cn(
+    'relative flex items-center justify-center h-full w-full text-center cursor-pointer',
+    'font-medium text-sm',
+    'transition-all duration-300 ease-out select-none',
+    'rounded-xl whitespace-nowrap px-5',
+    isActive
+      ? 'bg-white/[0.12] text-white shadow-[0_1px_8px_rgba(255,255,255,0.06),inset_0_1px_0_rgba(255,255,255,0.1)]'
+      : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]',
+  );
+  const content = (
+    <>
       {isActive && (
         <span className="absolute inset-0 rounded-xl border border-white/[0.08]" />
       )}
       <span className="relative z-10">{tab.label}</span>
+    </>
+  );
+
+  // href가 있으면 클라이언트 내비게이션(전체 새로고침 없이 loading.tsx 스켈레톤 표시)
+  if (tab.href) {
+    return (
+      <Link
+        href={tab.href}
+        onClick={onClick}
+        className={className}
+        tabIndex={isActive ? 0 : -1}
+        aria-selected={isActive}
+        role="tab"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <a
+      href="#"
+      onClick={onClick}
+      className={className}
+      tabIndex={isActive ? 0 : -1}
+      aria-selected={isActive}
+      role="tab"
+    >
+      {content}
     </a>
   );
 }
