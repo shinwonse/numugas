@@ -73,8 +73,14 @@ export default function BatterStatsTable({
     leagueParam && availableLeagues.includes(leagueParam as League)
       ? (leagueParam as League)
       : undefined;
-  const { isPending, shownSeason, shownLeague, changeSeason, changeLeague } =
-    useStatsNavigation('batter', season, league);
+  const {
+    isPending,
+    showSkeleton,
+    shownSeason,
+    shownLeague,
+    changeSeason,
+    changeLeague,
+  } = useStatsNavigation('batter', season, league);
   const data = initialData;
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'plateappearances' | string>(
@@ -204,7 +210,8 @@ export default function BatterStatsTable({
       {/* Glass table card */}
       <div
         className={cn(
-          'rounded-2xl overflow-hidden',
+          'rounded-2xl overflow-hidden transition-opacity duration-200',
+          isPending && !showSkeleton && 'opacity-60',
           'bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-150',
           'border border-white/[0.06]',
           'shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.04)]',
@@ -236,7 +243,7 @@ export default function BatterStatsTable({
                 </TableRow>
               </TableHeader>
               <TableBody aria-busy={isPending}>
-                {isPending ? (
+                {showSkeleton ? (
                   <StatsTableRowsSkeleton columns={COLUMNS.length} />
                 ) : filtered.length === 0 ? (
                   <TableRow className="hover:bg-transparent">
@@ -294,7 +301,7 @@ export default function BatterStatsTable({
       {/* Result count */}
       <div className="text-right">
         <span className="text-xs text-gray-600">
-          {isPending ? '불러오는 중' : `총 ${filtered.length}명`}
+          {showSkeleton ? '불러오는 중' : `총 ${filtered.length}명`}
         </span>
       </div>
     </div>

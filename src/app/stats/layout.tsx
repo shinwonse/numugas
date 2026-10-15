@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { StatsShellHeader } from './stats-shell';
 
 export default function StatsLayout({ children }: { children: ReactNode }) {
   return (
@@ -10,7 +11,12 @@ export default function StatsLayout({ children }: { children: ReactNode }) {
         <div className="absolute -bottom-[20%] left-[30%] h-[60vh] w-[60vh] rounded-full bg-red-900/10 blur-[120px]" />
       </div>
 
-      <div className="relative z-10">{children}</div>
+      <main className="relative z-10 flex flex-col pt-24 pb-16 md:pt-28 md:pb-20 min-h-screen">
+        <div className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
+          <StatsShellHeader />
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

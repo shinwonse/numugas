@@ -4,7 +4,7 @@ import StatsTabs from '@/components/stats-tabs';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 
 interface StatsPageHeaderProps {
-  tabList: Array<{ key: string; label: string; href: string }>;
+  tabList: Array<{ key: string; label: string; href: string; prefetch?: boolean }>;
   currentType: string;
 }
 

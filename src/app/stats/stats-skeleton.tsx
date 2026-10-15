@@ -37,50 +37,35 @@ export function StatsTableRowsSkeleton({ columns }: { columns: number }) {
   );
 }
 
-/** /stats 진입·타입 전환 시 loading.tsx에서 쓰는 전체 페이지 스켈레톤 */
-export function StatsPageSkeleton() {
+/**
+ * loading.tsx용: 헤더는 레이아웃에 남아 있으므로 필터 + 표 자리만 그린다.
+ * (다른 페이지에서 /stats로 처음 들어올 때 보인다)
+ */
+export function StatsContentSkeleton() {
   return (
-    <main
-      className="flex flex-col pt-24 pb-16 md:pt-28 md:pb-20 min-h-screen"
-      aria-busy
-      aria-label="기록을 불러오는 중"
-    >
-      <div className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex flex-col items-center mb-10 md:mb-14">
-          <Skeleton className="mb-5 h-8 w-48 rounded-full bg-white/[0.06]" />
-          <Skeleton className="mb-3 h-10 md:h-14 w-64 md:w-80 rounded-xl bg-white/[0.08]" />
-          <Skeleton className="mb-8 h-4 w-56 rounded bg-white/[0.05]" />
-          <div className="mb-8 h-px w-24 bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
-          <Skeleton className="h-11 w-full max-w-sm rounded-2xl bg-white/[0.05]" />
-        </div>
-
-        {/* Controls */}
-        <div className="mb-4 flex items-center justify-end gap-2">
-          <Skeleton className="h-9 w-28 rounded-xl bg-white/[0.05]" />
-          <Skeleton className="h-9 w-28 rounded-xl bg-white/[0.05]" />
-          <Skeleton className="h-9 w-44 rounded-xl bg-white/[0.05]" />
-        </div>
-
-        {/* Table */}
-        <div className="rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06]">
-          <div className="h-10 border-b border-white/[0.04]" />
-          <div className="divide-y divide-white/[0.03]">
-            {Array.from({ length: SKELETON_ROWS }, (_, i) => (
-              <div key={i} className="flex items-center gap-6 px-4 py-3.5">
-                <Skeleton
-                  className="h-4 w-14 rounded bg-white/[0.07]"
-                  style={{ animationDelay: `${i * 60}ms` }}
-                />
-                <Skeleton
-                  className="h-4 flex-1 rounded bg-white/[0.04]"
-                  style={{ animationDelay: `${i * 60}ms` }}
-                />
-              </div>
-            ))}
-          </div>
+    <div className="w-full space-y-4" aria-busy aria-label="기록을 불러오는 중">
+      <div className="flex items-center justify-end gap-2">
+        <Skeleton className="h-9 w-28 rounded-xl bg-white/[0.05]" />
+        <Skeleton className="h-9 w-28 rounded-xl bg-white/[0.05]" />
+        <Skeleton className="h-9 w-44 rounded-xl bg-white/[0.05]" />
+      </div>
+      <div className="rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06]">
+        <div className="h-10 border-b border-white/[0.04]" />
+        <div className="divide-y divide-white/[0.03]">
+          {Array.from({ length: SKELETON_ROWS }, (_, i) => (
+            <div key={i} className="flex items-center gap-6 px-4 py-3.5">
+              <Skeleton
+                className="h-4 w-14 rounded bg-white/[0.07]"
+                style={{ animationDelay: `${i * 60}ms` }}
+              />
+              <Skeleton
+                className="h-4 flex-1 rounded bg-white/[0.04]"
+                style={{ animationDelay: `${i * 60}ms` }}
+              />
+            </div>
+          ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

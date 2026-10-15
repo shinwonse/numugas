@@ -5,7 +5,6 @@ import {
 import { LEAGUES, type League } from '@/lib/leagues';
 import type { Metadata } from 'next/types';
 import { notFound } from 'next/navigation';
-import { StatsPageHeader } from './stats-page-header';
 import StatsTableClient from './stats-table-client';
 
 export const revalidate = 300;
@@ -75,18 +74,7 @@ export default async function StatsTypeSeasonPage({
     console.error(`[stats] ${type}/${season} 조회 실패`, e);
   }
 
-  const tabList = TYPES.map((t) => ({
-    key: t.key,
-    label: t.label,
-    href: `/stats/${encodeURIComponent(t.key)}/${encodeURIComponent(season)}`,
-  }));
-
   return (
-    <main className="flex flex-col pt-24 pb-16 md:pt-28 md:pb-20 min-h-screen">
-      <div className="max-w-7xl mx-auto w-full px-4 md:px-6 lg:px-8">
-        <StatsPageHeader tabList={tabList} currentType={type} />
-        <StatsTableClient type={type} season={season} initialData={data} />
-      </div>
-    </main>
+    <StatsTableClient type={type} season={season} initialData={data} />
   );
 }

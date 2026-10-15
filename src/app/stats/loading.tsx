@@ -1,5 +1,5 @@
-import { StatsPageSkeleton } from './stats-skeleton';
+import { StatsContentSkeleton } from './stats-skeleton';
 
 export default function Loading() {
-  return <StatsPageSkeleton />;
+  return <StatsContentSkeleton />;
 }

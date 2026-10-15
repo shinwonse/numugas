@@ -7,6 +7,8 @@ interface StatsTab {
   key: string;
   label: string;
   href?: string;
+  /** 동적 페이지 데이터까지 미리 받아 탭 전환을 즉시 처리 */
+  prefetch?: boolean;
 }
 
 interface StatsTabsProps {
@@ -67,6 +69,7 @@ function StatsTabButton({
     return (
       <Link
         href={tab.href}
+        prefetch={tab.prefetch}
         onClick={onClick}
         className={className}
         tabIndex={isActive ? 0 : -1}
