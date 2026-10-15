@@ -1,0 +1,4 @@
+.env*
+.local/
+.git/
+__pycache__/

@@ -42,3 +42,7 @@ next-env.d.ts
 
 # local dev env (cmux layout script)
 .cmux-setup.sh
+
+# Local photo migration plans, logs, and account-specific folder IDs
+/.local/
+__pycache__/
