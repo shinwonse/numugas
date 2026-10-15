@@ -333,6 +333,8 @@ function UnlockDialog({
               onChange={(e) => setValue(e.target.value)}
               placeholder="관리자 키"
               aria-label="관리자 키"
+              inputMode="numeric"
+              autoComplete="off"
               autoFocus
               className={cn(
                 'w-full rounded-xl py-2.5 pl-10 pr-4 text-sm',

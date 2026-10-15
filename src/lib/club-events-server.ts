@@ -1,4 +1,4 @@
-// 서버 전용 (API 라우트·Server Action에서만 import)
+// 서버 전용 (Server Action에서만 import)
 import { CLUB_EVENT_TYPES, type ClubEventType } from '@/types/calendar';
 
 export function isAdminSecret(secret: string | undefined): boolean {

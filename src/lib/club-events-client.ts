@@ -83,29 +83,3 @@ export function clubEventFormToPayload(
     },
   };
 }
-
-export class AdminRequestError extends Error {
-  constructor(
-    message: string,
-    readonly status: number,
-  ) {
-    super(message);
-  }
-}
-
-/** /api/admin/events 호출. 실패 시 AdminRequestError(status 포함) */
-export async function requestClubEvent(
-  secret: string,
-  method: 'POST' | 'PATCH' | 'DELETE',
-  body: { id?: string; event?: ClubEventPayload },
-) {
-  const res = await fetch('/api/admin/events', {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ secret, ...body }),
-  });
-  const data = (await res.json().catch(() => ({}))) as { error?: string };
-  if (!res.ok) {
-    throw new AdminRequestError(data.error ?? `HTTP ${res.status}`, res.status);
-  }
-}

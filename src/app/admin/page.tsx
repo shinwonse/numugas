@@ -11,7 +11,6 @@ import {
   Shield,
 } from 'lucide-react';
 import { useState } from 'react';
-import { EventManager } from './event-manager';
 
 type CrawlTarget = 'batter' | 'pitcher' | 'team' | 'schedule';
 
@@ -117,7 +116,9 @@ export default function AdminPage() {
                   type="password"
                   value={secret}
                   onChange={(e) => setSecret(e.target.value)}
-                  placeholder="ADMIN_SECRET"
+                  placeholder="관리자 키"
+                  inputMode="numeric"
+                  autoComplete="off"
                   className={cn(
                     'w-full pl-10 pr-4 py-3 rounded-xl',
                     'bg-white/5 border border-white/10',
@@ -161,7 +162,7 @@ export default function AdminPage() {
           </div>
           <h1 className="text-3xl font-bold">데이터 관리</h1>
           <p className="text-gray-500 mt-2">
-            크롤링, 캐시 갱신, 구단 일정을 관리합니다
+            크롤링을 실행하고 캐시를 갱신합니다
           </p>
         </div>
 
@@ -282,13 +283,6 @@ export default function AdminPage() {
           </div>
         )}
 
-        <EventManager
-          secret={secret}
-          onUnauthorized={() => {
-            setIsAuthenticated(false);
-            setError('인증에 실패했습니다. 키를 다시 확인해주세요.');
-          }}
-        />
       </div>
     </main>
   );
