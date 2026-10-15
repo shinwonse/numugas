@@ -4,26 +4,44 @@ export const OUR_TEAM_NAME = '담장NUMUGAS';
 
 export type GameResult = '승' | '패' | '무';
 
+const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
+
 /**
  * gameone 일정 날짜 문자열("11월21일(토) 09:00")을 KST 기준 ISO 문자열로 변환.
+ * 날짜에 연도가 없어서 시즌 연도를 붙인다. 겨울 리그처럼 시즌 목록에 다음 해 초
+ * 경기가 섞여 있는 경우가 있어, 요일 라벨이 시즌+1년에만 맞으면 다음 해로 본다.
  * 시간이 없으면 00:00으로 간주한다. 파싱할 수 없으면 null.
  */
 export function parseGameDate(raw: string, season: number): string | null {
-  const match = raw.match(/(\d{1,2})월\s*(\d{1,2})일(?:\s*\([^)]*\))?(?:\s*(\d{1,2}):(\d{2}))?/);
+  const match = raw.match(/(\d{1,2})월\s*(\d{1,2})일(?:\s*\(([^)]*)\))?(?:\s*(\d{1,2}):(\d{2}))?/);
   if (!match) return null;
 
-  const [, month, day, hour = '0', minute = '00'] = match;
-  const pad = (v: string) => v.padStart(2, '0');
-  const iso = `${season}-${pad(month)}-${pad(day)}T${pad(hour)}:${minute}:00+09:00`;
+  const [, month, day, weekdayLabel, hour = '0', minute = '00'] = match;
+  const m = Number(month);
+  const d = Number(day);
 
-  const date = new Date(iso);
-  // 2월 30일 같은 잘못된 날짜 거르기
-  if (Number.isNaN(date.getTime())) return null;
-  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-  if (kst.getUTCMonth() + 1 !== Number(month) || kst.getUTCDate() !== Number(day)) {
-    return null;
+  const isValidDate = (year: number) => {
+    const date = new Date(Date.UTC(year, m - 1, d));
+    return date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
+  };
+  const weekdayFits = (year: number) =>
+    WEEKDAY_LABELS[new Date(Date.UTC(year, m - 1, d)).getUTCDay()] ===
+    weekdayLabel?.trim();
+
+  let year = season;
+  if (
+    weekdayLabel &&
+    !weekdayFits(season) &&
+    isValidDate(season + 1) &&
+    weekdayFits(season + 1)
+  ) {
+    year = season + 1;
   }
-  return iso;
+  // 2월 30일 같은 잘못된 날짜 거르기
+  if (!isValidDate(year)) return null;
+
+  const pad = (v: string) => v.padStart(2, '0');
+  return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${minute}:00+09:00`;
 }
 
 export interface GameSide {

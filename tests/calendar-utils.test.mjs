@@ -28,6 +28,24 @@ test('parseGameDate attaches season year and KST offset', () => {
   );
 });
 
+test('parseGameDate rolls into next year when weekday label only fits season + 1', () => {
+  // 겨울 리그: 2021 시즌 목록에 실린 2022-02-12(토) 경기
+  assert.equal(
+    utils.parseGameDate('02월12일(토) 07:30', 2021),
+    '2022-02-12T07:30:00+09:00',
+  );
+  // 시즌 연도와 요일이 맞으면 그대로
+  assert.equal(
+    utils.parseGameDate('11월20일(토) 07:20', 2021),
+    '2021-11-20T07:20:00+09:00',
+  );
+  // 어느 쪽도 맞지 않으면 시즌 연도 유지
+  assert.equal(
+    utils.parseGameDate('02월12일(월) 07:30', 2021),
+    '2021-02-12T07:30:00+09:00',
+  );
+});
+
 test('parseGameDate defaults missing time to midnight', () => {
   assert.equal(utils.parseGameDate('5월9일(토)', 2026), '2026-05-09T00:00:00+09:00');
 });
