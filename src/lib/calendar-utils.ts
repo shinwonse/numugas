@@ -1,0 +1,122 @@
+// 캘린더 순수 유틸리티 (외부 import 없음 — tests/calendar-utils.test.mjs에서 직접 로드)
+
+export const OUR_TEAM_NAME = '담장NUMUGAS';
+
+export type GameResult = '승' | '패' | '무';
+
+/**
+ * gameone 일정 날짜 문자열("11월21일(토) 09:00")을 KST 기준 ISO 문자열로 변환.
+ * 시간이 없으면 00:00으로 간주한다. 파싱할 수 없으면 null.
+ */
+export function parseGameDate(raw: string, season: number): string | null {
+  const match = raw.match(/(\d{1,2})월\s*(\d{1,2})일(?:\s*\([^)]*\))?(?:\s*(\d{1,2}):(\d{2}))?/);
+  if (!match) return null;
+
+  const [, month, day, hour = '0', minute = '00'] = match;
+  const pad = (v: string) => v.padStart(2, '0');
+  const iso = `${season}-${pad(month)}-${pad(day)}T${pad(hour)}:${minute}:00+09:00`;
+
+  const date = new Date(iso);
+  // 2월 30일 같은 잘못된 날짜 거르기
+  if (Number.isNaN(date.getTime())) return null;
+  const kst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  if (kst.getUTCMonth() + 1 !== Number(month) || kst.getUTCDate() !== Number(day)) {
+    return null;
+  }
+  return iso;
+}
+
+export interface GameSide {
+  team1_name: string;
+  team1_score: string;
+  team2_name: string;
+  team2_score: string;
+}
+
+/**
+ * 우리 팀 관점의 상대팀/점수/결과. 점수가 없으면(경기 전) result/score는 null.
+ */
+export function getGameOutcome(game: GameSide): {
+  opponent: string;
+  score: { ours: number; theirs: number } | null;
+  result: GameResult | null;
+} {
+  const weAreTeam1 = game.team1_name === OUR_TEAM_NAME;
+  const opponent = weAreTeam1 ? game.team2_name : game.team1_name;
+  const oursRaw = weAreTeam1 ? game.team1_score : game.team2_score;
+  const theirsRaw = weAreTeam1 ? game.team2_score : game.team1_score;
+
+  const ours = Number.parseInt(oursRaw, 10);
+  const theirs = Number.parseInt(theirsRaw, 10);
+  if (Number.isNaN(ours) || Number.isNaN(theirs)) {
+    return { opponent, score: null, result: null };
+  }
+
+  const result: GameResult = ours > theirs ? '승' : ours < theirs ? '패' : '무';
+  return { opponent, score: { ours, theirs }, result };
+}
+
+/** "2026-10" 형식 파싱. 잘못된 값이면 null. */
+export function parseMonthParam(
+  value: string | undefined,
+): { year: number; month: number } | null {
+  if (!value) return null;
+  const match = value.match(/^(\d{4})-(\d{2})$/);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  if (month < 1 || month > 12 || year < 2000 || year > 2100) return null;
+  return { year, month };
+}
+
+export function formatMonthParam(year: number, month: number): string {
+  return `${year}-${String(month).padStart(2, '0')}`;
+}
+
+export function shiftMonth(
+  year: number,
+  month: number,
+  delta: number,
+): { year: number; month: number } {
+  const index = year * 12 + (month - 1) + delta;
+  return { year: Math.floor(index / 12), month: (index % 12) + 1 };
+}
+
+/** 해당 월의 KST 범위 [start, end) ISO 문자열 */
+export function getMonthRange(year: number, month: number): { start: string; end: string } {
+  const next = shiftMonth(year, month, 1);
+  return {
+    start: `${formatMonthParam(year, month)}-01T00:00:00+09:00`,
+    end: `${formatMonthParam(next.year, next.month)}-01T00:00:00+09:00`,
+  };
+}
+
+/** ISO 시각을 KST 날짜 키("2026-10-15")로 변환 */
+export function toKstDateKey(iso: string): string {
+  const kst = new Date(new Date(iso).getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 10);
+}
+
+/** ISO 시각을 KST "HH:mm"으로 변환 */
+export function toKstTime(iso: string): string {
+  const kst = new Date(new Date(iso).getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(11, 16);
+}
+
+/**
+ * 월간 달력 그리드(일요일 시작, 6주 고정이 아닌 필요한 주 수만큼).
+ * 해당 월이 아닌 칸은 null.
+ */
+export function buildMonthGrid(year: number, month: number): (string | null)[][] {
+  const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  const cells: (string | null)[] = Array(firstWeekday).fill(null);
+  for (let day = 1; day <= daysInMonth; day++) {
+    cells.push(`${formatMonthParam(year, month)}-${String(day).padStart(2, '0')}`);
+  }
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const weeks: (string | null)[][] = [];
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
+  return weeks;
+}

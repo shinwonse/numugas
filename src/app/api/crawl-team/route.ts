@@ -1,15 +1,15 @@
 import { axiosInstance } from '@/lib/axios';
+import { getCrawlSeasons } from '@/lib/seasons';
 import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
 
-const SEASONS = ['2020', '2021', '2022', '2023', '2024', '2025', '2026'];
 const CLUB_IDX = '35417';
 
 export async function GET() {
   try {
     const results = await Promise.all(
-      SEASONS.map(async (season) => {
+      getCrawlSeasons().map(async (season) => {
         const url = `http://www.gameone.kr/club/info/schedule/table?club_idx=${CLUB_IDX}&kind=&season=${season}`;
         const { data: html } = await axiosInstance.get(url);
         const $ = cheerio.load(html);

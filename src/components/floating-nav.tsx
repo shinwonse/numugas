@@ -2,7 +2,14 @@
 
 import { cn } from '@/lib/cn';
 import { motion } from 'framer-motion';
-import { BarChart3, Home, ListOrdered, Shield, Users } from 'lucide-react';
+import {
+  BarChart3,
+  CalendarDays,
+  Home,
+  ListOrdered,
+  Shield,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -12,6 +19,7 @@ const NAV_ITEMS = [
   { label: 'ABOUT', href: '/about', icon: Shield },
   { label: 'STATS', href: '/stats', icon: BarChart3 },
   { label: 'ROSTER', href: '/players', icon: Users },
+  { label: 'CALENDAR', href: '/calendar', icon: CalendarDays },
   { label: 'LINEUP', href: '/lineup', icon: ListOrdered },
 ] as const;
 

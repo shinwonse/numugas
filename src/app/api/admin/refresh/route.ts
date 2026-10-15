@@ -58,12 +58,13 @@ export async function POST(req: NextRequest) {
   // Revalidate cached pages
   revalidatePath('/');
   revalidatePath('/players');
+  revalidatePath('/calendar', 'layout');
 
   const allSuccess = Object.values(results).every((r) => r.success);
 
   return NextResponse.json({
     success: allSuccess,
     results,
-    revalidated: ['/', '/players'],
+    revalidated: ['/', '/players', '/calendar'],
   });
 }

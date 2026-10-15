@@ -62,6 +62,8 @@ src/
 Required in `.env`:
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- `ADMIN_SECRET` - `/admin` 인증 키
+- `SUPABASE_SERVICE_ROLE_KEY` - 서버 전용. `club_events` 쓰기(`/api/admin/events`)에 사용 (RLS로 anon 쓰기 차단)
 
 ## Adding shadcn/ui Components
 
