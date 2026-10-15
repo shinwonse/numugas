@@ -1,9 +1,7 @@
-import { SectionBackground } from '@/components/animated/section-background';
 
 export default function Loading() {
   return (
     <main className="relative min-h-screen bg-black text-white py-8 md:py-16 px-4 sm:px-8 md:px-16 lg:px-32 overflow-hidden">
-      <SectionBackground variant="dots" />
 
       {/* Player Header Skeleton */}
       <div

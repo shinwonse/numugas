@@ -1,6 +1,5 @@
 'use client';
 
-import { SectionBackground } from '@/components/animated/section-background';
 import { SectionTitle } from '@/components/animated/section-title';
 import { ShimmerCard } from '@/components/animated/shimmer-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,7 +39,6 @@ export function TotalStatsSection({
         transition: 'opacity 1s ease-out, transform 1s ease-out',
       }}
     >
-      <SectionBackground variant="dots" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <SectionTitle

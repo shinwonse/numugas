@@ -1,6 +1,5 @@
 'use client';
 
-import { SectionBackground } from '@/components/animated/section-background';
 import { cn } from '@/lib/cn';
 import { BatterStatsChart, PitcherStatsChart } from './player-stats-chart';
 import Image from 'next/image';
@@ -52,7 +51,6 @@ export function PlayerDetailContent({
 
   return (
     <main className="relative min-h-screen bg-black text-white py-8 md:py-16 px-4 sm:px-8 md:px-16 lg:px-32 overflow-hidden">
-      <SectionBackground variant="dots" />
 
       {/* Compact Player Header */}
       <section className="relative z-10 w-full mb-6">

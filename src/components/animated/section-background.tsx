@@ -1,12 +1,10 @@
 interface SectionBackgroundProps {
-  variant?: 'dots' | 'lines' | 'gradient' | 'none';
+  variant?: 'lines' | 'gradient' | 'none';
 }
 
 export function SectionBackground({
-  variant = 'dots',
+  variant = 'none',
 }: SectionBackgroundProps) {
-  if (variant === 'none') return null;
-
   if (variant === 'gradient') {
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -48,33 +46,5 @@ export function SectionBackground({
     );
   }
 
-  // dots variant (default)
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-      <svg
-        className="absolute inset-0 w-full h-full"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <pattern
-            id="dots"
-            x="0"
-            y="0"
-            width="40"
-            height="40"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle
-              cx="2"
-              cy="2"
-              r="1"
-              fill="currentColor"
-              className="text-red-500"
-            />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#dots)" />
-      </svg>
-    </div>
-  );
+  return null;
 }
