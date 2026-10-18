@@ -107,21 +107,6 @@ export function CalendarView({
         </Link>
       </div>
 
-      {admin.isAdmin && (
-        <div className="flex items-center justify-between gap-2">
-          <span className="rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium text-red-300">
-            관리 모드
-          </span>
-          <button
-            type="button"
-            onClick={admin.lock}
-            className="cursor-pointer rounded-xl px-3 py-2 text-xs text-white/50 transition-colors hover:bg-white/5 hover:text-white"
-          >
-            관리 종료
-          </button>
-        </div>
-      )}
-
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
         <div className="grid grid-cols-7 border-b border-white/10">
           {WEEKDAYS.map((day, i) => (

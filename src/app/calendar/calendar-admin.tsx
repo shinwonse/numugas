@@ -43,9 +43,7 @@ import {
 } from './actions';
 
 interface CalendarAdminContextValue {
-  isAdmin: boolean;
-  lock: () => void;
-  /** 아래 동작들은 관리자 키가 없으면 먼저 키를 묻고, 확인되면 이어서 실행한다 */
+  /** 아래 동작들은 매번 관리자 키를 먼저 묻고, 확인되면 이어서 실행한다 */
   openCreate: (date: string) => void;
   openEdit: (record: ClubEvent) => void;
   openDelete: (record: ClubEvent, onDeleted?: () => void) => void;
@@ -61,26 +59,6 @@ export function useCalendarAdmin() {
   return value;
 }
 
-// 탭을 닫으면 사라지도록 sessionStorage에만 보관
-const STORAGE_KEY = 'numugas:calendar-admin-secret';
-
-function readStoredSecret() {
-  try {
-    return sessionStorage.getItem(STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function storeSecret(secret: string | null) {
-  try {
-    if (secret) sessionStorage.setItem(STORAGE_KEY, secret);
-    else sessionStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // 저장 실패 시 이 페이지에서만 유지된다
-  }
-}
-
 const dialogClass =
   'max-h-[90dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border-white/10 bg-[#0c0c10] text-white sm:rounded-2xl [&>button]:text-white/60';
 
@@ -90,8 +68,9 @@ type EditorState =
   | null;
 
 /**
- * 캘린더 일정 관리: 추가/수정/삭제를 누르는 시점에 관리자 키를 묻고,
- * 한 번 확인되면 탭을 닫기 전까지 유지한다. 레이아웃에 두어 월 이동·상세 모달에서도 쓴다.
+ * 캘린더 일정 관리: 추가/수정/삭제를 누를 때마다 관리자 키를 묻는다.
+ * 키는 그 동작(폼·삭제 확인)이 끝날 때까지만 메모리에 두고 버린다.
+ * 레이아웃에 두어 월 이동·상세 모달에서도 쓴다.
  */
 export function CalendarAdminProvider({ children }: { children: ReactNode }) {
   const [secret, setSecret] = useState<string | null>(null);
@@ -107,36 +86,31 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  // 열린 동작이 하나도 없으면 키를 버린다 → 다음 동작에서 다시 묻는다
   useEffect(() => {
-    setSecret(readStoredSecret());
+    if (!editor && !deleting && !unlockOpen) setSecret(null);
+  }, [editor, deleting, unlockOpen]);
+
+  const requireAdmin = useCallback((action: () => void) => {
+    pendingRef.current = action;
+    setUnlockError(null);
+    setUnlockOpen(true);
   }, []);
 
-  const lock = useCallback(() => {
-    storeSecret(null);
-    setSecret(null);
-  }, []);
-
-  const requireAdmin = useCallback(
-    (action: () => void) => {
-      if (secret) {
-        action();
-        return;
-      }
-      pendingRef.current = action;
-      setUnlockError(null);
-      setUnlockOpen(true);
-    },
-    [secret],
-  );
-
-  /** 키가 만료/변경되어 401이 나면 관리 모드를 풀고 다시 묻는다 */
+  /** 저장 도중 키가 바뀌어 401이 나면 같은 동작을 다시 열 수 있게 키를 다시 묻는다 */
   const handleAuthFailure = useCallback(() => {
-    lock();
+    const retryEditor = editor;
+    const retryDeleting = deleting;
+    pendingRef.current = () => {
+      if (retryEditor) setEditor(retryEditor);
+      if (retryDeleting) setDeleting(retryDeleting);
+    };
     setEditor(null);
     setDeleting(null);
+    setSecret(null);
     setUnlockError('관리자 키가 더 이상 유효하지 않습니다. 다시 입력하세요.');
     setUnlockOpen(true);
-  }, [lock]);
+  }, [editor, deleting]);
 
   // Server Action 응답에 갱신된 화면이 함께 오므로 별도 refresh가 필요 없다
   const save = async (payload: ClubEventPayload) => {
@@ -177,8 +151,6 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<CalendarAdminContextValue>(
     () => ({
-      isAdmin: Boolean(secret),
-      lock,
       openCreate: (date) => {
         requireAdmin(() => {
           setEditor({ mode: 'create', date });
@@ -196,7 +168,7 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
         });
       },
     }),
-    [secret, lock, requireAdmin],
+    [requireAdmin],
   );
 
   return (
@@ -212,7 +184,6 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
           if (!open) pendingRef.current = null;
         }}
         onUnlocked={(key) => {
-          storeSecret(key);
           setSecret(key);
           setUnlockOpen(false);
           const pending = pendingRef.current;
@@ -342,7 +313,7 @@ function UnlockDialog({
         <DialogHeader>
           <DialogTitle>관리자 확인</DialogTitle>
           <DialogDescription className="text-white/50">
-            일정을 추가·수정·삭제하려면 관리자 키를 입력하세요. 이 탭을 닫기 전까지 다시 묻지 않습니다.
+            일정을 추가·수정·삭제하려면 관리자 키를 입력하세요.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
@@ -354,7 +325,6 @@ function UnlockDialog({
               onChange={(e) => setValue(e.target.value)}
               placeholder="관리자 키"
               aria-label="관리자 키"
-              inputMode="numeric"
               autoComplete="off"
               autoFocus
               className={cn(

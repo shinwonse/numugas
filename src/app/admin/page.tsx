@@ -117,7 +117,6 @@ export default function AdminPage() {
                   value={secret}
                   onChange={(e) => setSecret(e.target.value)}
                   placeholder="관리자 키"
-                  inputMode="numeric"
                   autoComplete="off"
                   className={cn(
                     'w-full pl-10 pr-4 py-3 rounded-xl',
