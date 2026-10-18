@@ -7,6 +7,8 @@ import { PlayerPhotoGallery } from './player-photo-gallery';
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
+const PLACEHOLDER_PHOTO = '/logo.webp';
+
 interface Player {
   id: number;
   name: string;
@@ -49,48 +51,85 @@ export function PlayerDetailContent({
     setActiveTab(tab);
   };
 
-  return (
-    <main className="relative min-h-screen bg-black text-white py-8 md:py-16 px-4 sm:px-8 md:px-16 lg:px-32 overflow-hidden">
+  const isPlaceholderPhoto = player.photo === PLACEHOLDER_PHOTO;
+  const tabClass = (active: boolean) =>
+    cn(
+      'px-5 py-2 rounded-xl text-sm font-semibold transition-colors duration-200 cursor-pointer',
+      active
+        ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]'
+        : 'text-white/40 hover:text-white/80',
+    );
 
-      {/* Compact Player Header */}
-      <section className="relative z-10 w-full mb-6">
-        <div className="flex items-center gap-4 md:gap-6">
+  return (
+    <main className="relative min-h-screen bg-[#050508] text-white overflow-x-clip">
+      {/* 사진을 크게 흐려 배경 전체에 은은하게 깐다 */}
+      {!isPlaceholderPhoto && (
+        <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
+          <Image
+            src={player.photo}
+            alt=""
+            fill
+            sizes="100vw"
+            className="scale-110 object-cover opacity-30 blur-3xl saturate-150"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/30 via-[#050508]/75 to-[#050508]" />
+        </div>
+      )}
+
+      <div className="relative z-10 lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+        {/* 사진: 모바일은 상단 히어로, 데스크톱은 좌측 고정 */}
+        <div className="relative lg:sticky lg:top-0 lg:h-dvh">
           <button
             type="button"
             aria-label={`${player.name} 프로필 사진 확대`}
             onClick={() => setPhotoOpen(true)}
-            className="flex-shrink-0 relative group cursor-pointer"
+            className="group relative block h-[64vh] min-h-[420px] w-full cursor-zoom-in overflow-hidden lg:h-full"
           >
-            <div className="w-24 h-24 md:w-28 md:h-28 relative rounded-full overflow-hidden border-2 border-red-500/60 transition-all duration-200 group-hover:border-red-400 group-hover:shadow-lg group-hover:shadow-red-500/30">
+            {/* 단색 그라데이션 대신 마스크로 투명하게 지워서, 뒤의 흐린 배경에 자연스럽게 녹아든다 */}
+            <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_45%,transparent_98%)] lg:[mask-image:linear-gradient(to_right,black_50%,transparent_100%)]">
               <Image
                 src={player.photo}
                 alt={player.name}
                 fill
-                className="object-cover transition-transform duration-200 group-hover:scale-105"
-                sizes="112px"
                 priority
+                sizes="(min-width: 1024px) 42vw, 100vw"
+                className={cn(
+                  'transition-transform duration-700 ease-out group-hover:scale-[1.02]',
+                  isPlaceholderPhoto
+                    ? 'object-contain p-20 opacity-40'
+                    : 'object-cover object-top',
+                )}
               />
+              {/* 붉은 톤 + 이름이 올라가는 하단 대비 */}
+              <div className="absolute inset-0 bg-gradient-to-br from-red-900/30 via-transparent to-transparent mix-blend-overlay" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:from-black/40" />
             </div>
+            <span
+              aria-hidden
+              className="absolute bottom-8 left-8 hidden font-display text-[11rem] font-bold leading-none text-white/[0.08] lg:block"
+            >
+              {player.number}
+            </span>
           </button>
-          <div className="flex-1 min-w-0 flex flex-col gap-3">
-            <h1 className="text-2xl md:text-3xl font-bold font-display flex items-baseline gap-2 flex-wrap">
-              <span className="text-red-500">#{player.number}</span>
-              <span className="text-white truncate">{player.name}</span>
-              <span className="text-sm md:text-base font-normal text-gray-500 ml-1 whitespace-nowrap break-keep">
-                {player.position}
-              </span>
+        </div>
+
+        <div className="-mt-28 px-4 pb-16 sm:px-8 lg:mt-0 lg:px-12 lg:pt-20 xl:px-16">
+          {/* 이름 / 포지션 / 타자·투수 전환 */}
+          <section className="relative mb-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">
+              No. {player.number}
+              <span className="mx-2 text-white/20">·</span>
+              <span className="text-white/60">{player.position}</span>
+            </p>
+            <h1 className="mt-2 text-4xl font-bold tracking-tight md:text-5xl">
+              {player.name}
             </h1>
-            <div className="flex bg-gray-900/80 border border-gray-700/50 rounded-xl p-1 self-start">
+            <div className="mt-6 inline-flex gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-1 backdrop-blur-xl">
               <button
                 type="button"
                 aria-pressed={activeTab === 'batter'}
                 onClick={() => handleTabChange('batter')}
-                className={cn(
-                  'px-4 py-2 rounded-lg transition-all duration-200 text-sm font-semibold',
-                  activeTab === 'batter'
-                    ? 'bg-red-600 text-white shadow-md shadow-red-500/40'
-                    : 'text-gray-400 hover:text-white',
-                )}
+                className={tabClass(activeTab === 'batter')}
               >
                 타자
               </button>
@@ -98,19 +137,12 @@ export function PlayerDetailContent({
                 type="button"
                 aria-pressed={activeTab === 'pitcher'}
                 onClick={() => handleTabChange('pitcher')}
-                className={cn(
-                  'px-4 py-2 rounded-lg transition-all duration-200 text-sm font-semibold',
-                  activeTab === 'pitcher'
-                    ? 'bg-red-600 text-white shadow-md shadow-red-500/40'
-                    : 'text-gray-400 hover:text-white',
-                )}
+                className={tabClass(activeTab === 'pitcher')}
               >
                 투수
               </button>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
       <section aria-label="선수 기록" className="relative z-10 mb-8 w-full">
         <div className="space-y-5">
@@ -127,8 +159,8 @@ export function PlayerDetailContent({
                 <>
                   {/* Career Stats Detailed Table */}
                   {batterStats && batterStats.careerStats && (
-                    <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
+                    <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+                      <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                         통산 기록
                       </h2>
                       <div className="overflow-x-auto w-full">
@@ -224,15 +256,15 @@ export function PlayerDetailContent({
                     </section>
                   )}
 
-                  <details className="group rounded-2xl border border-white/10 bg-gray-900/40">
+                  <details className="group rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
                     <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-4 md:px-8 text-sm font-semibold text-gray-300 hover:text-white [&::-webkit-details-marker]:hidden">
                       세부 기록
                       <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
                     </summary>
                     <div className="space-y-6 border-t border-white/[0.08] pt-4">
                       {/* Detailed Yearly Stats Table */}
-                      <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
+                      <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+                        <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                           연도별 기록
                         </h2>
                         {batterStats && batterStats.seasonStats.length > 0 ? (
@@ -422,8 +454,8 @@ export function PlayerDetailContent({
                 <>
                   {/* Pitcher Career Stats Table */}
                   {pitcherStats && pitcherStats.careerStats && (
-                    <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
+                    <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+                      <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                         통산 기록
                       </h2>
                       <div className="overflow-x-auto w-full">
@@ -513,15 +545,15 @@ export function PlayerDetailContent({
                     </section>
                   )}
 
-                  <details className="group rounded-2xl border border-white/10 bg-gray-900/40">
+                  <details className="group rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
                     <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-4 md:px-8 text-sm font-semibold text-gray-300 hover:text-white [&::-webkit-details-marker]:hidden">
                       세부 기록
                       <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
                     </summary>
                     <div className="space-y-6 border-t border-white/[0.08] pt-4">
                       {/* Detailed Yearly Pitcher Stats Table */}
-                      <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-                        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
+                      <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+                        <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                           연도별 기록
                         </h2>
                         <div className="overflow-x-auto w-full">
@@ -684,20 +716,22 @@ export function PlayerDetailContent({
         folderId={player.driveFolderId || undefined}
         playerName={player.name}
       />
+        </div>
+      </div>
 
       {/* Photo Lightbox */}
       {photoOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex cursor-zoom-out items-center justify-center bg-black/85 backdrop-blur-md"
           onClick={() => setPhotoOpen(false)}
         >
-          <div className="relative w-[80vw] max-w-md aspect-square">
+          <div className="relative h-[85dvh] w-[92vw] max-w-3xl">
             <Image
               src={player.photo}
               alt={player.name}
               fill
-              className="object-cover rounded-2xl"
-              sizes="80vw"
+              className="object-contain"
+              sizes="92vw"
             />
           </div>
         </div>
