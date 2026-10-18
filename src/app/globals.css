@@ -367,3 +367,26 @@ html {
     mix-blend-mode: normal;
   }
 }
+
+/*
+ * 동작 줄이기(OS 설정)를 켠 사용자: 반복·등장 애니메이션을 끄고 내용은 바로 보이게 한다.
+ * (스크롤로 나타나는 섹션은 JS가 붙이는 inline opacity도 덮어쓴다)
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-on-scroll,
+  .animate-section,
+  [style*='opacity:0'],
+  [style*='opacity: 0'] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -6,6 +6,7 @@ import { getLeaguesForSeason, LEAGUES, type League } from '@/lib/leagues';
 import { getStatsSeasons } from '@/lib/seasons';
 import type { Metadata } from 'next/types';
 import { notFound } from 'next/navigation';
+import type { StatsType } from '../../../stats-columns';
 import StatsTableClient from '../stats-table-client';
 
 export const revalidate = 300;
@@ -35,7 +36,6 @@ export async function generateMetadata({
   };
 }
 
-const NO_ROWS: any[] = [];
 
 /** 시즌에서 고를 수 있는 리그 (통산은 전체 리그) */
 function leaguesFor(season: string): readonly League[] {
@@ -74,20 +74,15 @@ export default async function StatsTypeSeasonPage({
   if (leagueParam && !league) notFound();
 
   const seasonArg = season === '통산' ? undefined : season;
-  // 조회 실패는 캐시하지 않는다 (fetcher가 throw). 여기서만 빈 테이블로 흡수한다.
-  let data = NO_ROWS;
-  try {
-    data =
-      type === 'batter'
-        ? await fetchBattingStatsBySeason(seasonArg, league)
-        : await fetchPitchingStatsBySeason(seasonArg, league);
-  } catch (e) {
-    console.error(`[stats] ${type}/${season} 조회 실패`, e);
-  }
+  // 조회 실패는 던져서 에러 화면을 보여주고, ISR에 빈 표가 캐시되지 않게 한다
+  const data =
+    type === 'batter'
+      ? await fetchBattingStatsBySeason(seasonArg, league)
+      : await fetchPitchingStatsBySeason(seasonArg, league);
 
   return (
     <StatsTableClient
-      type={type}
+      type={type as StatsType}
       season={season}
       league={league}
       initialData={data}

@@ -1,8 +1,8 @@
 'use client';
 
+import { PageHeader } from '@/components/page-header';
 import { cn } from '@/lib/cn';
 import {
-  Database,
   KeyRound,
   Loader2,
   RefreshCw,
@@ -154,16 +154,7 @@ export default function AdminPage() {
     <main className="min-h-screen bg-black text-white px-4 py-20">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.08] text-xs font-semibold uppercase tracking-[0.25em] text-red-400 mb-4">
-            <Database className="w-3.5 h-3.5" />
-            Admin Panel
-          </div>
-          <h1 className="text-3xl font-bold">데이터 관리</h1>
-          <p className="text-gray-500 mt-2">
-            크롤링을 실행하고 캐시를 갱신합니다
-          </p>
-        </div>
+        <PageHeader eyebrow="Admin" title="데이터 관리" className="mb-12" />
 
         {/* 전체 갱신 */}
         <button

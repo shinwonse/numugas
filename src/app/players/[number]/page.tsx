@@ -1,9 +1,9 @@
-import { SectionBackground } from '@/components/animated/section-background';
 import {
   fetchBatterCareerByNumber,
   fetchPitcherCareerByNumber,
 } from '@/lib/fetchers/player-career';
 import { supabase } from '@/lib/supabase';
+import { notFound } from 'next/navigation';
 import type { Metadata } from 'next/types';
 import { unstable_cache } from 'next/cache';
 import { PlayerDetailContent } from './player-detail-content';
@@ -91,21 +91,8 @@ export default async function PlayerDetailPage({
     }),
   ]);
 
-  if (error || !data) {
-    return (
-      <main className="relative min-h-screen flex flex-col items-center justify-center bg-black text-white overflow-hidden">
-        <SectionBackground variant="gradient" />
-        <div className="relative z-10">
-          <h1 className="text-3xl font-bold mb-4">
-            선수 정보를 찾을 수 없습니다
-          </h1>
-          <p className="text-gray-400">
-            존재하지 않는 선수이거나, 정보를 불러오는 데 실패했습니다.
-          </p>
-        </div>
-      </main>
-    );
-  }
+  // 조회 실패는 getCachedPlayerData가 던지므로, 여기는 없는 등번호
+  if (error || !data) notFound();
 
   const player: Player = {
     id: data.id,

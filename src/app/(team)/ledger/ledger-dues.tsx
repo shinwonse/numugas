@@ -120,9 +120,6 @@ export function LedgerDues({
             </option>
           ))}
         </select>
-        <p className="text-xs text-white/40">
-          {isAdmin ? '칸을 누르면 납부 → 휴면 → 미납 순으로 바뀝니다' : '분기별 회비 납부 현황'}
-        </p>
         {isAdmin && (
           <button
             type="button"
@@ -163,7 +160,7 @@ export function LedgerDues({
                   const chip = (
                     <span
                       className={cn(
-                        'inline-flex min-w-11 items-center justify-center rounded-lg border px-2 py-1 text-xs font-medium',
+                        'inline-flex min-h-9 min-w-11 items-center justify-center rounded-lg border px-2 py-1.5 text-xs font-medium',
                         STATUS_STYLES[status],
                       )}
                     >
@@ -182,7 +179,7 @@ export function LedgerDues({
                           disabled={pendingCell !== null}
                           onClick={() => void toggle(m.name, q, status)}
                           aria-label={`${m.name} ${q}분기 ${DUES_STATUS_LABELS[status]}, 눌러서 변경`}
-                          className="cursor-pointer rounded-lg p-1 transition-opacity hover:opacity-80 disabled:cursor-wait"
+                          className="min-h-11 cursor-pointer rounded-lg p-1 transition-opacity hover:opacity-80 disabled:cursor-wait"
                         >
                           {chip}
                         </button>

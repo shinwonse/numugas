@@ -172,7 +172,7 @@ export function CalendarView({
                         scroll={false}
                         className={cn(
                           'pointer-events-auto block truncate rounded md:rounded-md',
-                          'px-1 md:px-1.5 py-0.5 text-[10px] md:text-[11px] font-medium leading-4',
+                          'px-1 md:px-1.5 py-1 text-[11px] font-medium leading-4',
                           'transition-opacity hover:opacity-80',
                           itemColors(item).chip,
                         )}

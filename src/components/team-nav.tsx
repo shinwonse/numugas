@@ -47,8 +47,8 @@ export function TeamNav() {
               href={item.href}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'relative flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-lg',
-                'text-[11px] font-medium tracking-wide',
+                'relative flex min-h-11 items-center justify-center gap-1.5 px-4 rounded-lg',
+                'text-xs font-medium tracking-wide',
                 'transition-colors duration-200',
                 isActive ? 'text-white' : 'text-white/40 hover:text-white/70',
               )}

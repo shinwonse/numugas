@@ -50,10 +50,10 @@ function StatsTabButton({
     'relative flex items-center justify-center h-full w-full text-center cursor-pointer',
     'font-medium text-sm',
     'transition-all duration-300 ease-out select-none',
-    'rounded-xl whitespace-nowrap px-5',
+    'rounded-xl whitespace-nowrap px-2 sm:px-5',
     isActive
       ? 'bg-white/[0.12] text-white shadow-[0_1px_8px_rgba(255,255,255,0.06),inset_0_1px_0_rgba(255,255,255,0.1)]'
-      : 'text-gray-500 hover:text-gray-300 hover:bg-white/[0.04]',
+      : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]',
   );
   const content = (
     <>
@@ -72,7 +72,6 @@ function StatsTabButton({
         prefetch={tab.prefetch}
         onClick={onClick}
         className={className}
-        tabIndex={isActive ? 0 : -1}
         aria-selected={isActive}
         role="tab"
       >
@@ -82,16 +81,15 @@ function StatsTabButton({
   }
 
   return (
-    <a
-      href="#"
+    <button
+      type="button"
       onClick={onClick}
       className={className}
-      tabIndex={isActive ? 0 : -1}
       aria-selected={isActive}
       role="tab"
     >
       {content}
-    </a>
+    </button>
   );
 }
 
@@ -117,7 +115,6 @@ export default function StatsTabs({
       )}
       role="tablist"
       aria-orientation="horizontal"
-      tabIndex={0}
       data-orientation="horizontal"
     >
       {tabs.map((tab) => {

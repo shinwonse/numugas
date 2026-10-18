@@ -38,15 +38,15 @@ export function Footer() {
             </p>
 
             {/* Social Links - Minimal style */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
               <Link
                 href="https://www.instagram.com/numugas/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  'text-gray-600',
-                  'transition-all duration-300',
-                  'hover:text-white hover:scale-110',
+                  'inline-flex h-11 w-11 items-center justify-center rounded-xl text-white/60',
+                  'transition-colors duration-300',
+                  'hover:bg-white/5 hover:text-white',
                 )}
                 aria-label="Instagram"
               >
@@ -58,9 +58,9 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  'text-gray-600',
-                  'transition-all duration-300',
-                  'hover:text-white hover:scale-110',
+                  'inline-flex h-11 w-11 items-center justify-center rounded-xl text-white/60',
+                  'transition-colors duration-300',
+                  'hover:bg-white/5 hover:text-white',
                 )}
                 aria-label="YouTube"
               >
@@ -72,7 +72,7 @@ export function Footer() {
           {/* Bottom bar */}
           <div className="mt-16 pt-8 border-t border-white/5">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-white/50">
                 © {new Date().getFullYear()} 담장NUMUGAS. All rights reserved.
               </p>
             </div>

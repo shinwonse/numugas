@@ -202,17 +202,17 @@ export default function LineupPage() {
     }
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
     setIsDragging(false);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
     setIsDragging(false);
 
@@ -327,7 +327,7 @@ export default function LineupPage() {
       <main className="relative min-h-screen text-white overflow-hidden">
         <MeshGradientBackground />
 
-        <div className="relative z-10 px-4 pt-20 pb-16 md:pb-20">
+        <div className="relative z-10 px-4 pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16 md:pb-20">
           <PageHeader eyebrow="Lineup Generator" title="라인업" />
 
           {/* 반응형 레이아웃 - 모바일은 세로 스택, 데스크탑은 가로 정렬 */}
@@ -556,31 +556,32 @@ export default function LineupPage() {
                           alt="선수 사진 미리보기"
                           className="w-full h-full object-contain"
                         />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="sm"
-                            onClick={handleRemoveImage}
-                            className="bg-red-500 hover:bg-red-600 cursor-pointer"
-                          >
-                            <X className="w-4 h-4 mr-2" />
-                            제거
-                          </Button>
-                        </div>
                       </div>
-                      <p className="mt-2 text-xs text-gray-600 truncate">
-                        {playerImageName}
-                      </p>
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <p className="min-w-0 truncate text-xs text-white/50">
+                          {playerImageName}
+                        </p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleRemoveImage}
+                          className="h-10 shrink-0 cursor-pointer text-red-300 hover:bg-red-500/10 hover:text-red-200"
+                        >
+                          <X className="w-4 h-4 mr-1.5" />
+                          사진 제거
+                        </Button>
+                      </div>
                     </div>
                   ) : (
-                    <div
+                    <button
+                      type="button"
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}
                       onDrop={handleDrop}
                       onClick={() => fileInputRef.current?.click()}
                       className={cn(
-                        'relative h-48 rounded-xl border-2 border-dashed cursor-pointer transition-colors duration-200',
+                        'relative block w-full h-48 rounded-xl border-2 border-dashed cursor-pointer transition-colors duration-200',
                         isDragging
                           ? 'border-red-500/50 bg-red-500/5'
                           : 'border-white/[0.08] bg-white/[0.02] hover:border-white/[0.15]',
@@ -594,18 +595,11 @@ export default function LineupPage() {
                             <ImageIcon className="w-6 h-6 text-gray-500" />
                           )}
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-300 mb-1">
-                            {isDragging
-                              ? '이미지를 놓으세요'
-                              : '클릭하거나 드래그하여 업로드'}
-                          </p>
-                          <p className="text-xs text-gray-600">
-                            PNG, JPG, GIF 등 (최대 10MB)
-                          </p>
-                        </div>
+                        <p className="text-sm font-medium text-gray-300">
+                          {isDragging ? '이미지를 놓으세요' : '사진 추가'}
+                        </p>
                       </div>
-                    </div>
+                    </button>
                   )}
 
                   {/* 숨겨진 파일 인풋 */}
@@ -662,23 +656,26 @@ export default function LineupPage() {
                   <div
                     key={index}
                     className={cn(
-                      'flex items-center gap-3 p-2.5',
+                      'flex items-center gap-2 md:gap-3 p-2 md:p-2.5',
                       'border border-white/[0.04] rounded-xl',
                       'bg-white/[0.02]',
                       'hover:bg-white/[0.04] transition-colors duration-150',
                     )}
                   >
-                    <span className="font-bold text-base w-7 text-center text-red-500 font-mono">
+                    <span className="font-bold text-base w-5 md:w-7 shrink-0 text-center text-red-500 font-mono">
                       {player.battingOrder}
                     </span>
-                    <div className="flex-1 flex gap-2">
+                    <div className="flex min-w-0 flex-1 gap-1.5 md:gap-2">
                       <Select
                         value={player.position}
                         onValueChange={(value) =>
                           handlePositionChange(index, value)
                         }
                       >
-                        <SelectTrigger className={cn(glassSelect, 'w-[110px] h-9 text-sm')}>
+                        <SelectTrigger
+                          className={cn(glassSelect, 'w-[88px] md:w-[110px] h-10 shrink-0 px-2.5 text-sm')}
+                          aria-label={`${player.battingOrder}번 포지션`}
+                        >
                           <SelectValue placeholder="포지션" />
                         </SelectTrigger>
                         <SelectContent>
@@ -695,7 +692,8 @@ export default function LineupPage() {
                           handleNameChange(index, e.target.value)
                         }
                         placeholder="이름"
-                        className={cn(glassInput, 'flex-1 h-9 text-sm')}
+                        aria-label={`${player.battingOrder}번 타자 이름`}
+                        className={cn(glassInput, 'min-w-0 flex-1 h-10 text-sm')}
                       />
                       <Input
                         value={player.number}
@@ -703,7 +701,9 @@ export default function LineupPage() {
                           handleNumberChange(index, e.target.value)
                         }
                         placeholder="No."
-                        className={cn(glassInput, 'w-16 h-9 text-sm text-center')}
+                        aria-label={`${player.battingOrder}번 타자 등번호`}
+                        inputMode="numeric"
+                        className={cn(glassInput, 'w-12 md:w-16 h-10 shrink-0 px-1 text-sm text-center')}
                       />
                     </div>
                   </div>
@@ -796,46 +796,49 @@ export default function LineupPage() {
                               <div
                                 key={saved.id}
                                 className={cn(
-                                  'group p-4 rounded-xl cursor-pointer',
+                                  'flex items-start gap-1 rounded-xl',
                                   'bg-white/[0.03] border border-white/[0.06]',
                                   'hover:bg-white/[0.06] transition-colors duration-150',
                                 )}
-                                onClick={() => handleLoadLineup(saved)}
                               >
-                                <div className="flex items-start justify-between gap-2">
-                                  <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-sm text-white truncate">
-                                      {saved.name}
-                                    </p>
-                                    <div className="flex items-center gap-1.5 mt-1 text-xs text-gray-500">
-                                      <Clock className="w-3 h-3" />
-                                      {new Date(saved.savedAt).toLocaleString('ko-KR', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                      })}
-                                    </div>
-                                    {/* 라인업 요약 */}
-                                    <p className="mt-2 text-xs text-gray-600 truncate">
-                                      {saved.lineup
-                                        .filter((p) => p.name)
-                                        .map((p) => p.name)
-                                        .join(', ') || '빈 라인업'}
-                                    </p>
-                                  </div>
-                                  <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-500 hover:text-red-400 hover:bg-red-500/10 cursor-pointer shrink-0"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      deleteLineup(saved.id);
-                                    }}
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </Button>
-                                </div>
+                                {/* 불러오기와 삭제를 형제 버튼으로 둬서 키보드·터치 모두 각각 누를 수 있다 */}
+                                <button
+                                  type="button"
+                                  onClick={() => handleLoadLineup(saved)}
+                                  className="min-w-0 flex-1 cursor-pointer p-4 text-left"
+                                >
+                                  <p className="font-semibold text-sm text-white truncate">
+                                    {saved.name}
+                                  </p>
+                                  <span className="flex items-center gap-1.5 mt-1 text-xs text-white/50">
+                                    <Clock className="w-3 h-3" />
+                                    {new Date(saved.savedAt).toLocaleString('ko-KR', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit',
+                                    })}
+                                  </span>
+                                  {/* 라인업 요약 */}
+                                  <span className="mt-2 block text-xs text-white/50 truncate">
+                                    {saved.lineup
+                                      .filter((p) => p.name)
+                                      .map((p) => p.name)
+                                      .join(', ') || '빈 라인업'}
+                                  </span>
+                                </button>
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  variant="ghost"
+                                  aria-label={`${saved.name} 삭제`}
+                                  className="m-2 h-10 w-10 shrink-0 cursor-pointer text-white/50 hover:text-red-400 hover:bg-red-500/10"
+                                  onClick={() => {
+                                    deleteLineup(saved.id);
+                                  }}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
                               </div>
                             ))
                           )}

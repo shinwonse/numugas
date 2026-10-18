@@ -173,7 +173,7 @@ export function LedgerTransactions({
                             {row.kind === 'income' ? '+' : '-'}
                             {row.amount.toLocaleString('ko-KR')}
                           </span>
-                          <span className="block text-[11px] tabular-nums text-white/30">
+                          <span className="block text-[11px] tabular-nums text-white/50">
                             {row.balance.toLocaleString('ko-KR')}
                           </span>
                         </span>

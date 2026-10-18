@@ -86,7 +86,7 @@ export function FloatingNav() {
     }
     updateBlobPos(displayIndex);
 
-    // 브레이크포인트(w-14 ↔ w-20)나 회전으로 탭 크기가 바뀌면 다시 측정
+    // 브레이크포인트(w-[3.25rem] ↔ w-14 ↔ w-20)나 회전으로 탭 크기가 바뀌면 다시 측정
     const nav = navRef.current;
     if (!nav) return;
     const observer = new ResizeObserver(() => {
@@ -213,7 +213,7 @@ export function FloatingNav() {
               aria-current={isActive ? 'page' : undefined}
               className={cn(
                 'relative z-10 flex flex-col items-center justify-center',
-                'w-14 md:w-20 py-1.5 rounded-xl',
+                'w-[3.25rem] min-[380px]:w-14 md:w-20 py-1.5 rounded-xl',
                 'transition-colors duration-200',
                 isActive || isHovered ? 'text-white' : 'text-white/40',
               )}

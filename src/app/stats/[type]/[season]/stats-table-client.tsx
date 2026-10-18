@@ -1,34 +1,17 @@
 'use client';
 
-import BatterStatsTable from '@/app/stats/(batter)/batter-stats-table';
-import PitcherStatsTable from '@/app/stats/(pitcher)/pitcher-stats-table';
 import type { League } from '@/lib/leagues';
-import { SwitchCase } from 'react-simplikit';
+import type { StatsType } from '../../stats-columns';
+import { StatsTable } from '../../stats-table';
 
 interface StatsTableClientProps {
-  type: string;
+  type: StatsType;
   season: string;
   league: League | undefined;
-  initialData: any[];
+  initialData: Record<string, unknown>[];
 }
 
-export default function StatsTableClient({
-  type,
-  season,
-  league,
-  initialData,
-}: StatsTableClientProps) {
-  return (
-    <SwitchCase
-      value={type}
-      caseBy={{
-        batter: () => (
-          <BatterStatsTable season={season} league={league} initialData={initialData} />
-        ),
-        pitcher: () => (
-          <PitcherStatsTable season={season} league={league} initialData={initialData} />
-        ),
-      }}
-    />
-  );
+export default function StatsTableClient(props: StatsTableClientProps) {
+  // 시즌·리그가 바뀌면 정렬·검색 상태를 새로 시작한다
+  return <StatsTable key={`${props.type}-${props.season}-${props.league ?? 'ALL'}`} {...props} />;
 }
