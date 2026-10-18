@@ -32,6 +32,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -43,11 +44,11 @@ import {
 
 interface CalendarAdminContextValue {
   isAdmin: boolean;
-  openUnlock: () => void;
   lock: () => void;
+  /** 아래 동작들은 관리자 키가 없으면 먼저 키를 묻고, 확인되면 이어서 실행한다 */
   openCreate: (date: string) => void;
   openEdit: (record: ClubEvent) => void;
-  openDelete: (record: ClubEvent) => void;
+  openDelete: (record: ClubEvent, onDeleted?: () => void) => void;
 }
 
 const CalendarAdminContext = createContext<CalendarAdminContextValue | null>(
@@ -89,15 +90,20 @@ type EditorState =
   | null;
 
 /**
- * 캘린더 관리 모드: 관리자 키 확인 후 날짜에서 바로 일정 추가/수정/삭제.
- * 레이아웃에 두어 월 이동 후에도 관리 모드가 유지된다.
+ * 캘린더 일정 관리: 추가/수정/삭제를 누르는 시점에 관리자 키를 묻고,
+ * 한 번 확인되면 탭을 닫기 전까지 유지한다. 레이아웃에 두어 월 이동·상세 모달에서도 쓴다.
  */
 export function CalendarAdminProvider({ children }: { children: ReactNode }) {
   const [secret, setSecret] = useState<string | null>(null);
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [unlockError, setUnlockError] = useState<string | null>(null);
   const [editor, setEditor] = useState<EditorState>(null);
-  const [deleting, setDeleting] = useState<ClubEvent | null>(null);
+  const [deleting, setDeleting] = useState<{
+    record: ClubEvent;
+    onDeleted?: () => void;
+  } | null>(null);
+  // 키 입력이 끝나면 이어서 실행할 동작 (일정 추가/수정/삭제)
+  const pendingRef = useRef<(() => void) | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -109,6 +115,19 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
     storeSecret(null);
     setSecret(null);
   }, []);
+
+  const requireAdmin = useCallback(
+    (action: () => void) => {
+      if (secret) {
+        action();
+        return;
+      }
+      pendingRef.current = action;
+      setUnlockError(null);
+      setUnlockOpen(true);
+    },
+    [secret],
+  );
 
   /** 키가 만료/변경되어 401이 나면 관리 모드를 풀고 다시 묻는다 */
   const handleAuthFailure = useCallback(() => {
@@ -142,8 +161,11 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
     setIsDeleting(true);
     setDeleteError(null);
     try {
-      const result = await deleteClubEventAction(secret, deleting.id);
-      if (result.ok) setDeleting(null);
+      const result = await deleteClubEventAction(secret, deleting.record.id);
+      if (result.ok) {
+        setDeleting(null);
+        deleting.onDeleted?.();
+      }
       else if (result.status === 401) handleAuthFailure();
       else setDeleteError(result.error);
     } catch {
@@ -156,23 +178,25 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CalendarAdminContextValue>(
     () => ({
       isAdmin: Boolean(secret),
-      openUnlock: () => {
-        setUnlockError(null);
-        setUnlockOpen(true);
-      },
       lock,
       openCreate: (date) => {
-        setEditor({ mode: 'create', date });
+        requireAdmin(() => {
+          setEditor({ mode: 'create', date });
+        });
       },
       openEdit: (record) => {
-        setEditor({ mode: 'edit', record });
+        requireAdmin(() => {
+          setEditor({ mode: 'edit', record });
+        });
       },
-      openDelete: (record) => {
-        setDeleteError(null);
-        setDeleting(record);
+      openDelete: (record, onDeleted) => {
+        requireAdmin(() => {
+          setDeleteError(null);
+          setDeleting({ record, onDeleted });
+        });
       },
     }),
-    [secret, lock],
+    [secret, lock, requireAdmin],
   );
 
   return (
@@ -182,11 +206,18 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
       <UnlockDialog
         open={unlockOpen}
         initialError={unlockError}
-        onOpenChange={setUnlockOpen}
+        onOpenChange={(open) => {
+          setUnlockOpen(open);
+          // 키 입력을 취소하면 대기 중이던 동작도 버린다
+          if (!open) pendingRef.current = null;
+        }}
         onUnlocked={(key) => {
           storeSecret(key);
           setSecret(key);
           setUnlockOpen(false);
+          const pending = pendingRef.current;
+          pendingRef.current = null;
+          pending?.();
         }}
       />
 
@@ -233,7 +264,7 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
           <AlertDialogHeader>
             <AlertDialogTitle>일정을 삭제할까요?</AlertDialogTitle>
             <AlertDialogDescription className="text-white/60">
-              &ldquo;{deleting?.title}&rdquo; 일정이 캘린더에서 삭제됩니다.
+              &ldquo;{deleting?.record.title}&rdquo; 일정이 캘린더에서 삭제됩니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           {deleteError && (
@@ -309,9 +340,9 @@ function UnlockDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={dialogClass}>
         <DialogHeader>
-          <DialogTitle>일정 관리</DialogTitle>
+          <DialogTitle>관리자 확인</DialogTitle>
           <DialogDescription className="text-white/50">
-            관리자 키를 입력하면 캘린더에서 바로 일정을 추가하고 수정할 수 있습니다.
+            일정을 추가·수정·삭제하려면 관리자 키를 입력하세요. 이 탭을 닫기 전까지 다시 묻지 않습니다.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">

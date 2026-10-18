@@ -1,7 +1,14 @@
 import type { ReactNode } from 'react';
 import { CalendarAdminProvider } from './calendar-admin';
 
-export default function CalendarLayout({ children }: { children: ReactNode }) {
+export default function CalendarLayout({
+  children,
+  modal,
+}: {
+  children: ReactNode;
+  /** 일정 상세 모달 슬롯 (@modal) */
+  modal: ReactNode;
+}) {
   return (
     <div className="relative min-h-screen bg-[#050508] overflow-hidden">
       <div className="pointer-events-none fixed inset-0 z-0">
@@ -11,7 +18,10 @@ export default function CalendarLayout({ children }: { children: ReactNode }) {
       </div>
 
       <div className="relative z-10">
-        <CalendarAdminProvider>{children}</CalendarAdminProvider>
+        <CalendarAdminProvider>
+          {children}
+          {modal}
+        </CalendarAdminProvider>
       </div>
     </div>
   );

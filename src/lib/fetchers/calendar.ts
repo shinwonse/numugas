@@ -111,3 +111,35 @@ export async function fetchCalendarMonth(
     ...(eventsRes.data as ClubEvent[]).map(eventToItem),
   ].sort(byStartsAt);
 }
+
+/**
+ * 캘린더 항목 하나 조회. id는 CalendarItem.id 형식(`game-<번호>` / `event-<uuid>`).
+ * 없으면 null, 조회 실패 시 throw.
+ */
+export async function fetchCalendarItem(
+  id: string,
+): Promise<CalendarItem | null> {
+  const gameId = /^game-(\d+)$/.exec(id)?.[1];
+  if (gameId) {
+    const { data, error } = await supabase
+      .from('schedule')
+      .select(GAME_COLUMNS)
+      .eq('id', Number(gameId))
+      .maybeSingle();
+    if (error) throw error;
+    return data ? gameToItem(data as GameRow) : null;
+  }
+
+  const eventId = /^event-([0-9a-f-]{36})$/i.exec(id)?.[1];
+  if (eventId) {
+    const { data, error } = await supabase
+      .from('club_events')
+      .select('*')
+      .eq('id', eventId)
+      .maybeSingle();
+    if (error) throw error;
+    return data ? eventToItem(data as ClubEvent) : null;
+  }
+
+  return null;
+}

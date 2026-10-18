@@ -4,14 +4,8 @@ import { buildMonthGrid, toKstDateKey, toKstTime } from '@/lib/calendar-utils';
 import { itemColors, itemLabel, RESULT_STYLES } from '@/lib/calendar-styles';
 import { cn } from '@/lib/cn';
 import type { CalendarItem } from '@/types/calendar';
-import {
-  ExternalLink,
-  Lock,
-  MapPin,
-  Pencil,
-  Plus,
-  Trash2,
-} from 'lucide-react';
+import { ChevronRight, Plus } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useCalendarAdmin } from './calendar-admin';
 
@@ -55,49 +49,23 @@ export function CalendarView({
 
   const selectedItems = selected ? (itemsByDate.get(selected) ?? []) : [];
   const admin = useCalendarAdmin();
-  // 툴바의 '일정 추가'는 선택한 날짜 → 오늘 → 이번 달 1일 순으로 기본값을 잡는다
-  const defaultDate =
-    selected ??
-    (todayKey && weeks.flat().includes(todayKey) ? todayKey : null) ??
-    `${year}-${String(month).padStart(2, '0')}-01`;
 
   return (
     <div className="space-y-6">
-      <div className="-mt-2 flex min-h-9 items-center justify-end gap-2">
-        {admin.isAdmin ? (
-          <>
-            <span className="mr-auto rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium text-red-300">
-              관리 모드
-            </span>
-            <button
-              type="button"
-              onClick={admin.lock}
-              className="cursor-pointer rounded-xl px-3 py-2 text-xs text-white/50 transition-colors hover:bg-white/5 hover:text-white"
-            >
-              관리 종료
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                admin.openCreate(defaultDate);
-              }}
-              className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-red-500 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-red-600"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              일정 추가
-            </button>
-          </>
-        ) : (
+      {admin.isAdmin && (
+        <div className="-mt-2 flex items-center justify-end gap-2">
+          <span className="mr-auto rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium text-red-300">
+            관리 모드
+          </span>
           <button
             type="button"
-            onClick={admin.openUnlock}
-            className="flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-2 text-xs text-white/40 transition-colors hover:bg-white/5 hover:text-white/80"
+            onClick={admin.lock}
+            className="cursor-pointer rounded-xl px-3 py-2 text-xs text-white/50 transition-colors hover:bg-white/5 hover:text-white"
           >
-            <Lock className="h-3.5 w-3.5" />
-            일정 관리
+            관리 종료
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
         <div className="grid grid-cols-7 border-b border-white/10">
@@ -141,7 +109,7 @@ export function CalendarView({
                     'min-h-14 md:min-h-28 p-1 md:p-2 text-left',
                     'flex flex-col items-center md:items-stretch gap-1',
                     'border-b border-r border-white/5 last:border-r-0',
-                    'transition-colors hover:bg-white/[0.06]',
+                    'cursor-pointer transition-colors hover:bg-white/[0.06]',
                     isSelected && 'bg-white/[0.08]',
                   )}
                 >
@@ -196,150 +164,79 @@ export function CalendarView({
       </div>
 
       <section aria-live="polite">
-        {selected && (
-          <div className="mb-3 flex min-h-8 items-center justify-between gap-2">
-            <h3 className="text-sm font-medium text-white/60">
-              {month}월 {Number(selected.slice(8))}일 (
-              {WEEKDAYS[new Date(`${selected}T00:00:00Z`).getUTCDay()]})
-            </h3>
-            {admin.isAdmin && (
+        {selected ? (
+          <>
+            <div className="mb-3 flex min-h-11 items-center justify-between gap-2">
+              <h3 className="text-sm font-medium text-white/60">
+                {month}월 {Number(selected.slice(8))}일 (
+                {WEEKDAYS[new Date(`${selected}T00:00:00Z`).getUTCDay()]})
+              </h3>
               <button
                 type="button"
                 onClick={() => {
                   admin.openCreate(selected);
                 }}
-                className="flex cursor-pointer items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs text-red-300 transition-colors hover:bg-red-500/10 hover:text-red-200"
+                className="flex min-h-11 cursor-pointer items-center gap-1 rounded-xl px-3 text-sm text-red-300 transition-colors hover:bg-red-500/10 hover:text-red-200"
               >
-                <Plus className="h-3.5 w-3.5" />이 날 일정 추가
+                <Plus className="h-4 w-4" />
+                일정 추가
               </button>
+            </div>
+            {selectedItems.length === 0 ? (
+              <p className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-8 text-center text-sm text-white/40">
+                일정이 없습니다
+              </p>
+            ) : (
+              <ul className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl divide-y divide-white/5">
+                {selectedItems.map((item) => (
+                  <li key={item.id}>
+                    <CalendarItemRow item={item} />
+                  </li>
+                ))}
+              </ul>
             )}
-          </div>
-        )}
-        {selectedItems.length === 0 ? (
-          <p className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-8 text-center text-sm text-white/40">
-            {selected
-              ? '일정이 없습니다'
-              : items.length === 0
-                ? '이번 달 일정이 없습니다'
-                : '날짜를 선택하세요'}
-          </p>
+          </>
         ) : (
-          <ul className="space-y-3">
-            {selectedItems.map((item) => (
-              <CalendarItemCard
-                key={item.id}
-                item={item}
-                onEdit={
-                  admin.isAdmin && item.record
-                    ? () => {
-                        if (item.record) admin.openEdit(item.record);
-                      }
-                    : undefined
-                }
-                onDelete={
-                  admin.isAdmin && item.record
-                    ? () => {
-                        if (item.record) admin.openDelete(item.record);
-                      }
-                    : undefined
-                }
-              />
-            ))}
-          </ul>
+          <p className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-8 text-center text-sm text-white/40">
+            {items.length === 0 ? '이번 달 일정이 없습니다' : '날짜를 선택하세요'}
+          </p>
         )}
       </section>
     </div>
   );
 }
 
-function CalendarItemCard({
-  item,
-  onEdit,
-  onDelete,
-}: {
-  item: CalendarItem;
-  onEdit?: () => void;
-  onDelete?: () => void;
-}) {
-  const label = itemLabel(item);
-
+/** 선택한 날짜의 일정 한 줄. 누르면 상세(PC 모달 / 모바일 페이지)로 이동한다. */
+function CalendarItemRow({ item }: { item: CalendarItem }) {
   return (
-    <li className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-xl">
-      <div className="flex items-start gap-3">
-        <div className="w-12 shrink-0 pt-0.5 text-sm font-semibold tabular-nums text-white/70">
-          {itemTime(item)}
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={cn('rounded-md px-1.5 py-0.5 text-[11px] font-medium', itemColors(item).chip)}
-            >
-              {label}
-            </span>
-            <span className="font-semibold">{item.title}</span>
-            {item.kind === 'game' && item.result && item.score && (
-              <span
-                className={cn(
-                  'rounded-md border px-1.5 py-0.5 text-xs font-semibold tabular-nums',
-                  RESULT_STYLES[item.result],
-                )}
-              >
-                {item.result} {item.score.ours}:{item.score.theirs}
-              </span>
-            )}
-          </div>
-
-          {item.kind === 'game' && item.category && (
-            <p className="mt-1 text-xs text-white/40">{item.category}</p>
-          )}
-          {item.location && (
-            <p className="mt-1 flex items-center gap-1 text-xs text-white/50">
-              <MapPin className="h-3 w-3" />
-              {item.location}
-            </p>
-          )}
-          {item.description && (
-            <p className="mt-2 whitespace-pre-line text-sm text-white/60">
-              {item.description}
-            </p>
-          )}
-          {item.kind === 'game' && item.link && (
-            <a
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1 text-xs text-red-400 hover:text-red-300"
-            >
-              박스스코어
-              <ExternalLink className="h-3 w-3" />
-            </a>
-          )}
-        </div>
-        {(onEdit ?? onDelete) && (
-          <div className="-mr-1 -mt-1 flex shrink-0 gap-0.5">
-            {onEdit && (
-              <button
-                type="button"
-                onClick={onEdit}
-                aria-label={`${item.title} 수정`}
-                className="cursor-pointer rounded-lg p-2.5 text-white/40 transition-colors hover:bg-white/10 hover:text-white"
-              >
-                <Pencil className="h-4 w-4" />
-              </button>
-            )}
-            {onDelete && (
-              <button
-                type="button"
-                onClick={onDelete}
-                aria-label={`${item.title} 삭제`}
-                className="cursor-pointer rounded-lg p-2.5 text-white/40 transition-colors hover:bg-red-500/10 hover:text-red-400"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            )}
-          </div>
+    <Link
+      href={`/calendar/event/${item.id}`}
+      scroll={false}
+      className="flex min-h-14 items-center gap-3 px-4 py-3 transition-colors hover:bg-white/[0.05]"
+    >
+      <span className="w-10 shrink-0 text-sm font-semibold tabular-nums text-white/70">
+        {itemTime(item)}
+      </span>
+      <span
+        className={cn(
+          'shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-medium',
+          itemColors(item).chip,
         )}
-      </div>
-    </li>
+      >
+        {itemLabel(item)}
+      </span>
+      <span className="min-w-0 flex-1 truncate font-medium">{item.title}</span>
+      {item.kind === 'game' && item.result && item.score && (
+        <span
+          className={cn(
+            'shrink-0 rounded-md border px-1.5 py-0.5 text-xs font-semibold tabular-nums',
+            RESULT_STYLES[item.result],
+          )}
+        >
+          {item.result} {item.score.ours}:{item.score.theirs}
+        </span>
+      )}
+      <ChevronRight className="h-4 w-4 shrink-0 text-white/30" aria-hidden />
+    </Link>
   );
 }
