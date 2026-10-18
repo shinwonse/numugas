@@ -76,9 +76,9 @@ export function PlayerDetailContent({
         </div>
       )}
 
-      <div className="relative z-10 lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+      <div className="relative z-10">
         {/* 사진: 모바일은 상단 히어로, 데스크톱은 좌측 고정 */}
-        <div className="relative lg:sticky lg:top-0 lg:h-dvh">
+        <div className="relative lg:fixed lg:inset-y-0 lg:left-0 lg:w-[36%]">
           <button
             type="button"
             aria-label={`${player.name} 프로필 사진 확대`}
@@ -92,7 +92,7 @@ export function PlayerDetailContent({
                 alt={player.name}
                 fill
                 priority
-                sizes="(min-width: 1024px) 42vw, 100vw"
+                sizes="(min-width: 1024px) 36vw, 100vw"
                 className={cn(
                   'transition-transform duration-700 ease-out group-hover:scale-[1.02]',
                   isPlaceholderPhoto
@@ -113,7 +113,7 @@ export function PlayerDetailContent({
           </button>
         </div>
 
-        <div className="-mt-28 px-4 pb-16 sm:px-8 lg:mt-0 lg:px-12 lg:pt-20 xl:px-16">
+        <div className="-mt-28 px-4 pb-16 sm:px-8 lg:ml-[36%] lg:mt-0 lg:px-12 lg:pt-20 xl:px-16">
           {/* 이름 / 포지션 / 타자·투수 전환 */}
           <section className="relative mb-8">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">
