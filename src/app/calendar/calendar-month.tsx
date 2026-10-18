@@ -12,7 +12,7 @@ export async function CalendarMonth({
   const items = await fetchCalendarMonth(year, month);
 
   return (
-    <main className="mx-auto max-w-5xl px-4 pt-20 pb-16 text-white">
+    <main className="page-container pt-20 pb-16 text-white">
       <PageHeader eyebrow="Club Calendar" title="구단 캘린더" />
       <CalendarView
         key={`${year}-${month}`}

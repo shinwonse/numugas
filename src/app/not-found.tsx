@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <main className="bg-under-nav relative min-h-screen bg-[#050508] text-white">
       <MeshGradientBackground />
-      <div className="relative z-10 mx-auto flex max-w-md flex-col items-center px-4 pt-32 text-center">
+      <div className="relative z-10 page-container flex flex-col items-center pt-20 text-center">
         <PageHeader eyebrow="404" title="페이지를 찾을 수 없어요" />
         <Link
           href="/"

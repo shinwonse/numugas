@@ -12,7 +12,7 @@ export default function LedgerPage() {
   return (
     <div className="bg-under-nav relative min-h-screen bg-[#050508] overflow-hidden">
       <MeshGradientBackground />
-      <main className="relative z-10 mx-auto max-w-4xl px-4 pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16 text-white">
+      <main className="relative z-10 page-container pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16 text-white">
         <PageHeader eyebrow="Club Ledger" title="회계 장부" />
         <LedgerApp />
       </main>

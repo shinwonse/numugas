@@ -19,13 +19,13 @@ export default function AboutPage() {
       <section className="relative pt-20 pb-16 md:pb-24">
         <SectionBackground variant="gradient" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+        <div className="relative z-10 page-container">
           <PageHeader eyebrow="History" title="담장NUMUGAS" className="mb-0" />
         </div>
       </section>
 
       {/* Timeline Section */}
-      <section className="relative z-10 max-w-5xl mx-auto px-6 md:px-8 lg:px-12 pb-32">
+      <section className="relative z-10 page-container pb-32">
         <HistoryTimeline />
       </section>
 

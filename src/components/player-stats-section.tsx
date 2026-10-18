@@ -90,7 +90,7 @@ export function PlayerStatsSection({
       }}
     >
 
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+      <div className="page-container relative z-10">
         <SectionTitle
           subtitle={`SEASON LEADERS ${season}`}
           title={`${season} 시즌 주요 기록`}

@@ -40,7 +40,7 @@ export function TotalStatsSection({
       }}
     >
 
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+      <div className="page-container relative z-10">
         <SectionTitle
           subtitle="ALL-TIME LEADERS"
           title="역대 통산 기록"

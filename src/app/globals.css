@@ -130,6 +130,11 @@ html {
   --nav-clearance: calc(7rem + env(safe-area-inset-bottom));
 }
 
+/* 모든 페이지 공통 콘텐츠 영역: 최대 너비와 좌우 여백을 한곳에서 맞춘다 */
+.page-container {
+  @apply mx-auto w-full max-w-6xl px-4 md:px-6;
+}
+
 /*
  * 루트 레이아웃의 하단 여백은 페이지 바깥에 있어 body 배경(검정)이 드러난다.
  * 자체 배경이 있는 페이지는 이 클래스로 배경을 그 여백까지 이어 칠한다.

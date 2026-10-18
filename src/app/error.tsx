@@ -21,7 +21,7 @@ export default function Error({
   return (
     <main className="bg-under-nav relative min-h-screen bg-[#050508] text-white">
       <MeshGradientBackground />
-      <div className="relative z-10 mx-auto flex max-w-md flex-col items-center px-4 pt-32 text-center">
+      <div className="relative z-10 page-container flex flex-col items-center pt-20 text-center">
         <PageHeader eyebrow="Error" title="불러오지 못했어요" />
         <p className="-mt-4 mb-8 text-sm text-white/60">
           잠시 후 다시 시도해 주세요.

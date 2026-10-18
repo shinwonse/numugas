@@ -14,7 +14,7 @@ export function Footer() {
         {/* Subtle top glow line */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
 
-        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-20">
+        <div className="page-container py-20">
           {/* Logo with glow */}
           <div className="flex flex-col items-center gap-10">
             <Link href="/" className="group">

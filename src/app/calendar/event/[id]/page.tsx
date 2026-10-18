@@ -36,7 +36,7 @@ export default async function EventPage({
   const monthHref = `/calendar/${toKstDateKey(item.startsAt).slice(0, 7)}`;
 
   return (
-    <main className="mx-auto max-w-lg px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-16 text-white md:pt-20">
+    <main className="page-container pt-[calc(1rem+env(safe-area-inset-top))] pb-16 text-white md:pt-20">
       <Link
         href={monthHref}
         className="mb-4 -ml-1 inline-flex h-11 items-center gap-0.5 rounded-xl pl-1 pr-3 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-white"

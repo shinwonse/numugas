@@ -75,7 +75,7 @@ export function YoutubeSection({ video }: { video: YouTubeVideo }) {
         transition: 'opacity 1s ease-out, transform 1s ease-out',
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
+      <div className="page-container relative z-10">
         <SectionTitle
           subtitle="GAME HIGHLIGHTS"
           title="경기 하이라이트"

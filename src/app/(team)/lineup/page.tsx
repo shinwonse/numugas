@@ -327,7 +327,7 @@ export default function LineupPage() {
       <main className="relative min-h-screen text-white overflow-hidden">
         <MeshGradientBackground />
 
-        <div className="relative z-10 px-4 pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16 md:pb-20">
+        <div className="relative z-10 page-container pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16">
           <PageHeader eyebrow="Lineup Generator" title="라인업" />
 
           {/* 반응형 레이아웃 - 모바일은 세로 스택, 데스크탑은 가로 정렬 */}

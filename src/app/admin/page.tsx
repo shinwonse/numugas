@@ -151,8 +151,8 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white px-4 py-20">
-      <div className="max-w-2xl mx-auto">
+    <main className="min-h-screen bg-black text-white pt-20 pb-16">
+      <div className="page-container">
         {/* Header */}
         <PageHeader eyebrow="Admin" title="데이터 관리" className="mb-12" />
 

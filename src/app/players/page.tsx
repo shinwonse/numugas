@@ -51,7 +51,7 @@ export default async function PlayersPage() {
     <main className="relative min-h-screen text-white overflow-hidden">
       <MeshGradientBackground />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-20 pb-16 md:pb-20">
+      <div className="relative z-10 page-container pt-20 pb-16">
         {error ? (
           <div className="text-center text-red-400 py-12 text-sm">{error}</div>
         ) : (

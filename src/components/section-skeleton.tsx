@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function StatsSectionSkeleton() {
   return (
     <section className="relative py-32 md:py-40 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+      <div className="page-container">
         <div className="text-center mb-16">
           <Skeleton className="h-4 w-40 mx-auto mb-4 bg-white/10" />
           <Skeleton className="h-8 w-56 mx-auto bg-white/10" />
@@ -24,7 +24,7 @@ export function StatsSectionSkeleton() {
 export function PlayerStatsSectionSkeleton() {
   return (
     <section className="relative py-32 md:py-40 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+      <div className="page-container">
         <div className="text-center mb-16">
           <Skeleton className="h-4 w-48 mx-auto mb-4 bg-white/10" />
           <Skeleton className="h-8 w-64 mx-auto bg-white/10" />
@@ -49,7 +49,7 @@ export function PlayerStatsSectionSkeleton() {
 export function TotalStatsSectionSkeleton() {
   return (
     <section className="relative py-32 md:py-40 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+      <div className="page-container">
         <div className="text-center mb-16">
           <Skeleton className="h-4 w-40 mx-auto mb-4 bg-white/10" />
           <Skeleton className="h-8 w-56 mx-auto bg-white/10" />
