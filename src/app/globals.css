@@ -50,31 +50,6 @@
   mix-blend-mode: normal;
 }
 
-/* 어그로체 폰트 */
-@font-face {
-  font-family: 'Aggravo';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroL.woff')
-    format('woff');
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Aggravo';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroM.woff')
-    format('woff');
-  font-weight: 500;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Aggravo';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff')
-    format('woff');
-  font-weight: 700;
-  font-display: swap;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -165,6 +140,16 @@ html {
 }
 
 /* ===== Scroll-triggered animations ===== */
+/* 히어로 격자 배경: 한 칸(50px)만큼 밀고 처음으로 돌아가 끊김 없이 반복 */
+@keyframes grid-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(50px, 50px, 0);
+  }
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;

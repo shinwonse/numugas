@@ -44,7 +44,6 @@ import {
   Upload,
   X,
 } from 'lucide-react';
-import { domToPng } from 'modern-screenshot';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LineupPreview } from './lineup-preview';
 
@@ -270,7 +269,8 @@ export default function LineupPage() {
       // 렌더링 완료 보장
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // modern-screenshot을 사용하여 이미지 생성
+      // 이미지 저장을 누를 때만 modern-screenshot을 불러온다
+      const { domToPng } = await import('modern-screenshot');
       const dataUrl = await domToPng(previewRef.current, {
         scale: 2,
         backgroundColor: '#000000',

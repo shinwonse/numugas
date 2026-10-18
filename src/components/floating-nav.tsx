@@ -2,7 +2,6 @@
 
 import { TEAM_ITEMS } from '@/components/team-nav';
 import { cn } from '@/lib/cn';
-import { motion } from 'framer-motion';
 import {
   BarChart3,
   CalendarDays,
@@ -13,7 +12,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const NAV_ITEMS = [
   { label: 'HOME', href: '/', icon: Home, match: ['/'] },
@@ -33,13 +32,6 @@ const NAV_ITEMS = [
     match: TEAM_ITEMS.map((item) => item.href),
   },
 ] as const;
-
-const BLOB_SPRING = {
-  type: 'spring',
-  stiffness: 400,
-  damping: 30,
-  mass: 0.8,
-} as const;
 
 const isMatch = (pathname: string, href: string) =>
   href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -62,6 +54,21 @@ export function FloatingNav() {
   const [blobPos, setBlobPos] = useState<{ x: number; width: number } | null>(
     null,
   );
+  // 첫 위치를 그린 다음 프레임부터 transition을 켠다 (처음엔 날아오지 않게)
+  const [blobAnimated, setBlobAnimated] = useState(false);
+  const hasBlob = blobPos !== null;
+  useEffect(() => {
+    if (!hasBlob) {
+      setBlobAnimated(false);
+      return;
+    }
+    const frame = requestAnimationFrame(() => {
+      setBlobAnimated(true);
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+    };
+  }, [hasBlob]);
 
   const updateBlobPos = useCallback((index: number) => {
     const el = itemRefs.current[index];
@@ -176,21 +183,19 @@ export function FloatingNav() {
       >
         {/* Animated blob indicator */}
         {displayIndex >= 0 && blobPos && (
-          <motion.div
+          <div
             className={cn(
-              'absolute top-0 bottom-0 rounded-xl pointer-events-none',
+              'absolute top-0 bottom-0 left-0 rounded-xl pointer-events-none',
               'shadow-[inset_0_0.5px_0_rgba(255,255,255,0.15),0_0_12px_rgba(255,255,255,0.04)]',
+              isDragging ? 'bg-white/[0.22]' : 'bg-white/[0.12]',
+              // 살짝 튀는 스프링 느낌의 곡선
+              blobAnimated &&
+                'transition-[transform,width,background-color] duration-300 ease-[cubic-bezier(0.34,1.36,0.64,1)] motion-reduce:transition-none',
             )}
-            initial={false}
-            animate={{
-              x: blobPos.x,
+            style={{
               width: blobPos.width,
-              scale: isDragging ? 1.08 : 1,
-              backgroundColor: isDragging
-                ? 'rgba(255,255,255,0.22)'
-                : 'rgba(255,255,255,0.12)',
+              transform: `translateX(${blobPos.x}px) scale(${isDragging ? 1.08 : 1})`,
             }}
-            transition={BLOB_SPRING}
           />
         )}
 

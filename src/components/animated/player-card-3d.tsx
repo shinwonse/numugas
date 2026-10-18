@@ -1,7 +1,4 @@
-'use client';
-
 import { cn } from '@/lib/cn';
-import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -17,16 +14,11 @@ interface PlayerCard3DProps {
 }
 
 export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
-  const { ref, isInView } = useIntersectionObserver();
-
   return (
+    // JS 없이 CSS로만 나타나게 해서, 첫 화면 사진이 하이드레이션을 기다리지 않는다
     <div
-      ref={ref as React.RefObject<HTMLDivElement>}
-      style={{
-        opacity: isInView ? 1 : 0,
-        transform: isInView ? 'translateY(0)' : 'translateY(20px)',
-        transition: `opacity 0.5s ${index * 0.05}s, transform 0.5s ${index * 0.05}s`,
-      }}
+      className="animate-[fade-in-up_0.5s_ease_both] motion-reduce:animate-none"
+      style={{ animationDelay: `${Math.min(index, 8) * 50}ms` }}
     >
       <Link href={`/players/${player.number}`} className="block cursor-pointer">
         <div className="relative group transition-transform duration-300 ease-out hover:-translate-y-1.5">
@@ -49,7 +41,8 @@ export function PlayerCard3D({ player, index }: PlayerCard3DProps) {
                 alt={player.name}
                 fill
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, 33vw"
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                priority={index < 3}
               />
             </div>
 

@@ -2,7 +2,6 @@ import { FloatingNav } from '@/components/floating-nav';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
-import { aggravo } from '@/lib/fonts';
 import { Montserrat, Orbitron } from 'next/font/google';
 import type { Metadata, Viewport } from 'next/types';
 import type React from 'react';
@@ -187,7 +186,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${montserrat.variable} ${orbitron.variable} ${aggravo.variable} font-sans antialiased`}
+        className={`${montserrat.variable} ${orbitron.variable} font-sans antialiased`}
       >
         <QueryClientProviderWrapper>
           <ThemeProvider

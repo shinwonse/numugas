@@ -1,11 +1,22 @@
 'use client';
 
 import { cn } from '@/lib/cn';
-import { BatterStatsChart, PitcherStatsChart } from './player-stats-chart';
 import Image from 'next/image';
 import { PlayerPhotoGallery } from './player-photo-gallery';
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+// 차트(Recharts)는 접힌 '세부 기록' 안에서만 보이므로 필요할 때 불러온다
+const chartLoading = () => <div className="h-64 animate-pulse rounded-xl bg-white/[0.03]" />;
+const BatterStatsChart = dynamic(
+  () => import('./player-stats-chart').then((m) => m.BatterStatsChart),
+  { ssr: false, loading: chartLoading },
+);
+const PitcherStatsChart = dynamic(
+  () => import('./player-stats-chart').then((m) => m.PitcherStatsChart),
+  { ssr: false, loading: chartLoading },
+);
 
 const PLACEHOLDER_PHOTO = '/logo.webp';
 
@@ -69,7 +80,8 @@ export function PlayerDetailContent({
             src={player.photo}
             alt=""
             fill
-            sizes="100vw"
+            // 크게 흐려서 까는 배경이라 작은 이미지로 충분하다
+            sizes="96px"
             className="scale-110 object-cover opacity-30 blur-3xl saturate-150"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/30 via-[#050508]/75 to-[#050508]" />

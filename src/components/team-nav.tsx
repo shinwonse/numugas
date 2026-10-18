@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@/lib/cn';
-import { motion } from 'framer-motion';
 import { ListOrdered, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -12,10 +11,11 @@ export const TEAM_ITEMS = [
   { label: 'LEDGER', href: '/ledger', icon: Wallet },
 ] as const;
 
-const INDICATOR_SPRING = { type: 'spring', stiffness: 400, damping: 30 } as const;
-
 export function TeamNav() {
   const pathname = usePathname();
+  const activeIndex = TEAM_ITEMS.findIndex((item) =>
+    pathname.startsWith(item.href),
+  );
 
   return (
     <nav
@@ -29,9 +29,17 @@ export function TeamNav() {
         'shadow-[0_4px_24px_rgba(0,0,0,0.4)]',
       )}
     >
-      <div className="flex items-center gap-0.5">
-        {TEAM_ITEMS.map((item) => {
-          const isActive = pathname.startsWith(item.href);
+      <div className="relative grid grid-cols-2 gap-0.5">
+        {/* 선택 표시: 두 칸 너비가 같아 인덱스만큼 옮긴다 (팀 레이아웃에 있어 페이지 이동 시 미끄러진다) */}
+        {activeIndex >= 0 && (
+          <span
+            aria-hidden
+            className="absolute inset-y-0 left-0 w-[calc(50%-1px)] rounded-lg bg-white/[0.12] shadow-[inset_0_0.5px_0_rgba(255,255,255,0.15)] transition-transform duration-300 ease-[cubic-bezier(0.34,1.36,0.64,1)] motion-reduce:transition-none"
+            style={{ transform: `translateX(calc(${activeIndex * 100}% + ${activeIndex * 2}px))` }}
+          />
+        )}
+        {TEAM_ITEMS.map((item, i) => {
+          const isActive = i === activeIndex;
 
           return (
             <Link
@@ -39,21 +47,14 @@ export function TeamNav() {
               href={item.href}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'relative flex items-center gap-1.5 px-4 py-1.5 rounded-lg',
+                'relative flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-lg',
                 'text-[11px] font-medium tracking-wide',
                 'transition-colors duration-200',
                 isActive ? 'text-white' : 'text-white/40 hover:text-white/70',
               )}
             >
-              {isActive && (
-                <motion.span
-                  layoutId="team-nav-indicator"
-                  className="absolute inset-0 rounded-lg bg-white/[0.12] shadow-[inset_0_0.5px_0_rgba(255,255,255,0.15)]"
-                  transition={INDICATOR_SPRING}
-                />
-              )}
-              <item.icon size={14} strokeWidth={isActive ? 2 : 1.5} className="relative" />
-              <span className="relative">{item.label}</span>
+              <item.icon size={14} strokeWidth={isActive ? 2 : 1.5} />
+              <span>{item.label}</span>
             </Link>
           );
         })}

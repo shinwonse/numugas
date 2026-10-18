@@ -1,5 +1,4 @@
 import { SectionDivider } from '@/components/animated/section-divider';
-import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
 import { HeroSection } from '@/components/hero-section';
 import { PlayerStatsSection } from '@/components/player-stats-section';
@@ -10,11 +9,7 @@ import {
 } from '@/components/section-skeleton';
 import { StatsSection } from '@/components/stats-section';
 import { TotalStatsSection } from '@/components/total-stats-section';
-import {
-  YoutubeErrorFallback,
-  YoutubeLoadingFallback,
-} from '@/components/youtube-section';
-import { YoutubeSectionWrapper } from '@/components/youtube-section-wrapper';
+import { YoutubeSection } from '@/components/youtube-section';
 import {
   fetchBattingCareerStats,
   fetchSeasonBattingLeaders,
@@ -23,6 +18,7 @@ import {
   fetchTeamCareerStats,
   fetchTeamTotalStats,
 } from '@/lib/fetchers';
+import { fetchLatestYouTubeVideo } from '@/lib/fetchers/youtube';
 import { getCurrentSeason } from '@/lib/seasons';
 import { Suspense } from 'react';
 
@@ -64,6 +60,19 @@ async function PlayerStatsSectionData() {
   );
 }
 
+async function YoutubeSectionData() {
+  const video = await fetchLatestYouTubeVideo();
+  // 영상을 못 가져오면 섹션을 통째로 숨긴다
+  if (!video) return null;
+
+  return (
+    <>
+      <SectionDivider />
+      <YoutubeSection video={video} />
+    </>
+  );
+}
+
 async function TotalStatsSectionData() {
   const [battingCareerStats, pitchingCareerStats] = await Promise.all([
     fetchBattingCareerStats(),
@@ -98,12 +107,9 @@ export default function Home() {
         <TotalStatsSectionData />
       </Suspense>
 
-      <SectionDivider />
-      <ErrorBoundary fallback={<YoutubeErrorFallback />}>
-        <Suspense fallback={<YoutubeLoadingFallback />}>
-          <YoutubeSectionWrapper />
-        </Suspense>
-      </ErrorBoundary>
+      <Suspense>
+        <YoutubeSectionData />
+      </Suspense>
 
       <Footer />
     </main>

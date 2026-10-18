@@ -23,7 +23,7 @@ pnpm lint       # Run ESLint
 - **Styling**: Tailwind CSS + shadcn/ui components
 - **Database**: Supabase
 - **Data Fetching**: TanStack Query (client), Supabase client (server)
-- **Animations**: Framer Motion
+- **Animations**: CSS transitions (Tailwind)
 
 ### Directory Structure
 
@@ -36,7 +36,7 @@ src/
 │   └── lineup/            # Lineup preview page
 ├── components/
 │   ├── ui/                # shadcn/ui components (import via @/components/ui/*)
-│   └── animated/          # Framer Motion animated components
+│   └── animated/          # Animated components (CSS)
 ├── hooks/                 # Custom React hooks (use-batting-stats, use-team, etc.)
 ├── lib/
 │   ├── fetchers/         # Server-side data fetching functions (Supabase 직접 조회)

@@ -50,7 +50,7 @@ export function useStatsNavigation(
     const base = `/stats/${type}/${season}`;
     startTransition(() => {
       setShownLeague(value);
-      router.push(value === 'ALL' ? base : `${base}?league=${value}`);
+      router.push(value === 'ALL' ? base : `${base}/${value}`);
     });
   };
 

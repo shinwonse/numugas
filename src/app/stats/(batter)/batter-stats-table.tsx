@@ -25,7 +25,6 @@ import {
   type League,
 } from '@/lib/leagues';
 import { ChevronDown, ChevronUp, Search } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { StatsTableRowsSkeleton } from '../stats-skeleton';
 import { useStatsNavigation } from '../use-stats-navigation';
@@ -61,19 +60,15 @@ const COLUMNS = [
 
 export default function BatterStatsTable({
   season,
+  league,
   initialData,
 }: {
   season: string;
+  league: League | undefined;
   initialData: any[];
 }) {
-  const searchParams = useSearchParams();
-  const leagueParam = searchParams.get('league');
   const availableLeagues: League[] =
     season === '통산' ? [...LEAGUES] : getLeaguesForSeason(season);
-  const league =
-    leagueParam && availableLeagues.includes(leagueParam as League)
-      ? (leagueParam as League)
-      : undefined;
   const {
     isPending,
     showSkeleton,

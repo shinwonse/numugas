@@ -23,11 +23,8 @@ export async function generateMetadata({
   params,
 }: PlayerDetailPageProps): Promise<Metadata> {
   const { number } = await params;
-  const { data } = await supabase
-    .from('players')
-    .select('name, position, number')
-    .eq('number', number)
-    .single();
+  // 페이지 본문과 같은 캐시를 써서 선수 조회를 한 번만 한다
+  const { data } = await getCachedPlayerData(number);
 
   if (!data) {
     return { title: '선수 정보' };

@@ -1,80 +1,23 @@
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
-
+/**
+ * 천천히 흐르는 붉은 격자 배경.
+ * 50px 격자를 한 칸 크게 그려 두고 transform으로 한 칸씩 밀어 반복한다
+ * (매 프레임 다시 그리는 canvas 대신 GPU 합성만 쓰고, 화면 밖에서도 비용이 거의 없다).
+ */
 export function GridBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isClient) return;
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const setCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    setCanvasSize();
-    window.addEventListener('resize', setCanvasSize);
-
-    const gridSize = 50;
-    let animationFrame: number;
-
-    const drawGrid = (offset: number) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = 'rgba(239, 68, 68, 0.1)';
-      ctx.lineWidth = 1;
-
-      for (let x = offset % gridSize; x < canvas.width; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-
-      for (let y = offset % gridSize; y < canvas.height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-    };
-
-    let offset = 0;
-    const animate = () => {
-      offset = (offset + 0.2) % gridSize;
-      drawGrid(offset);
-      animationFrame = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', setCanvasSize);
-      cancelAnimationFrame(animationFrame);
-    };
-  }, [isClient]);
-
-  if (!isClient) return null;
-
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none"
-      style={{
-        mixBlendMode: 'screen',
-        animation: 'fade-in-only 2s ease-in-out forwards',
-      }}
-    />
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      style={{ mixBlendMode: 'screen', animation: 'fade-in-only 2s ease-in-out forwards' }}
+    >
+      <div
+        className="absolute -inset-[50px] animate-[grid-drift_4s_linear_infinite] motion-reduce:animate-none"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, rgba(239,68,68,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(239,68,68,0.1) 1px, transparent 1px)',
+          backgroundSize: '50px 50px',
+        }}
+      />
+    </div>
   );
 }
