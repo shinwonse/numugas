@@ -3,8 +3,18 @@
 import { itemColors, itemLabel, RESULT_STYLES } from '@/lib/calendar-styles';
 import { toKstDateKey, toKstTime, WEEKDAY_LABELS } from '@/lib/calendar-utils';
 import { cn } from '@/lib/cn';
+import { formatWinLoss, opponentHref } from '@/lib/opponents';
 import type { CalendarItem } from '@/types/calendar';
-import { CalendarDays, ExternalLink, MapPin, Pencil, Trash2 } from 'lucide-react';
+import {
+  CalendarDays,
+  ChevronRight,
+  ExternalLink,
+  MapPin,
+  Pencil,
+  Swords,
+  Trash2,
+} from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCalendarAdmin } from './calendar-admin';
 
@@ -34,6 +44,15 @@ function formatWhen(item: CalendarItem) {
   return `${start} ${time}`;
 }
 
+/** 경기 상세에 붙이는 상대 전적 요약 */
+export interface HeadToHeadSummary {
+  opponent: string;
+  games: number;
+  win: number;
+  lose: number;
+  draw: number;
+}
+
 /**
  * 일정 상세. PC 모달과 모바일 페이지에서 함께 쓴다.
  * 직접 등록한 일정이면 수정/삭제 버튼이 보이고, 누를 때 관리자 키를 묻는다.
@@ -41,8 +60,11 @@ function formatWhen(item: CalendarItem) {
 export function EventDetail({
   item,
   deletedHref,
+  headToHead,
 }: {
   item: CalendarItem;
+  /** 경기일 때 이 상대와의 통산 전적. 맞대결이 없으면 생략 */
+  headToHead?: HeadToHeadSummary | null;
   /** 삭제 후 이동할 경로. 없으면 이전 화면(모달을 연 캘린더)으로 돌아간다. */
   deletedHref?: string;
 }) {
@@ -90,6 +112,24 @@ export function EventDetail({
             <dt className="sr-only">장소</dt>
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white/40" aria-hidden />
             <dd className="text-white/80">{item.location}</dd>
+          </div>
+        )}
+        {headToHead && (
+          <div className="flex items-start gap-3">
+            <dt className="sr-only">상대 전적</dt>
+            <Swords className="mt-0.5 h-4 w-4 shrink-0 text-white/40" aria-hidden />
+            <dd>
+              <Link
+                href={opponentHref(headToHead.opponent)}
+                className="inline-flex items-center gap-1 text-white/80 transition-colors hover:text-white"
+              >
+                <span className="tabular-nums">
+                  상대 전적 {formatWinLoss(headToHead)}
+                </span>
+                <span className="text-white/40">· 전체 보기</span>
+                <ChevronRight className="h-4 w-4 text-white/40" aria-hidden />
+              </Link>
+            </dd>
           </div>
         )}
       </dl>

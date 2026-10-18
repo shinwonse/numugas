@@ -1,4 +1,5 @@
 import { fetchCalendarItem } from '@/lib/fetchers/calendar';
+import { fetchHeadToHeadSummary } from '@/lib/fetchers/opponents';
 import { notFound } from 'next/navigation';
 import { EventDetailModal } from '../../../event-detail-modal';
 
@@ -10,5 +11,6 @@ export default async function InterceptedEventPage({
 }) {
   const item = await fetchCalendarItem((await params).id);
   if (!item) notFound();
-  return <EventDetailModal item={item} />;
+  const headToHead = await fetchHeadToHeadSummary(item);
+  return <EventDetailModal item={item} headToHead={headToHead} />;
 }

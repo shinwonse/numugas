@@ -1,5 +1,6 @@
 import { toKstDateKey } from '@/lib/calendar-utils';
 import { fetchCalendarItem } from '@/lib/fetchers/calendar';
+import { fetchHeadToHeadSummary } from '@/lib/fetchers/opponents';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -33,6 +34,7 @@ export default async function EventPage({
 }) {
   const item = await fetchCalendarItem((await params).id);
   if (!item) notFound();
+  const headToHead = await fetchHeadToHeadSummary(item);
   const monthHref = `/calendar/${toKstDateKey(item.startsAt).slice(0, 7)}`;
 
   return (
@@ -45,7 +47,7 @@ export default async function EventPage({
         캘린더
       </Link>
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl md:p-6">
-        <EventDetail item={item} deletedHref={monthHref} />
+        <EventDetail item={item} deletedHref={monthHref} headToHead={headToHead} />
       </div>
     </main>
   );

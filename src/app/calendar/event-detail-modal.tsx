@@ -5,14 +5,20 @@ import type { CalendarItem } from '@/types/calendar';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { ChevronLeft, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { EventDetail } from './event-detail';
+import { EventDetail, type HeadToHeadSummary } from './event-detail';
 
 /**
  * 캘린더에서 일정을 눌렀을 때(가로챈 라우트) 띄우는 상세 화면.
  * PC(md 이상)는 가운데 모달, 모바일은 화면 전체를 덮는 페이지처럼 보인다.
  * 닫으면 history를 되돌려 URL도 캘린더로 돌아간다.
  */
-export function EventDetailModal({ item }: { item: CalendarItem }) {
+export function EventDetailModal({
+  item,
+  headToHead,
+}: {
+  item: CalendarItem;
+  headToHead?: HeadToHeadSummary | null;
+}) {
   const router = useRouter();
 
   return (
@@ -55,7 +61,7 @@ export function EventDetailModal({ item }: { item: CalendarItem }) {
           </DialogPrimitive.Close>
 
           <div className="flex-1 overflow-y-auto px-5 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-6 md:p-6 md:pr-12">
-            <EventDetail item={item} />
+            <EventDetail item={item} headToHead={headToHead} />
           </div>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

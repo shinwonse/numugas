@@ -1,29 +1,46 @@
 'use client';
 
+import { OPPONENTS_HREF } from '@/lib/opponents';
 import { getCurrentSeason } from '@/lib/seasons';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { StatsPageHeader } from './stats-page-header';
 
-const TYPES = [
+const PLAYER_TYPES = [
   { key: 'batter', label: '타자 기록' },
   { key: 'pitcher', label: '투수 기록' },
 ];
 
 /**
- * 레이아웃에 두는 헤더(제목 + 타자/투수 탭).
+ * 레이아웃에 두는 헤더(제목 + 타자/투수/상대 전적 탭).
  * 타입·시즌이 바뀌어도 리마운트되지 않아 등장 애니메이션이 다시 재생되지 않는다.
  */
 export function StatsShellHeader() {
   const params = useParams<{ type?: string; season?: string }>();
-  const type = params.type ? decodeURIComponent(params.type) : 'batter';
+  const pathname = usePathname();
+  const isOpponents = pathname.startsWith(OPPONENTS_HREF);
+  const type = isOpponents
+    ? 'opponents'
+    : params.type
+      ? decodeURIComponent(params.type)
+      : 'batter';
   const season = params.season ? decodeURIComponent(params.season) : getCurrentSeason();
 
-  const tabList = TYPES.map((t) => ({
-    key: t.key,
-    label: t.label,
-    href: `/stats/${encodeURIComponent(t.key)}/${encodeURIComponent(season)}`,
-    prefetch: true,
-  }));
+  const tabList = [
+    ...PLAYER_TYPES.map((t) => ({
+      key: t.key,
+      label: t.label,
+      href: `/stats/${encodeURIComponent(t.key)}/${encodeURIComponent(season)}`,
+      prefetch: true,
+    })),
+    { key: 'opponents', label: '상대 전적', href: OPPONENTS_HREF, prefetch: true },
+  ];
 
-  return <StatsPageHeader tabList={tabList} currentType={type} />;
+  return (
+    <StatsPageHeader
+      eyebrow={isOpponents ? 'Head to Head' : 'Player Statistics'}
+      title={isOpponents ? '상대 전적' : '선수 기록'}
+      tabList={tabList}
+      currentType={type}
+    />
+  );
 }

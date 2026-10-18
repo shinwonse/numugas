@@ -1,194 +1,221 @@
 'use client';
 
+import StatsTabs from '@/components/stats-tabs';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { formatInning, parseInning } from '@/lib/inning';
+import { useState } from 'react';
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+
+type Row = { season: string } & Record<string, number | string>;
+
+interface MetricGroup {
+  key: string;
+  label: string;
+  config: ChartConfig;
+  /** 축·툴팁 숫자 표시 */
+  format: (value: number, dataKey: string) => string;
+}
+
+const COLORS = ['#ef4444', '#f97316', '#eab308'];
+
+function metrics(entries: Array<[key: string, label: string]>): ChartConfig {
+  return Object.fromEntries(
+    entries.map(([key, label], i) => [key, { label, color: COLORS[i] }]),
+  );
+}
+
+const toFixed = (digits: number) => (value: number) => value.toFixed(digits);
+const toInteger = (value: number) => String(Math.round(value));
+
+/**
+ * 시즌별 지표 추이. 지표 묶음(비율/누적)을 토글로 바꿔 본다.
+ * 시즌이 2개 미만이면 선이 그려지지 않으므로 숨긴다.
+ */
+function TrendChart({ data, groups }: { data: Row[]; groups: MetricGroup[] }) {
+  const [groupKey, setGroupKey] = useState(groups[0].key);
+  if (data.length < 2) return null;
+
+  const group = groups.find((g) => g.key === groupKey) ?? groups[0];
+  const keys = Object.keys(group.config);
+
+  return (
+    <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+          시즌별 추이
+        </h2>
+        <StatsTabs
+          tabs={groups.map((g) => ({ key: g.key, label: g.label }))}
+          current={group.key}
+          onTabClick={setGroupKey}
+          className="mx-0 h-9 max-w-[10rem]"
+        />
+      </div>
+
+      <ChartContainer config={group.config} className="h-[260px] w-full md:h-[300px]">
+        <LineChart data={data} margin={{ top: 5, right: 12, bottom: 5, left: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
+          <XAxis
+            dataKey="season"
+            stroke="rgba(255,255,255,0.45)"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis
+            stroke="rgba(255,255,255,0.45)"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            width={44}
+            domain={[0, 'auto']}
+            allowDecimals={group.key === 'rate'}
+            tickFormatter={(v: number) => group.format(v, '')}
+          />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                formatter={(value, name, entry) => (
+                  <div className="flex w-full items-center justify-between gap-4">
+                    <span className="flex items-center gap-1.5 text-white/60">
+                      <span
+                        className="h-2 w-2 rounded-full"
+                        style={{ backgroundColor: entry.color }}
+                      />
+                      {group.config[String(name)].label}
+                    </span>
+                    <span className="font-mono font-medium tabular-nums text-white">
+                      {typeof value === 'number' ? group.format(value, String(name)) : value}
+                    </span>
+                  </div>
+                )}
+              />
+            }
+          />
+          {keys.map((key) => (
+            <Line
+              key={key}
+              type="monotone"
+              dataKey={key}
+              stroke={`var(--color-${key})`}
+              strokeWidth={2.5}
+              dot={{ r: 3.5, fill: `var(--color-${key})` }}
+              activeDot={{ r: 5.5 }}
+              isAnimationActive={false}
+            />
+          ))}
+        </LineChart>
+      </ChartContainer>
+
+      <ul className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-1">
+        {keys.map((key) => (
+          <li key={key} className="flex items-center gap-2 text-sm text-white/60">
+            <span
+              className="h-2.5 w-2.5 rounded-full"
+              style={{ backgroundColor: group.config[key].color }}
+            />
+            {group.config[key].label}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 interface BatterSeasonStat {
   season: number;
-  atbats: number;
   hits: number;
-  walks: number;
-  hitbypitch: number;
-  sacrificeflies: number;
-  totalbases: number;
+  homeruns: number;
+  rbi: number;
+  avg: string;
+  onbasepercentage: string;
+  sluggingpercentage: string;
+}
+
+const BATTER_GROUPS: MetricGroup[] = [
+  {
+    key: 'rate',
+    label: '비율',
+    config: metrics([
+      ['avg', '타율'],
+      ['obp', '출루율'],
+      ['slg', '장타율'],
+    ]),
+    format: toFixed(3),
+  },
+  {
+    key: 'count',
+    label: '누적',
+    config: metrics([
+      ['hits', '안타'],
+      ['homeruns', '홈런'],
+      ['rbi', '타점'],
+    ]),
+    format: toInteger,
+  },
+];
+
+export function BatterStatsChart({ seasonStats }: { seasonStats: BatterSeasonStat[] }) {
+  const data = seasonStats.map((stat) => ({
+    season: String(stat.season),
+    avg: Number(stat.avg) || 0,
+    obp: Number(stat.onbasepercentage) || 0,
+    slg: Number(stat.sluggingpercentage) || 0,
+    hits: stat.hits,
+    homeruns: stat.homeruns,
+    rbi: stat.rbi,
+  }));
+
+  return <TrendChart data={data} groups={BATTER_GROUPS} />;
 }
 
 interface PitcherSeasonStat {
   season: number;
   era: string;
   whip: string;
-  strikeouts: number;
   innings: string;
+  strikeouts: number;
+  wins: number;
 }
 
-const batterChartConfig = {
-  avg: { label: '타율', color: '#ef4444' },
-  obp: { label: '출루율', color: '#f97316' },
-  slg: { label: '장타율', color: '#eab308' },
-} satisfies ChartConfig;
-
-const pitcherChartConfig = {
-  era: { label: 'ERA', color: '#ef4444' },
-  whip: { label: 'WHIP', color: '#f97316' },
-} satisfies ChartConfig;
-
-export function BatterStatsChart({ seasonStats }: { seasonStats: BatterSeasonStat[] }) {
-  if (seasonStats.length < 2) return null;
-
-  const data = seasonStats.map((stat) => {
-    const avg = stat.atbats ? stat.hits / stat.atbats : 0;
-    const obpDenom = stat.atbats + stat.walks + stat.hitbypitch + stat.sacrificeflies;
-    const obp = obpDenom ? (stat.hits + stat.walks + stat.hitbypitch) / obpDenom : 0;
-    const slg = stat.atbats ? stat.totalbases / stat.atbats : 0;
-
-    return {
-      season: String(stat.season),
-      avg: Number(avg.toFixed(3)),
-      obp: Number(obp.toFixed(3)),
-      slg: Number(slg.toFixed(3)),
-    };
-  });
-
-  return (
-    <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
-        성적 추이
-      </h2>
-      <ChartContainer config={batterChartConfig} className="h-[300px] w-full">
-        <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis
-            dataKey="season"
-            stroke="#9ca3af"
-            fontSize={12}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            stroke="#9ca3af"
-            fontSize={12}
-            tickLine={false}
-            axisLine={false}
-            domain={[0, 'auto']}
-            tickFormatter={(v: number) => v.toFixed(3)}
-          />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                formatter={(value) => {
-                  if (typeof value === 'number') return value.toFixed(3);
-                  return value;
-                }}
-              />
-            }
-          />
-          <Line
-            type="monotone"
-            dataKey="avg"
-            stroke="var(--color-avg)"
-            strokeWidth={2.5}
-            dot={{ r: 4, fill: 'var(--color-avg)' }}
-            activeDot={{ r: 6 }}
-          />
-          <Line
-            type="monotone"
-            dataKey="obp"
-            stroke="var(--color-obp)"
-            strokeWidth={2.5}
-            dot={{ r: 4, fill: 'var(--color-obp)' }}
-            activeDot={{ r: 6 }}
-          />
-          <Line
-            type="monotone"
-            dataKey="slg"
-            stroke="var(--color-slg)"
-            strokeWidth={2.5}
-            dot={{ r: 4, fill: 'var(--color-slg)' }}
-            activeDot={{ r: 6 }}
-          />
-        </LineChart>
-      </ChartContainer>
-      <div className="flex justify-center gap-6 mt-4">
-        {Object.entries(batterChartConfig).map(([key, config]) => (
-          <div key={key} className="flex items-center gap-2">
-            <span
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: config.color }}
-            />
-            <span className="text-sm text-gray-400">{config.label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+const PITCHER_GROUPS: MetricGroup[] = [
+  {
+    key: 'rate',
+    label: '비율',
+    config: metrics([
+      ['era', 'ERA'],
+      ['whip', 'WHIP'],
+    ]),
+    format: toFixed(2),
+  },
+  {
+    key: 'count',
+    label: '누적',
+    config: metrics([
+      ['innings', '이닝'],
+      ['strikeouts', '탈삼진'],
+      ['wins', '승'],
+    ]),
+    // 이닝은 1/3 단위라 툴팁에서 "12.1"처럼 야구식으로 보여준다
+    format: (value, dataKey) =>
+      dataKey === 'innings' ? formatInning(value) : toInteger(value),
+  },
+];
 
 export function PitcherStatsChart({ seasonStats }: { seasonStats: PitcherSeasonStat[] }) {
-  if (seasonStats.length < 2) return null;
-
   const data = seasonStats.map((stat) => ({
     season: String(stat.season),
-    era: Number(parseFloat(stat.era || '0').toFixed(2)),
-    whip: Number(parseFloat(stat.whip || '0').toFixed(2)),
+    era: Number(stat.era) || 0,
+    whip: Number(stat.whip) || 0,
+    innings: parseInning(stat.innings),
+    strikeouts: stat.strikeouts,
+    wins: stat.wins,
   }));
 
-  return (
-    <section className="w-full bg-gradient-to-br from-gray-900/80 to-black/60 backdrop-blur-sm border border-white/10 rounded-2xl shadow-xl shadow-red-400/10 p-4 md:p-8">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
-        성적 추이
-      </h2>
-      <ChartContainer config={pitcherChartConfig} className="h-[300px] w-full">
-        <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis
-            dataKey="season"
-            stroke="#9ca3af"
-            fontSize={12}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            stroke="#9ca3af"
-            fontSize={12}
-            tickLine={false}
-            axisLine={false}
-            domain={[0, 'auto']}
-          />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <Line
-            type="monotone"
-            dataKey="era"
-            stroke="var(--color-era)"
-            strokeWidth={2.5}
-            dot={{ r: 4, fill: 'var(--color-era)' }}
-            activeDot={{ r: 6 }}
-          />
-          <Line
-            type="monotone"
-            dataKey="whip"
-            stroke="var(--color-whip)"
-            strokeWidth={2.5}
-            dot={{ r: 4, fill: 'var(--color-whip)' }}
-            activeDot={{ r: 6 }}
-          />
-        </LineChart>
-      </ChartContainer>
-      <div className="flex justify-center gap-6 mt-4">
-        {Object.entries(pitcherChartConfig).map(([key, config]) => (
-          <div key={key} className="flex items-center gap-2">
-            <span
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: config.color }}
-            />
-            <span className="text-sm text-gray-400">{config.label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+  return <TrendChart data={data} groups={PITCHER_GROUPS} />;
 }

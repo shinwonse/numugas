@@ -112,6 +112,29 @@ export async function fetchCalendarMonth(
   ].sort(byStartsAt);
 }
 
+export type GameItem = Extract<CalendarItem, { kind: 'game' }>;
+
+/**
+ * 전체 기간의 경기(크롤링 경기 + 직접 등록한 경기)를 시간순으로 반환.
+ * 실패 시 throw.
+ */
+export async function fetchAllGames(): Promise<GameItem[]> {
+  const [gamesRes, eventsRes] = await Promise.all([
+    supabase.from('schedule').select(GAME_COLUMNS),
+    supabase.from('club_events').select('*').eq('type', 'game'),
+  ]);
+
+  if (gamesRes.error) throw gamesRes.error;
+  if (eventsRes.error) throw eventsRes.error;
+
+  return [
+    ...(gamesRes.data as GameRow[]).map(gameToItem),
+    ...(eventsRes.data as ClubEvent[]).map(eventToItem),
+  ]
+    .filter((item): item is GameItem => item.kind === 'game')
+    .sort(byStartsAt);
+}
+
 /**
  * 캘린더 항목 하나 조회. id는 CalendarItem.id 형식(`game-<번호>` / `event-<uuid>`).
  * 없으면 null, 조회 실패 시 throw.
