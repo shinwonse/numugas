@@ -1,4 +1,4 @@
-import { ListOrdered, type LucideIcon, Wallet } from 'lucide-react';
+import { ListOrdered, type LucideIcon, RefreshCw, Wallet } from 'lucide-react';
 
 export type TeamMenuItem = {
   label: string;
@@ -25,6 +25,14 @@ export const TEAM_ITEMS: readonly TeamMenuItem[] = [
     description: '회비 납부 현황과 입출금 내역',
     href: '/ledger',
     icon: Wallet,
+    locked: true,
+  },
+  {
+    label: 'ADMIN',
+    title: '데이터 관리',
+    description: '기록·일정을 다시 불러와 사이트에 반영',
+    href: '/admin',
+    icon: RefreshCw,
     locked: true,
   },
 ];
