@@ -1,3 +1,4 @@
+import { PageHeader } from '@/components/page-header';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const WEEKS = 5;
@@ -9,12 +10,7 @@ export default function Loading() {
       aria-busy
       aria-label="일정을 불러오는 중"
     >
-      <div className="mb-8 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">
-          Club Calendar
-        </p>
-        <h1 className="mt-2 text-3xl md:text-4xl font-bold">구단 캘린더</h1>
-      </div>
+      <PageHeader eyebrow="Club Calendar" title="구단 캘린더" />
 
       <div className="mb-6 flex items-center justify-between">
         <Skeleton className="h-10 w-10 rounded-xl bg-white/[0.06]" />

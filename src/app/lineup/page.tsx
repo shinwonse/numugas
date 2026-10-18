@@ -1,5 +1,6 @@
 'use client';
 
+import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import {
   Collapsible,
@@ -330,47 +331,8 @@ export default function LineupPage() {
           <div className="absolute -bottom-[20%] left-[30%] h-[60vh] w-[60vh] rounded-full bg-red-900/10 blur-[120px]" />
         </div>
 
-        <div className="relative z-10 px-4 pt-24 pb-16 md:pt-28 md:pb-20">
-          {/* Header Section */}
-          <div className="text-center mb-10 md:mb-14">
-            {/* Glass badge */}
-            <div
-              className="mb-5 inline-flex"
-              style={{ animation: 'fade-in-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both' }}
-            >
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/[0.08] text-xs md:text-sm font-semibold uppercase tracking-[0.25em] text-red-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                Lineup Generator
-              </span>
-            </div>
-
-            {/* Title */}
-            <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 font-display tracking-tight"
-              style={{ animation: 'fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both' }}
-            >
-              <span className="bg-gradient-to-b from-white via-white to-white/50 bg-clip-text text-transparent">
-                라인업{' '}
-              </span>
-              <span className="bg-gradient-to-b from-red-400 to-red-600 bg-clip-text text-transparent">
-                작성
-              </span>
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              className="text-sm md:text-base text-gray-500 mb-8"
-              style={{ animation: 'fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s both' }}
-            >
-              라인업을 작성하고 이미지로 저장하세요
-            </p>
-
-            {/* Decorative line */}
-            <div
-              className="mx-auto h-px w-24 bg-gradient-to-r from-transparent via-red-500/60 to-transparent"
-              style={{ animation: 'scale-in-x 0.8s ease 0.25s both' }}
-            />
-          </div>
+        <div className="relative z-10 px-4 pt-20 pb-16 md:pb-20">
+          <PageHeader eyebrow="Lineup Generator" title="라인업" />
 
           {/* 반응형 레이아웃 - 모바일은 세로 스택, 데스크탑은 가로 정렬 */}
           <div

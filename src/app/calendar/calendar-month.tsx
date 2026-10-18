@@ -3,6 +3,7 @@ import { cn } from '@/lib/cn';
 import { fetchCalendarMonth } from '@/lib/fetchers/calendar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { PageHeader } from '@/components/page-header';
 import { CalendarView } from './calendar-view';
 
 const navButton = cn(
@@ -24,12 +25,7 @@ export async function CalendarMonth({
 
   return (
     <main className="mx-auto max-w-5xl px-4 pt-20 pb-32 text-white">
-      <div className="mb-8 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">
-          Club Calendar
-        </p>
-        <h1 className="mt-2 text-3xl md:text-4xl font-bold">구단 캘린더</h1>
-      </div>
+      <PageHeader eyebrow="Club Calendar" title="구단 캘린더" />
 
       <div className="mb-6 flex items-center justify-between">
         <Link
