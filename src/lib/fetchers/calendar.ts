@@ -1,4 +1,8 @@
-import { getGameOutcome, getMonthRange } from '@/lib/calendar-utils';
+import {
+  getGameOutcome,
+  getMonthRange,
+  resultFromScore,
+} from '@/lib/calendar-utils';
 import { supabase } from '@/lib/supabase';
 import type { CalendarItem, ClubEvent } from '@/types/calendar';
 
@@ -31,14 +35,37 @@ function gameToItem(game: GameRow): CalendarItem {
     result,
     // 경기 전에는 BOX SCORE 링크가 의미 없다
     link: result ? game.result_link : null,
+    description: null,
   };
 }
 
 function eventToItem(event: ClubEvent): CalendarItem {
+  // 직접 등록한 경기는 크롤링된 경기와 같은 모양으로 보여준다
+  if (event.type === 'game') {
+    const opponent = event.opponent ?? '';
+    const score =
+      event.our_score !== null && event.their_score !== null
+        ? { ours: event.our_score, theirs: event.their_score }
+        : null;
+    return {
+      kind: 'game',
+      id: `event-${event.id}`,
+      startsAt: event.starts_at,
+      title: `vs ${opponent}`,
+      category: '',
+      location: event.location,
+      opponent,
+      score,
+      result: score ? resultFromScore(score.ours, score.theirs) : null,
+      link: null,
+      description: event.description,
+      record: event,
+    };
+  }
   return {
     kind: 'event',
     id: `event-${event.id}`,
-    eventId: event.id,
+    record: event,
     startsAt: event.starts_at,
     endsAt: event.ends_at,
     allDay: event.all_day,

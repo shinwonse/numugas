@@ -44,6 +44,10 @@ export function parseGameDate(raw: string, season: number): string | null {
   return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${minute}:00+09:00`;
 }
 
+export function resultFromScore(ours: number, theirs: number): GameResult {
+  return ours > theirs ? '승' : ours < theirs ? '패' : '무';
+}
+
 export interface GameSide {
   team1_name: string;
   team1_score: string;
@@ -70,8 +74,7 @@ export function getGameOutcome(game: GameSide): {
     return { opponent, score: null, result: null };
   }
 
-  const result: GameResult = ours > theirs ? '승' : ours < theirs ? '패' : '무';
-  return { opponent, score: { ours, theirs }, result };
+  return { opponent, score: { ours, theirs }, result: resultFromScore(ours, theirs) };
 }
 
 /** "2026-10" 형식 파싱. 잘못된 값이면 null. */

@@ -1,7 +1,7 @@
-import type { CalendarItem, ClubEventType } from '@/types/calendar';
+import type { CalendarItem, ClubScheduleType } from '@/types/calendar';
 import { CLUB_EVENT_TYPE_LABELS } from '@/types/calendar';
 
-const EVENT_COLORS: Record<ClubEventType, { dot: string; chip: string }> = {
+const EVENT_COLORS: Record<ClubScheduleType, { dot: string; chip: string }> = {
   training: { dot: 'bg-sky-400', chip: 'bg-sky-500/15 text-sky-300' },
   dinner: { dot: 'bg-amber-400', chip: 'bg-amber-500/15 text-amber-300' },
   event: { dot: 'bg-violet-400', chip: 'bg-violet-500/15 text-violet-300' },

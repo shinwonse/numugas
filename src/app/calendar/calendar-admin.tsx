@@ -24,7 +24,7 @@ import {
   type ClubEventPayload,
 } from '@/lib/club-events-client';
 import { cn } from '@/lib/cn';
-import type { CalendarItem } from '@/types/calendar';
+import type { ClubEvent } from '@/types/calendar';
 import { KeyRound, Loader2 } from 'lucide-react';
 import {
   createContext,
@@ -41,15 +41,13 @@ import {
   verifyCalendarAdmin,
 } from './actions';
 
-type EventItem = Extract<CalendarItem, { kind: 'event' }>;
-
 interface CalendarAdminContextValue {
   isAdmin: boolean;
   openUnlock: () => void;
   lock: () => void;
   openCreate: (date: string) => void;
-  openEdit: (item: EventItem) => void;
-  openDelete: (item: EventItem) => void;
+  openEdit: (record: ClubEvent) => void;
+  openDelete: (record: ClubEvent) => void;
 }
 
 const CalendarAdminContext = createContext<CalendarAdminContextValue | null>(
@@ -87,7 +85,7 @@ const dialogClass =
 
 type EditorState =
   | { mode: 'create'; date: string }
-  | { mode: 'edit'; item: EventItem }
+  | { mode: 'edit'; record: ClubEvent }
   | null;
 
 /**
@@ -99,7 +97,7 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
   const [unlockOpen, setUnlockOpen] = useState(false);
   const [unlockError, setUnlockError] = useState<string | null>(null);
   const [editor, setEditor] = useState<EditorState>(null);
-  const [deleting, setDeleting] = useState<EventItem | null>(null);
+  const [deleting, setDeleting] = useState<ClubEvent | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
@@ -126,7 +124,7 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
     if (!secret || !editor) return;
     const result = await saveClubEventAction(
       secret,
-      editor.mode === 'edit' ? editor.item.eventId : null,
+      editor.mode === 'edit' ? editor.record.id : null,
       payload,
     );
     if (!result.ok) {
@@ -144,7 +142,7 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
     setIsDeleting(true);
     setDeleteError(null);
     try {
-      const result = await deleteClubEventAction(secret, deleting.eventId);
+      const result = await deleteClubEventAction(secret, deleting.id);
       if (result.ok) setDeleting(null);
       else if (result.status === 401) handleAuthFailure();
       else setDeleteError(result.error);
@@ -166,12 +164,12 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
       openCreate: (date) => {
         setEditor({ mode: 'create', date });
       },
-      openEdit: (item) => {
-        setEditor({ mode: 'edit', item });
+      openEdit: (record) => {
+        setEditor({ mode: 'edit', record });
       },
-      openDelete: (item) => {
+      openDelete: (record) => {
         setDeleteError(null);
-        setDeleting(item);
+        setDeleting(record);
       },
     }),
     [secret, lock],
@@ -209,18 +207,10 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
           </DialogHeader>
           {editor && (
             <ClubEventForm
-              key={editor.mode === 'edit' ? editor.item.id : editor.date}
+              key={editor.mode === 'edit' ? editor.record.id : editor.date}
               initial={
                 editor.mode === 'edit'
-                  ? clubEventToForm({
-                      title: editor.item.title,
-                      type: editor.item.eventType,
-                      starts_at: editor.item.startsAt,
-                      ends_at: editor.item.endsAt,
-                      all_day: editor.item.allDay,
-                      location: editor.item.location,
-                      description: editor.item.description,
-                    })
+                  ? clubEventToForm(editor.record)
                   : emptyClubEventForm(editor.date)
               }
               submitLabel={editor.mode === 'edit' ? '수정' : '추가'}

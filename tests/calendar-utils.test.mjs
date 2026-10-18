@@ -125,3 +125,9 @@ test('buildMonthGrid starts on Sunday and pads to full weeks', () => {
   // 2026-09-30 is a Wednesday, so the last week is padded
   assert.deepEqual(utils.buildMonthGrid(2026, 9).at(-1).slice(3), ['2026-09-30', null, null, null]);
 });
+
+test('resultFromScore decides win/loss/draw from our side', () => {
+  assert.equal(utils.resultFromScore(7, 3), '승');
+  assert.equal(utils.resultFromScore(2, 9), '패');
+  assert.equal(utils.resultFromScore(4, 4), '무');
+});

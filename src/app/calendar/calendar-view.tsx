@@ -230,16 +230,16 @@ export function CalendarView({
                 key={item.id}
                 item={item}
                 onEdit={
-                  admin.isAdmin && item.kind === 'event'
+                  admin.isAdmin && item.record
                     ? () => {
-                        admin.openEdit(item);
+                        if (item.record) admin.openEdit(item.record);
                       }
                     : undefined
                 }
                 onDelete={
-                  admin.isAdmin && item.kind === 'event'
+                  admin.isAdmin && item.record
                     ? () => {
-                        admin.openDelete(item);
+                        if (item.record) admin.openDelete(item.record);
                       }
                     : undefined
                 }
@@ -298,7 +298,7 @@ function CalendarItemCard({
               {item.location}
             </p>
           )}
-          {item.kind === 'event' && item.description && (
+          {item.description && (
             <p className="mt-2 whitespace-pre-line text-sm text-white/60">
               {item.description}
             </p>

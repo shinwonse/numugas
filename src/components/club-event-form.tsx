@@ -70,23 +70,42 @@ export function ClubEventForm({
     }
   };
 
+  const isGame = form.type === 'game';
+
   return (
     <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
       <div className="grid grid-cols-[1fr_auto] gap-3">
-        <div>
-          <label htmlFor={`${id}-title`} className={labelClass}>
-            제목
-          </label>
-          <input
-            id={`${id}-title`}
-            value={form.title}
-            onChange={(e) => update('title', e.target.value)}
-            placeholder="예: 정기 훈련"
-            className={inputClass}
-            autoFocus
-            required
-          />
-        </div>
+        {isGame ? (
+          <div>
+            <label htmlFor={`${id}-opponent`} className={labelClass}>
+              상대팀
+            </label>
+            <input
+              id={`${id}-opponent`}
+              value={form.opponent}
+              onChange={(e) => update('opponent', e.target.value)}
+              placeholder="예: 크레이지 덕스"
+              className={inputClass}
+              autoFocus
+              required
+            />
+          </div>
+        ) : (
+          <div>
+            <label htmlFor={`${id}-title`} className={labelClass}>
+              제목
+            </label>
+            <input
+              id={`${id}-title`}
+              value={form.title}
+              onChange={(e) => update('title', e.target.value)}
+              placeholder="예: 정기 훈련"
+              className={inputClass}
+              autoFocus
+              required
+            />
+          </div>
+        )}
         <div>
           <label htmlFor={`${id}-type`} className={labelClass}>
             종류
@@ -131,7 +150,7 @@ export function ClubEventForm({
             value={form.startTime}
             onChange={(e) => update('startTime', e.target.value)}
             className={inputClass}
-            disabled={form.allDay}
+            disabled={!isGame && form.allDay}
           />
         </div>
         <div>
@@ -144,20 +163,49 @@ export function ClubEventForm({
             value={form.endTime}
             onChange={(e) => update('endTime', e.target.value)}
             className={inputClass}
-            disabled={form.allDay}
+            disabled={!isGame && form.allDay}
           />
         </div>
       </div>
 
-      <label className="flex w-fit cursor-pointer items-center gap-2 text-sm text-gray-300">
-        <input
-          type="checkbox"
-          checked={form.allDay}
-          onChange={(e) => update('allDay', e.target.checked)}
-          className="h-4 w-4 accent-red-500"
-        />
-        종일
-      </label>
+      {isGame ? (
+        <fieldset>
+          <legend className={labelClass}>점수 (선택 · 경기 후 입력)</legend>
+          <div className="flex items-center gap-3">
+            <label className="flex flex-1 items-center gap-2">
+              <span className="shrink-0 text-xs text-gray-400">우리</span>
+              <input
+                value={form.ourScore}
+                onChange={(e) => update('ourScore', e.target.value)}
+                inputMode="numeric"
+                aria-label="우리 팀 점수"
+                className={cn(inputClass, 'text-center tabular-nums')}
+              />
+            </label>
+            <span className="text-gray-500">:</span>
+            <label className="flex flex-1 items-center gap-2">
+              <input
+                value={form.theirScore}
+                onChange={(e) => update('theirScore', e.target.value)}
+                inputMode="numeric"
+                aria-label="상대 팀 점수"
+                className={cn(inputClass, 'text-center tabular-nums')}
+              />
+              <span className="shrink-0 text-xs text-gray-400">상대</span>
+            </label>
+          </div>
+        </fieldset>
+      ) : (
+        <label className="flex w-fit cursor-pointer items-center gap-2 text-sm text-gray-300">
+          <input
+            type="checkbox"
+            checked={form.allDay}
+            onChange={(e) => update('allDay', e.target.checked)}
+            className="h-4 w-4 accent-red-500"
+          />
+          종일
+        </label>
+      )}
 
       <div>
         <label htmlFor={`${id}-location`} className={labelClass}>
