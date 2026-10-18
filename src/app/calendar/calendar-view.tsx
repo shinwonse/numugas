@@ -1,20 +1,35 @@
 'use client';
 
-import { buildMonthGrid, toKstDateKey, toKstTime } from '@/lib/calendar-utils';
-import { itemColors, itemLabel, RESULT_STYLES } from '@/lib/calendar-styles';
+import {
+  buildMonthGrid,
+  formatMonthParam,
+  shiftMonth,
+  toKstDateKey,
+} from '@/lib/calendar-utils';
+import { itemColors } from '@/lib/calendar-styles';
 import { cn } from '@/lib/cn';
 import type { CalendarItem } from '@/types/calendar';
-import { ChevronRight, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useCalendarAdmin } from './calendar-admin';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-function itemTime(item: CalendarItem) {
-  return item.kind === 'event' && item.allDay ? '종일' : toKstTime(item.startsAt);
-}
+const navButton = cn(
+  'flex h-11 w-11 items-center justify-center rounded-xl',
+  'bg-white/5 border border-white/10 text-white/70',
+  'hover:bg-white/10 hover:text-white transition-colors',
+);
 
+const NO_ITEMS: CalendarItem[] = [];
+
+/**
+ * 월간 캘린더.
+ * - 날짜를 누르면 그 날짜로 일정 추가(관리자 키를 그때 묻는다)
+ * - 칸 안의 일정을 누르면 상세(PC 모달 / 모바일 페이지)
+ * - 월 이동은 누르는 즉시 새 달의 달력을 그리고, 일정은 서버 응답이 오면 채운다
+ */
 export function CalendarView({
   year,
   month,
@@ -24,37 +39,77 @@ export function CalendarView({
   month: number;
   items: CalendarItem[];
 }) {
-  const weeks = useMemo(() => buildMonthGrid(year, month), [year, month]);
+  const admin = useCalendarAdmin();
+
+  // 이동 중인 달. 새 페이지가 도착하면 이 컴포넌트가 key로 새로 마운트되며 초기화된다.
+  const [pendingMonth, setPendingMonth] = useState<{
+    year: number;
+    month: number;
+  } | null>(null);
+  const shown = pendingMonth ?? { year, month };
+  const shownItems = pendingMonth ? NO_ITEMS : items;
+  const prev = shiftMonth(shown.year, shown.month, -1);
+  const next = shiftMonth(shown.year, shown.month, 1);
+
+  const weeks = useMemo(
+    () => buildMonthGrid(shown.year, shown.month),
+    [shown.year, shown.month],
+  );
 
   const itemsByDate = useMemo(() => {
     const map = new Map<string, CalendarItem[]>();
-    for (const item of items) {
+    for (const item of shownItems) {
       const key = toKstDateKey(item.startsAt);
       map.set(key, [...(map.get(key) ?? []), item]);
     }
     return map;
-  }, [items]);
+  }, [shownItems]);
 
   // ISR HTML과 어긋나지 않도록 '오늘'은 마운트 후에 계산
   const [todayKey, setTodayKey] = useState<string | null>(null);
-  const [selected, setSelected] = useState<string | null>(() =>
-    items[0] ? toKstDateKey(items[0].startsAt) : null,
-  );
-
   useEffect(() => {
-    const today = toKstDateKey(new Date().toISOString());
-    setTodayKey(today);
-    if (weeks.flat().includes(today)) setSelected(today);
-  }, [weeks]);
-
-  const selectedItems = selected ? (itemsByDate.get(selected) ?? []) : [];
-  const admin = useCalendarAdmin();
+    setTodayKey(toKstDateKey(new Date().toISOString()));
+  }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <Link
+          href={`/calendar/${formatMonthParam(prev.year, prev.month)}`}
+          scroll={false}
+          onClick={() => {
+            setPendingMonth(prev);
+          }}
+          className={navButton}
+          aria-label="이전 달"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Link>
+        <h2 className="flex items-center gap-2 text-xl md:text-2xl font-bold tabular-nums">
+          {shown.year}년 {shown.month}월
+          {pendingMonth && (
+            <Loader2
+              className="h-4 w-4 animate-spin text-white/40"
+              aria-label="일정을 불러오는 중"
+            />
+          )}
+        </h2>
+        <Link
+          href={`/calendar/${formatMonthParam(next.year, next.month)}`}
+          scroll={false}
+          onClick={() => {
+            setPendingMonth(next);
+          }}
+          className={navButton}
+          aria-label="다음 달"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Link>
+      </div>
+
       {admin.isAdmin && (
-        <div className="-mt-2 flex items-center justify-end gap-2">
-          <span className="mr-auto rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium text-red-300">
+        <div className="flex items-center justify-between gap-2">
+          <span className="rounded-full border border-red-500/30 bg-red-500/10 px-2.5 py-1 text-[11px] font-medium text-red-300">
             관리 모드
           </span>
           <button
@@ -89,154 +144,75 @@ export function CalendarView({
                 return (
                   <div
                     key={`empty-${wi}-${di}`}
-                    className="min-h-14 md:min-h-28 border-b border-r border-white/5 last:border-r-0"
+                    className="min-h-20 md:min-h-28 border-b border-r border-white/5 last:border-r-0"
                   />
                 );
               }
               const dayItems = itemsByDate.get(dateKey) ?? [];
-              const isSelected = dateKey === selected;
               const isToday = dateKey === todayKey;
               const day = Number(dateKey.slice(8));
 
               return (
-                <button
+                <div
                   key={dateKey}
-                  type="button"
-                  onClick={() => setSelected(dateKey)}
-                  aria-pressed={isSelected}
-                  aria-label={`${month}월 ${day}일, 일정 ${dayItems.length}개`}
-                  className={cn(
-                    'min-h-14 md:min-h-28 p-1 md:p-2 text-left',
-                    'flex flex-col items-center md:items-stretch gap-1',
-                    'border-b border-r border-white/5 last:border-r-0',
-                    'cursor-pointer transition-colors hover:bg-white/[0.06]',
-                    isSelected && 'bg-white/[0.08]',
-                  )}
+                  className="relative min-h-20 md:min-h-28 min-w-0 border-b border-r border-white/5 last:border-r-0"
                 >
-                  <span
-                    className={cn(
-                      'flex h-7 w-7 items-center justify-center rounded-full text-sm tabular-nums',
-                      di === 0 ? 'text-rose-400' : di === 6 ? 'text-sky-400' : 'text-white/80',
-                      isToday && 'bg-red-600 text-white font-semibold',
-                    )}
-                  >
-                    {day}
-                  </span>
+                  {/* 칸 전체: 이 날짜로 일정 추가 */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      admin.openCreate(dateKey);
+                    }}
+                    aria-label={`${shown.month}월 ${day}일에 일정 추가`}
+                    className="absolute inset-0 cursor-pointer transition-colors hover:bg-white/[0.06] focus-visible:bg-white/[0.08] focus-visible:outline-none"
+                  />
 
-                  {/* 모바일: 점 */}
-                  {dayItems.length > 0 && (
-                    <span className="flex gap-0.5 md:hidden">
-                      {dayItems.slice(0, 3).map((item) => (
-                        <span
-                          key={item.id}
-                          className={cn('h-1.5 w-1.5 rounded-full', itemColors(item).dot)}
-                        />
-                      ))}
+                  {/* 칸 위의 내용. 일정 칩만 클릭을 받고 나머지는 아래 버튼으로 통과시킨다 */}
+                  <div className="pointer-events-none relative flex flex-col items-stretch gap-1 p-1 md:p-2">
+                    <span
+                      className={cn(
+                        'mx-auto md:mx-0 flex h-6 w-6 md:h-7 md:w-7 items-center justify-center rounded-full text-xs md:text-sm tabular-nums',
+                        di === 0 ? 'text-rose-400' : di === 6 ? 'text-sky-400' : 'text-white/80',
+                        isToday && 'bg-red-600 text-white font-semibold',
+                      )}
+                    >
+                      {day}
                     </span>
-                  )}
 
-                  {/* 데스크톱: 칩 */}
-                  <span className="hidden md:flex flex-col gap-1 w-full">
-                    {dayItems.slice(0, 3).map((item) => (
-                      <span
+                    {dayItems.map((item) => (
+                      <Link
                         key={item.id}
+                        href={`/calendar/event/${item.id}`}
+                        scroll={false}
                         className={cn(
-                          'truncate rounded-md px-1.5 py-0.5 text-[11px] font-medium',
+                          'pointer-events-auto block truncate rounded md:rounded-md',
+                          'px-1 md:px-1.5 py-0.5 text-[10px] md:text-[11px] font-medium leading-4',
+                          'transition-opacity hover:opacity-80',
                           itemColors(item).chip,
                         )}
                       >
-                        {item.kind === 'game' && item.result
-                          ? `${item.result} ${item.title}`
-                          : item.title}
-                      </span>
+                        {/* 모바일은 칸이 좁아 경기는 상대팀 이름만 */}
+                        <span className="md:hidden">
+                          {item.kind === 'game' ? item.opponent : item.title}
+                        </span>
+                        <span className="hidden md:inline">
+                          {item.kind === 'game' && item.result
+                            ? `${item.result} ${item.title}`
+                            : item.title}
+                        </span>
+                      </Link>
                     ))}
-                    {dayItems.length > 3 && (
-                      <span className="px-1.5 text-[11px] text-white/40">
-                        +{dayItems.length - 3}
-                      </span>
-                    )}
-                  </span>
-                </button>
+                  </div>
+                </div>
               );
             })}
           </div>
         ))}
       </div>
 
-      <section aria-live="polite">
-        {selected ? (
-          <>
-            <div className="mb-3 flex min-h-11 items-center justify-between gap-2">
-              <h3 className="text-sm font-medium text-white/60">
-                {month}월 {Number(selected.slice(8))}일 (
-                {WEEKDAYS[new Date(`${selected}T00:00:00Z`).getUTCDay()]})
-              </h3>
-              <button
-                type="button"
-                onClick={() => {
-                  admin.openCreate(selected);
-                }}
-                className="flex min-h-11 cursor-pointer items-center gap-1 rounded-xl px-3 text-sm text-red-300 transition-colors hover:bg-red-500/10 hover:text-red-200"
-              >
-                <Plus className="h-4 w-4" />
-                일정 추가
-              </button>
-            </div>
-            {selectedItems.length === 0 ? (
-              <p className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-8 text-center text-sm text-white/40">
-                일정이 없습니다
-              </p>
-            ) : (
-              <ul className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl divide-y divide-white/5">
-                {selectedItems.map((item) => (
-                  <li key={item.id}>
-                    <CalendarItemRow item={item} />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </>
-        ) : (
-          <p className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-8 text-center text-sm text-white/40">
-            {items.length === 0 ? '이번 달 일정이 없습니다' : '날짜를 선택하세요'}
-          </p>
-        )}
-      </section>
+      <p className="text-center text-xs text-white/30">
+        날짜를 누르면 일정을 추가하고, 일정을 누르면 자세히 볼 수 있습니다.
+      </p>
     </div>
-  );
-}
-
-/** 선택한 날짜의 일정 한 줄. 누르면 상세(PC 모달 / 모바일 페이지)로 이동한다. */
-function CalendarItemRow({ item }: { item: CalendarItem }) {
-  return (
-    <Link
-      href={`/calendar/event/${item.id}`}
-      scroll={false}
-      className="flex min-h-14 items-center gap-3 px-4 py-3 transition-colors hover:bg-white/[0.05]"
-    >
-      <span className="w-10 shrink-0 text-sm font-semibold tabular-nums text-white/70">
-        {itemTime(item)}
-      </span>
-      <span
-        className={cn(
-          'shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-medium',
-          itemColors(item).chip,
-        )}
-      >
-        {itemLabel(item)}
-      </span>
-      <span className="min-w-0 flex-1 truncate font-medium">{item.title}</span>
-      {item.kind === 'game' && item.result && item.score && (
-        <span
-          className={cn(
-            'shrink-0 rounded-md border px-1.5 py-0.5 text-xs font-semibold tabular-nums',
-            RESULT_STYLES[item.result],
-          )}
-        >
-          {item.result} {item.score.ours}:{item.score.theirs}
-        </span>
-      )}
-      <ChevronRight className="h-4 w-4 shrink-0 text-white/30" aria-hidden />
-    </Link>
   );
 }
