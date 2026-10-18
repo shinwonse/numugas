@@ -6,7 +6,7 @@ const WEEKS = 5;
 export default function Loading() {
   return (
     <main
-      className="mx-auto max-w-5xl px-4 pt-20 pb-32 text-white"
+      className="mx-auto max-w-5xl px-4 pt-20 pb-16 text-white"
       aria-busy
       aria-label="일정을 불러오는 중"
     >

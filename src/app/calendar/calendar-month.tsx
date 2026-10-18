@@ -24,7 +24,7 @@ export async function CalendarMonth({
   const next = shiftMonth(year, month, 1);
 
   return (
-    <main className="mx-auto max-w-5xl px-4 pt-20 pb-32 text-white">
+    <main className="mx-auto max-w-5xl px-4 pt-20 pb-16 text-white">
       <PageHeader eyebrow="Club Calendar" title="구단 캘린더" />
 
       <div className="mb-6 flex items-center justify-between">

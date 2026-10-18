@@ -1,42 +1,67 @@
 'use client';
 
+import { TEAM_ITEMS } from '@/components/team-nav';
 import { cn } from '@/lib/cn';
 import { motion } from 'framer-motion';
 import {
   BarChart3,
   CalendarDays,
+  ClipboardList,
   Home,
-  ListOrdered,
   Shield,
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
 const NAV_ITEMS = [
-  { label: 'HOME', href: '/', icon: Home },
-  { label: 'ABOUT', href: '/about', icon: Shield },
-  { label: 'STATS', href: '/stats', icon: BarChart3 },
-  { label: 'ROSTER', href: '/players', icon: Users },
-  { label: 'CALENDAR', href: '/calendar', icon: CalendarDays },
-  { label: 'LINEUP', href: '/lineup', icon: ListOrdered },
+  { label: 'HOME', href: '/', icon: Home, match: ['/'] },
+  { label: 'ABOUT', href: '/about', icon: Shield, match: ['/about'] },
+  { label: 'STATS', href: '/stats', icon: BarChart3, match: ['/stats'] },
+  { label: 'ROSTER', href: '/players', icon: Users, match: ['/players'] },
+  {
+    label: 'CALENDAR',
+    href: '/calendar',
+    icon: CalendarDays,
+    match: ['/calendar'],
+  },
+  {
+    label: 'TEAM',
+    href: TEAM_ITEMS[0].href,
+    icon: ClipboardList,
+    match: TEAM_ITEMS.map((item) => item.href),
+  },
 ] as const;
+
+const BLOB_SPRING = {
+  type: 'spring',
+  stiffness: 400,
+  damping: 30,
+  mass: 0.8,
+} as const;
+
+const isMatch = (pathname: string, href: string) =>
+  href === '/' ? pathname === '/' : pathname.startsWith(href);
 
 export function FloatingNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const navRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   const activeIndex = NAV_ITEMS.findIndex((item) =>
-    item.href === '/' ? pathname === '/' : pathname.startsWith(item.href),
+    item.match.some((href) => isMatch(pathname, href)),
   );
 
   const displayIndex = hoverIndex ?? activeIndex;
 
-  const [blobPos, setBlobPos] = useState({ x: 0, width: 0 });
+  // null이면 아직 측정 전 → blob을 그리지 않고, 첫 측정 위치에 애니메이션 없이 놓는다
+  const [blobPos, setBlobPos] = useState<{ x: number; width: number } | null>(
+    null,
+  );
 
   const updateBlobPos = useCallback((index: number) => {
     const el = itemRefs.current[index];
@@ -47,24 +72,36 @@ export function FloatingNav() {
     setBlobPos({ x: elRect.left - navRect.left, width: elRect.width });
   }, []);
 
-  useEffect(() => {
-    if (displayIndex >= 0) updateBlobPos(displayIndex);
+  useLayoutEffect(() => {
+    if (displayIndex < 0) {
+      setBlobPos(null);
+      return;
+    }
+    updateBlobPos(displayIndex);
+
+    // 브레이크포인트(w-14 ↔ w-20)나 회전으로 탭 크기가 바뀌면 다시 측정
+    const nav = navRef.current;
+    if (!nav) return;
+    const observer = new ResizeObserver(() => {
+      updateBlobPos(displayIndex);
+    });
+    observer.observe(nav);
+    return () => {
+      observer.disconnect();
+    };
   }, [displayIndex, updateBlobPos]);
 
-  const getIndexFromPosition = useCallback(
-    (clientX: number) => {
-      for (let i = 0; i < itemRefs.current.length; i++) {
-        const el = itemRefs.current[i];
-        if (!el) continue;
-        const rect = el.getBoundingClientRect();
-        if (clientX >= rect.left && clientX <= rect.right) {
-          return i;
-        }
+  const getIndexFromPosition = useCallback((clientX: number) => {
+    for (let i = 0; i < itemRefs.current.length; i++) {
+      const el = itemRefs.current[i];
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      if (clientX >= rect.left && clientX <= rect.right) {
+        return i;
       }
-      return null;
-    },
-    [],
-  );
+    }
+    return null;
+  }, []);
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {
@@ -83,7 +120,21 @@ export function FloatingNav() {
     [getIndexFromPosition],
   );
 
-  const handleTouchEnd = useCallback(() => {
+  // 손을 뗀 위치의 탭으로 이동. 드래그하면 브라우저가 클릭을 취소하므로 직접 이동하고,
+  // 탭(클릭)과 중복 이동하지 않도록 기본 동작을 막는다.
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      if (hoverIndex !== null && hoverIndex !== activeIndex) {
+        e.preventDefault();
+        router.push(NAV_ITEMS[hoverIndex].href);
+      }
+      setIsDragging(false);
+      setHoverIndex(null);
+    },
+    [hoverIndex, activeIndex, router],
+  );
+
+  const handleTouchCancel = useCallback(() => {
     setIsDragging(false);
     setHoverIndex(null);
   }, []);
@@ -97,14 +148,15 @@ export function FloatingNav() {
   );
 
   const handleMouseLeave = useCallback(() => {
-    setIsDragging(false);
     setHoverIndex(null);
   }, []);
 
   return (
     <nav
+      aria-label="주 메뉴"
       className={cn(
-        'fixed bottom-5 left-1/2 -translate-x-1/2 z-50',
+        'fixed left-1/2 -translate-x-1/2 z-50',
+        'bottom-[calc(1.25rem+env(safe-area-inset-bottom))]',
         'px-1.5 py-1.5',
         'rounded-2xl',
         'bg-black/50 backdrop-blur-xl backdrop-saturate-150',
@@ -118,29 +170,27 @@ export function FloatingNav() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
         {/* Animated blob indicator */}
-        {displayIndex >= 0 && (
+        {displayIndex >= 0 && blobPos && (
           <motion.div
             className={cn(
               'absolute top-0 bottom-0 rounded-xl pointer-events-none',
-              'bg-white/[0.12]',
               'shadow-[inset_0_0.5px_0_rgba(255,255,255,0.15),0_0_12px_rgba(255,255,255,0.04)]',
             )}
+            initial={false}
             animate={{
               x: blobPos.x,
               width: blobPos.width,
               scale: isDragging ? 1.08 : 1,
-              opacity: isDragging ? 0.22 : 0.12,
+              backgroundColor: isDragging
+                ? 'rgba(255,255,255,0.22)'
+                : 'rgba(255,255,255,0.12)',
             }}
-            transition={{
-              type: 'spring',
-              stiffness: 400,
-              damping: 30,
-              mass: 0.8,
-            }}
+            transition={BLOB_SPRING}
           />
         )}
 
@@ -155,13 +205,12 @@ export function FloatingNav() {
               ref={(el) => {
                 itemRefs.current[i] = el;
               }}
+              aria-current={isActive ? 'page' : undefined}
               className={cn(
                 'relative z-10 flex flex-col items-center justify-center',
                 'w-14 md:w-20 py-1.5 rounded-xl',
                 'transition-colors duration-200',
-                isActive || isHovered
-                  ? 'text-white'
-                  : 'text-white/40',
+                isActive || isHovered ? 'text-white' : 'text-white/40',
               )}
             >
               <item.icon

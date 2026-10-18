@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { ViewTransitionLayout } from '@/components/view-transition-layout';
 import { aggravo } from '@/lib/fonts';
 import { Montserrat, Orbitron } from 'next/font/google';
-import type { Metadata } from 'next/types';
+import type { Metadata, Viewport } from 'next/types';
 import type React from 'react';
 import './globals.css';
 
@@ -18,6 +18,11 @@ const orbitron = Orbitron({
   subsets: ['latin'],
   variable: '--font-orbitron',
 });
+
+// iOS 홈 화면 앱(black-translucent)에서 safe-area-inset 값을 쓰기 위해 cover로 설정
+export const viewport: Viewport = {
+  viewportFit: 'cover',
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -193,7 +198,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ViewTransitionLayout>
-              <div className="pb-28">{children}</div>
+              <div className="pb-[calc(7rem+env(safe-area-inset-bottom))]">{children}</div>
               <FloatingNav />
             </ViewTransitionLayout>
             <Toaster />
