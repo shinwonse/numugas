@@ -62,7 +62,8 @@ src/
 Required in `.env`:
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
-- `ADMIN_SECRET` - `/admin`·캘린더 관리 모드 인증 키
+- `ADMIN_SECRET` - `/admin`·캘린더 관리 모드·회계 장부 수정 인증 키
+- `TEAM_SECRET` - 회계 장부(`/ledger`) 열람용 팀 비밀번호
 - `SUPABASE_SERVICE_ROLE_KEY` - 서버 전용. `club_events` 쓰기(캘린더 관리 모드의 Server Action)에 사용 (RLS로 anon 쓰기 차단)
 
 ## Adding shadcn/ui Components
