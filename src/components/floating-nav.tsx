@@ -1,7 +1,7 @@
 'use client';
 
-import { TEAM_ITEMS } from '@/components/team-nav';
 import { cn } from '@/lib/cn';
+import { TEAM_HUB_HREF, TEAM_ITEMS } from '@/lib/team-menu';
 import {
   BarChart3,
   CalendarDays,
@@ -27,9 +27,9 @@ const NAV_ITEMS = [
   },
   {
     label: 'TEAM',
-    href: TEAM_ITEMS[0].href,
+    href: TEAM_HUB_HREF,
     icon: ClipboardList,
-    match: TEAM_ITEMS.map((item) => item.href),
+    match: [TEAM_HUB_HREF, ...TEAM_ITEMS.map((item) => item.href)],
   },
 ] as const;
 
