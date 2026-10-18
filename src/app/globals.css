@@ -151,6 +151,17 @@
 
 html {
   scroll-behavior: smooth;
+  /* 하단 플로팅 네비에 가리지 않도록 본문 아래에 두는 여백 */
+  --nav-clearance: calc(7rem + env(safe-area-inset-bottom));
+}
+
+/*
+ * 루트 레이아웃의 하단 여백은 페이지 바깥에 있어 body 배경(검정)이 드러난다.
+ * 자체 배경이 있는 페이지는 이 클래스로 배경을 그 여백까지 이어 칠한다.
+ */
+.bg-under-nav {
+  margin-bottom: calc(-1 * var(--nav-clearance));
+  padding-bottom: var(--nav-clearance);
 }
 
 /* ===== Scroll-triggered animations ===== */

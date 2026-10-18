@@ -61,7 +61,7 @@ export function PlayerDetailContent({
     );
 
   return (
-    <main className="relative min-h-screen bg-[#050508] text-white overflow-x-clip">
+    <main className="bg-under-nav relative min-h-screen bg-[#050508] text-white overflow-x-clip">
       {/* 사진을 크게 흐려 배경 전체에 은은하게 깐다 */}
       {!isPlaceholderPhoto && (
         <div aria-hidden className="pointer-events-none fixed inset-0 z-0">

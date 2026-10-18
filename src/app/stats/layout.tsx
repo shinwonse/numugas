@@ -3,7 +3,7 @@ import { StatsShellHeader } from './stats-shell';
 
 export default function StatsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="relative min-h-screen bg-[#050508] overflow-hidden">
+    <div className="bg-under-nav relative min-h-screen bg-[#050508] overflow-hidden">
       {/* Apple-style mesh gradient orbs */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute -top-[30%] -left-[20%] h-[70vh] w-[70vh] rounded-full bg-red-600/15 blur-[120px]" />

@@ -198,7 +198,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ViewTransitionLayout>
-              <div className="pb-[calc(7rem+env(safe-area-inset-bottom))]">{children}</div>
+              <div className="pb-[var(--nav-clearance)]">{children}</div>
               <FloatingNav />
             </ViewTransitionLayout>
             <Toaster />

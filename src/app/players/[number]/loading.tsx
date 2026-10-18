@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
     <main
-      className="relative min-h-screen bg-[#050508] text-white overflow-x-clip"
+      className="bg-under-nav relative min-h-screen bg-[#050508] text-white overflow-x-clip"
       aria-busy
       aria-label="선수 정보를 불러오는 중"
     >

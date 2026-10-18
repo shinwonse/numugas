@@ -209,10 +209,6 @@ export function CalendarView({
           </div>
         ))}
       </div>
-
-      <p className="text-center text-xs text-white/30">
-        날짜를 누르면 일정을 추가하고, 일정을 누르면 자세히 볼 수 있습니다.
-      </p>
     </div>
   );
 }
