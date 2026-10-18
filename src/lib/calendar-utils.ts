@@ -4,7 +4,8 @@ export const OUR_TEAM_NAME = '담장NUMUGAS';
 
 export type GameResult = '승' | '패' | '무';
 
-const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
+/** 일요일부터 시작하는 요일 라벨 */
+export const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
 
 /**
  * gameone 일정 날짜 문자열("11월21일(토) 09:00")을 KST 기준 ISO 문자열로 변환.
@@ -116,6 +117,11 @@ export function getMonthRange(year: number, month: number): { start: string; end
 export function toKstDateKey(iso: string): string {
   const kst = new Date(new Date(iso).getTime() + 9 * 60 * 60 * 1000);
   return kst.toISOString().slice(0, 10);
+}
+
+/** 오늘의 KST 날짜 키("2026-10-15") */
+export function todayKstKey(): string {
+  return toKstDateKey(new Date().toISOString());
 }
 
 /** ISO 시각을 KST "HH:mm"으로 변환 */

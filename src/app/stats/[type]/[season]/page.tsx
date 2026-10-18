@@ -3,13 +3,14 @@ import {
   fetchPitchingStatsBySeason,
 } from '@/lib/fetchers/season-stats';
 import { LEAGUES, type League } from '@/lib/leagues';
+import { getStatsSeasons } from '@/lib/seasons';
 import type { Metadata } from 'next/types';
 import { notFound } from 'next/navigation';
 import StatsTableClient from './stats-table-client';
 
 export const revalidate = 300;
 
-const SEASONS = ['통산', '2026', '2025', '2024', '2023', '2022', '2021', '2020'];
+const SEASONS = getStatsSeasons();
 const TYPES = [
   { key: 'batter', label: '타자 기록' },
   { key: 'pitcher', label: '투수 기록' },
@@ -18,9 +19,9 @@ const TYPES = [
 export async function generateMetadata({
   params,
 }: {
-  params: { type: string; season: string };
+  params: Promise<{ type: string; season: string }>;
 }): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   const type = decodeURIComponent(resolvedParams.type);
   const season = decodeURIComponent(resolvedParams.season);
   const typeObj = TYPES.find((t) => t.key === type);
@@ -46,11 +47,11 @@ export default async function StatsTypeSeasonPage({
   params,
   searchParams,
 }: {
-  params: { type: string; season: string };
-  searchParams: { league?: string };
+  params: Promise<{ type: string; season: string }>;
+  searchParams: Promise<{ league?: string }>;
 }) {
-  const resolvedParams = await Promise.resolve(params);
-  const resolvedSearch = await Promise.resolve(searchParams);
+  const resolvedParams = await params;
+  const resolvedSearch = await searchParams;
   const type = decodeURIComponent(resolvedParams.type);
   const season = decodeURIComponent(resolvedParams.season);
   const typeObj = TYPES.find((t) => t.key === type);

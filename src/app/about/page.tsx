@@ -1,3 +1,4 @@
+import { MeshGradientBackground } from '@/components/mesh-gradient-background';
 import { SectionBackground } from '@/components/animated/section-background';
 import { Footer } from '@/components/footer';
 import { PageHeader } from '@/components/page-header';
@@ -12,12 +13,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="relative min-h-screen bg-black text-white overflow-hidden">
-      {/* Background mesh gradient orbs */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute -top-[30%] -left-[20%] h-[70vh] w-[70vh] rounded-full bg-red-600/15 blur-[120px]" />
-        <div className="absolute top-[20%] -right-[15%] h-[50vh] w-[50vh] rounded-full bg-rose-500/10 blur-[100px]" />
-        <div className="absolute -bottom-[20%] left-[30%] h-[60vh] w-[60vh] rounded-full bg-red-900/10 blur-[120px]" />
-      </div>
+      <MeshGradientBackground />
 
       {/* Hero Section */}
       <section className="relative pt-20 pb-16 md:pb-24">

@@ -10,6 +10,8 @@ import { useState } from 'react';
 import StatsTabs from './stats-tabs';
 
 interface PlayerStatsSectionProps {
+  /** 표시할 시즌 ("2026") */
+  season: string;
   battingStats: Stat[];
   pitchingStats: Stat[];
 }
@@ -21,7 +23,7 @@ function isStatsEmpty(stats: Stat[]): boolean {
   );
 }
 
-function SeasonComingSoon() {
+function SeasonComingSoon({ season }: { season: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 px-6">
       <div className="relative mb-8">
@@ -41,10 +43,10 @@ function SeasonComingSoon() {
           </svg>
         </div>
         <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-          <span className="text-white text-xs font-bold">26</span>
+          <span className="text-white text-xs font-bold">{season.slice(-2)}</span>
         </div>
       </div>
-      <h3 className="text-2xl font-bold text-white mb-3">2026 시즌 준비 중</h3>
+      <h3 className="text-2xl font-bold text-white mb-3">{season} 시즌 준비 중</h3>
       <p className="text-gray-400 text-center max-w-md mb-6">
         새로운 시즌이 곧 시작됩니다.
         <br />
@@ -59,6 +61,7 @@ function SeasonComingSoon() {
 }
 
 export function PlayerStatsSection({
+  season,
   battingStats,
   pitchingStats,
 }: PlayerStatsSectionProps) {
@@ -89,8 +92,8 @@ export function PlayerStatsSection({
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 relative z-10">
         <SectionTitle
-          subtitle="SEASON LEADERS 2026"
-          title="2026 시즌 주요 기록"
+          subtitle={`SEASON LEADERS ${season}`}
+          title={`${season} 시즌 주요 기록`}
           isInView={isInView}
         />
         <div
@@ -108,7 +111,7 @@ export function PlayerStatsSection({
           />
           {currentTab === 'batting' &&
             (isBattingEmpty ? (
-              <SeasonComingSoon />
+              <SeasonComingSoon season={season} />
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 {battingStats.map((stat, statIndex) => (
@@ -176,7 +179,7 @@ export function PlayerStatsSection({
             ))}
           {currentTab === 'pitching' &&
             (isPitchingEmpty ? (
-              <SeasonComingSoon />
+              <SeasonComingSoon season={season} />
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                 {pitchingStats.map((stat, statIndex) => (

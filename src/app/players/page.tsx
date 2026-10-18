@@ -1,6 +1,8 @@
+import { MeshGradientBackground } from '@/components/mesh-gradient-background';
 import { supabase } from '@/lib/supabase';
 import type { Metadata } from 'next/types';
 import { unstable_cache } from 'next/cache';
+import type { Player } from './components/player-card';
 import PlayerPositionSection from './components/player-position-section';
 
 export const metadata: Metadata = {
@@ -17,7 +19,9 @@ const getCachedPlayersData = unstable_cache(
       .select('id, name, number, position, photo_url')
       .order('number', { ascending: true }); // DB 레벨에서 정렬
 
-    return { data, error };
+    // 실패를 캐시하지 않도록 던진다 (unstable_cache는 throw한 결과를 저장하지 않음)
+    if (error) throw new Error(error.message);
+    return data ?? [];
   },
   ['players-list'], // 캐시 키
   {
@@ -27,34 +31,25 @@ const getCachedPlayersData = unstable_cache(
 );
 
 export default async function PlayersPage() {
-  let players: any[] = [];
-  let error = null;
+  let players: Player[] = [];
+  let error: string | null = null;
 
   try {
-    const { data, error: dbError } = await getCachedPlayersData();
-    if (dbError) throw new Error(dbError.message);
-
     // 이미 DB에서 정렬되어 있으므로 추가 정렬 불필요
-    players =
-      data?.map((p) => ({
-        ...p,
-        photo: p.photo_url,
-        stats: {},
-      })) ?? [];
-  } catch (e: any) {
-    error = e.message;
+    players = (await getCachedPlayersData()).map((p) => ({
+      ...p,
+      photo: p.photo_url,
+      stats: {},
+    }));
+  } catch (e) {
+    error = e instanceof Error ? e.message : '선수 명단을 불러오지 못했습니다.';
   }
 
   const positions = ['전체', '투수', '포수', '내/외야수'];
 
   return (
     <main className="relative min-h-screen text-white overflow-hidden">
-      {/* Apple-style mesh gradient orbs */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute -top-[30%] -left-[20%] h-[70vh] w-[70vh] rounded-full bg-red-600/15 blur-[120px]" />
-        <div className="absolute top-[20%] -right-[15%] h-[50vh] w-[50vh] rounded-full bg-rose-500/10 blur-[100px]" />
-        <div className="absolute -bottom-[20%] left-[30%] h-[60vh] w-[60vh] rounded-full bg-red-900/10 blur-[120px]" />
-      </div>
+      <MeshGradientBackground />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 pt-20 pb-16 md:pb-20">
         {error ? (

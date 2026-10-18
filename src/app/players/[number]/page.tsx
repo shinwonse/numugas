@@ -16,7 +16,7 @@ export async function generateStaticParams() {
 }
 
 interface PlayerDetailPageProps {
-  params: { number: string };
+  params: Promise<{ number: string }>;
 }
 
 export async function generateMetadata({

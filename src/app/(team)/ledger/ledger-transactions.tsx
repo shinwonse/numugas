@@ -10,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { todayKstKey } from '@/lib/calendar-utils';
 import {
   Dialog,
   DialogContent,
@@ -41,10 +42,6 @@ const dialogClass =
 const inputClass =
   'w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/20';
 
-function todayKst() {
-  return new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
-}
-
 export function LedgerTransactions({
   session,
   isAdmin,
@@ -64,7 +61,7 @@ export function LedgerTransactions({
   );
   const balance = rows.length ? rows[rows.length - 1].balance : ledger.openingBalance;
 
-  const thisMonth = todayKst().slice(0, 7);
+  const thisMonth = todayKstKey().slice(0, 7);
   const monthSummary = summarize(
     ledger.entries.filter((e) => e.entry_date.startsWith(thisMonth)),
   );
@@ -231,7 +228,7 @@ function EntryDialog({
   onResult: (result: ActionResult) => string | null;
 }) {
   const existing = editing && editing !== 'new' ? editing : null;
-  const [date, setDate] = useState(existing?.entry_date ?? todayKst());
+  const [date, setDate] = useState(existing?.entry_date ?? todayKstKey());
   const [kind, setKind] = useState<LedgerKind>(existing?.kind ?? 'income');
   const [amount, setAmount] = useState(existing ? existing.amount.toLocaleString('ko-KR') : '');
   const [counterparty, setCounterparty] = useState(existing?.counterparty ?? '');

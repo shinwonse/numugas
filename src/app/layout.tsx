@@ -2,7 +2,6 @@ import { FloatingNav } from '@/components/floating-nav';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
-import { ViewTransitionLayout } from '@/components/view-transition-layout';
 import { aggravo } from '@/lib/fonts';
 import { Montserrat, Orbitron } from 'next/font/google';
 import type { Metadata, Viewport } from 'next/types';
@@ -197,10 +196,8 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-            <ViewTransitionLayout>
-              <div className="pb-[var(--nav-clearance)]">{children}</div>
-              <FloatingNav />
-            </ViewTransitionLayout>
+            <div className="pb-[var(--nav-clearance)]">{children}</div>
+            <FloatingNav />
             <Toaster />
           </ThemeProvider>
         </QueryClientProviderWrapper>

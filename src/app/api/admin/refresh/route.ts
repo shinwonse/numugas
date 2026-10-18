@@ -1,3 +1,4 @@
+import { CRAWL_SECRET_HEADER } from '@/lib/crawl-auth';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -35,7 +36,10 @@ export async function POST(req: NextRequest) {
       const origin = req.nextUrl.origin;
       const res = await fetch(`${origin}${target.path}`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          [CRAWL_SECRET_HEADER]: ADMIN_SECRET,
+        },
       });
 
       if (!res.ok) {

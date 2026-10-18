@@ -17,12 +17,13 @@ import {
 import { YoutubeSectionWrapper } from '@/components/youtube-section-wrapper';
 import {
   fetchBattingCareerStats,
-  fetchBattingStats2026,
+  fetchSeasonBattingLeaders,
   fetchPitchingCareerStats,
-  fetchPitchingStats2026,
+  fetchSeasonPitchingLeaders,
   fetchTeamCareerStats,
   fetchTeamTotalStats,
 } from '@/lib/fetchers';
+import { getCurrentSeason } from '@/lib/seasons';
 import { Suspense } from 'react';
 
 // On-demand revalidation only — triggered from /admin page
@@ -48,15 +49,17 @@ async function StatsSectionData() {
 }
 
 async function PlayerStatsSectionData() {
-  const [battingStats2026, pitchingStats2026] = await Promise.all([
-    fetchBattingStats2026(),
-    fetchPitchingStats2026(),
+  const season = getCurrentSeason();
+  const [battingStats, pitchingStats] = await Promise.all([
+    fetchSeasonBattingLeaders(season),
+    fetchSeasonPitchingLeaders(season),
   ]);
 
   return (
     <PlayerStatsSection
-      battingStats={battingStats2026}
-      pitchingStats={pitchingStats2026}
+      season={season}
+      battingStats={battingStats}
+      pitchingStats={pitchingStats}
     />
   );
 }
@@ -102,7 +105,6 @@ export default function Home() {
         </Suspense>
       </ErrorBoundary>
 
-      {/* <ScheduleSection /> */}
       <Footer />
     </main>
   );

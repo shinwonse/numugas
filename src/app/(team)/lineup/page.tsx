@@ -1,5 +1,6 @@
 'use client';
 
+import { MeshGradientBackground } from '@/components/mesh-gradient-background';
 import { PageHeader } from '@/components/page-header';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,6 +28,7 @@ import { useLineupRecommend } from '@/hooks/use-lineup-recommend';
 import type { LineupFormData } from '@/hooks/use-lineup-storage';
 import { useLineupStorage } from '@/hooks/use-lineup-storage';
 import type { ImageTransform, LineupRecommendResponse, PlayerPosition } from '@/types/lineup';
+import { WEEKDAY_LABELS } from '@/lib/calendar-utils';
 import { cn } from '@/lib/cn';
 import {
   ChevronDown,
@@ -57,8 +59,7 @@ const formatDate = (dateString: string): string => {
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
 
-  const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
-  const weekday = weekdays[date.getDay()];
+  const weekday = WEEKDAY_LABELS[date.getDay()];
 
   return `${month}/${day}(${weekday}) ${hours}:${minutes}`;
 };
@@ -324,12 +325,7 @@ export default function LineupPage() {
   return (
     <>
       <main className="relative min-h-screen text-white overflow-hidden">
-        {/* Apple-style mesh gradient orbs */}
-        <div className="pointer-events-none fixed inset-0 z-0">
-          <div className="absolute -top-[30%] -left-[20%] h-[70vh] w-[70vh] rounded-full bg-red-600/15 blur-[120px]" />
-          <div className="absolute top-[20%] -right-[15%] h-[50vh] w-[50vh] rounded-full bg-rose-500/10 blur-[100px]" />
-          <div className="absolute -bottom-[20%] left-[30%] h-[60vh] w-[60vh] rounded-full bg-red-900/10 blur-[120px]" />
-        </div>
+        <MeshGradientBackground />
 
         <div className="relative z-10 px-4 pt-20 pb-16 md:pb-20">
           <PageHeader eyebrow="Lineup Generator" title="라인업" />

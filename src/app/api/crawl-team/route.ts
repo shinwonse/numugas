@@ -3,10 +3,14 @@ import { getCrawlSeasons } from '@/lib/seasons';
 import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
+import { rejectUnauthorizedCrawl } from '@/lib/crawl-auth';
 
 const CLUB_IDX = '35417';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const unauthorized = rejectUnauthorizedCrawl(req);
+  if (unauthorized) return unauthorized;
+
   try {
     const results = await Promise.all(
       getCrawlSeasons().map(async (season) => {

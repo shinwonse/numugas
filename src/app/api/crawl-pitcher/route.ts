@@ -10,6 +10,7 @@ import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
 import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
+import { rejectUnauthorizedCrawl } from '@/lib/crawl-auth';
 
 const BASE_URL =
   'http://www.gameone.kr/club/info/ranking/pitcher?club_idx=35417';
@@ -194,7 +195,10 @@ function mergeByName(rows: any[]): any[] {
   });
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const unauthorized = rejectUnauthorizedCrawl(req);
+  if (unauthorized) return unauthorized;
+
   try {
     const tasks = buildTasks();
     const results = await Promise.all(
@@ -228,7 +232,7 @@ export async function GET() {
       }),
     );
     // 갱신된 기록이 5분 캐시를 기다리지 않고 바로 노출되도록 무효화
-    revalidateTag('stats');
+    revalidateTag('stats', { expire: 0 });
     return NextResponse.json({ results });
   } catch (e) {
     return NextResponse.json(

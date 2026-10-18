@@ -4,6 +4,7 @@ import { getCrawlSeasons } from '@/lib/seasons';
 import { supabase } from '@/lib/supabase';
 import * as cheerio from 'cheerio';
 import { NextResponse } from 'next/server';
+import { rejectUnauthorizedCrawl } from '@/lib/crawl-auth';
 
 const BASE_URL = 'http://www.gameone.kr';
 const SCHEDULE_URL = `${BASE_URL}/club/info/schedule/table?club_idx=35417&kind=`;
@@ -81,7 +82,10 @@ async function crawlSeason(season: string) {
   return games;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  const unauthorized = rejectUnauthorizedCrawl(req);
+  if (unauthorized) return unauthorized;
+
   try {
     // 1. 시즌별 크롤링 (gameone 날짜에는 연도가 없어서 시즌으로 연도를 붙인다)
     let allGames: any[] = [];

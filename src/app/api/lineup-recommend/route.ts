@@ -1,5 +1,7 @@
+import { OVERALL_LEAGUE } from '@/lib/leagues';
 import { supabase } from '@/lib/supabase';
 import type { LineupRecommendResponse } from '@/types/lineup';
+import type { BatterStat, PitcherStat } from '@/types/stats';
 import Groq from 'groq-sdk';
 import { NextResponse } from 'next/server';
 
@@ -63,55 +65,34 @@ export async function POST() {
       );
     }
 
-    // 2. 타자 기록 fetch (2026 시즌 우선, 없으면 2025 fallback)
-    let batterSeason = 2026;
-    let { data: batterStats, error: batterError } = await supabase
-      .from('batter_stats')
-      .select('*')
-      .eq('season', 2026);
-
-    if (batterError) {
-      return NextResponse.json(
-        { error: '타자 기록을 불러오지 못했습니다.' },
-        { status: 500 },
-      );
-    }
-
-    if (!batterStats || batterStats.length === 0) {
-      batterSeason = 2025;
-      const result = await supabase
-        .from('batter_stats')
-        .select('*')
-        .eq('season', 2025);
-      batterStats = result.data;
-      if (result.error) {
+    // 2~3. 올해 시즌 기록(리그 합산)을 우선 쓰고, 아직 기록이 없으면 지난 시즌으로 대체
+    const currentSeason = new Date().getFullYear();
+    let batterSeason = currentSeason;
+    let batterStats: BatterStat[] = [];
+    let pitcherStats: PitcherStat[] = [];
+    for (const season of [currentSeason, currentSeason - 1]) {
+      const [batters, pitchers] = await Promise.all([
+        supabase
+          .from('batter_stats')
+          .select('*')
+          .eq('season', season)
+          .eq('league', OVERALL_LEAGUE),
+        supabase
+          .from('pitcher_stats')
+          .select('*')
+          .eq('season', season)
+          .eq('league', OVERALL_LEAGUE),
+      ]);
+      if (batters.error || pitchers.error) {
         return NextResponse.json(
-          { error: '타자 기록을 불러오지 못했습니다.' },
+          { error: '선수 기록을 불러오지 못했습니다.' },
           { status: 500 },
         );
       }
-    }
-
-    // 3. 투수 기록 fetch (동일 시즌)
-    let { data: pitcherStats, error: pitcherError } = await supabase
-      .from('pitcher_stats')
-      .select('*')
-      .eq('season', batterSeason);
-
-    if (pitcherError) {
-      return NextResponse.json(
-        { error: '투수 기록을 불러오지 못했습니다.' },
-        { status: 500 },
-      );
-    }
-
-    if (!pitcherStats || pitcherStats.length === 0) {
-      const fallbackSeason = batterSeason === 2026 ? 2025 : 2025;
-      const result = await supabase
-        .from('pitcher_stats')
-        .select('*')
-        .eq('season', fallbackSeason);
-      pitcherStats = result.data;
+      batterSeason = season;
+      batterStats = (batters.data ?? []) as BatterStat[];
+      pitcherStats = (pitchers.data ?? []) as PitcherStat[];
+      if (batterStats.length > 0) break;
     }
 
     // 4. 유저 프롬프트 구성
@@ -119,7 +100,7 @@ export async function POST() {
       .map((p) => `- ${p.name} (등번호: ${p.number}, 포지션: ${p.position})`)
       .join('\n');
 
-    const qualifiedBatters = (batterStats ?? []).filter(
+    const qualifiedBatters = batterStats.filter(
       (b) => Number(b.atbats) >= MIN_AT_BATS,
     );
 
@@ -136,7 +117,7 @@ export async function POST() {
       })
       .join('\n');
 
-    const pitcherList = (pitcherStats ?? [])
+    const pitcherList = pitcherStats
       .map(
         (p) =>
           `- ${p.name}: 이닝 ${p.innings}, 승 ${p.wins}, 패 ${p.losses}, ` +

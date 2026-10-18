@@ -1,6 +1,7 @@
 'use client';
 
 import { Input } from '@/components/ui/input';
+import { getStatsSeasons } from '@/lib/seasons';
 import {
   Select,
   SelectContent,
@@ -29,7 +30,7 @@ import { useMemo, useState } from 'react';
 import { StatsTableRowsSkeleton } from '../stats-skeleton';
 import { useStatsNavigation } from '../use-stats-navigation';
 
-const SEASONS = ['통산', '2026', '2025', '2024', '2023', '2022', '2021', '2020'];
+const SEASONS = getStatsSeasons();
 
 const COLUMNS = [
   { value: 'name', label: '선수명' },

@@ -1,19 +1,17 @@
 'use client';
 
 import { itemColors, itemLabel, RESULT_STYLES } from '@/lib/calendar-styles';
-import { toKstDateKey, toKstTime } from '@/lib/calendar-utils';
+import { toKstDateKey, toKstTime, WEEKDAY_LABELS } from '@/lib/calendar-utils';
 import { cn } from '@/lib/cn';
 import type { CalendarItem } from '@/types/calendar';
 import { CalendarDays, ExternalLink, MapPin, Pencil, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCalendarAdmin } from './calendar-admin';
 
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
-
 function formatDay(iso: string) {
   const key = toKstDateKey(iso);
   const [y, m, d] = key.split('-').map(Number);
-  const weekday = WEEKDAYS[new Date(`${key}T00:00:00Z`).getUTCDay()];
+  const weekday = WEEKDAY_LABELS[new Date(`${key}T00:00:00Z`).getUTCDay()];
   return `${y}년 ${m}월 ${d}일 (${weekday})`;
 }
 

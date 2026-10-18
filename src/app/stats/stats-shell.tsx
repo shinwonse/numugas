@@ -1,5 +1,6 @@
 'use client';
 
+import { getCurrentSeason } from '@/lib/seasons';
 import { useParams } from 'next/navigation';
 import { StatsPageHeader } from './stats-page-header';
 
@@ -15,7 +16,7 @@ const TYPES = [
 export function StatsShellHeader() {
   const params = useParams<{ type?: string; season?: string }>();
   const type = params.type ? decodeURIComponent(params.type) : 'batter';
-  const season = params.season ? decodeURIComponent(params.season) : '2026';
+  const season = params.season ? decodeURIComponent(params.season) : getCurrentSeason();
 
   const tabList = TYPES.map((t) => ({
     key: t.key,

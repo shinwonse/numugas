@@ -1,7 +1,8 @@
 import { supabase } from '@/lib/supabase';
+import { getStatsSeasons } from '@/lib/seasons';
 import type { MetadataRoute } from 'next';
 
-const SEASONS = ['통산', '2026', '2025', '2024', '2023', '2022', '2021', '2020'];
+const SEASONS = getStatsSeasons();
 const TYPES = ['batter', 'pitcher'];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

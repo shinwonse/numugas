@@ -65,14 +65,3 @@ export function extractTopPlayers(
     return { category, players };
   });
 }
-
-export function createFallbackStats(categoryNames: string[]): Stat[] {
-  return categoryNames.map((category) => ({
-    category,
-    players: [
-      { rank: 1, name: '-', team: '', value: 0 },
-      { rank: 2, name: '-', team: '', value: 0 },
-      { rank: 3, name: '-', team: '', value: 0 },
-    ],
-  }));
-}

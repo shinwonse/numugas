@@ -5,6 +5,8 @@ import {
   formatMonthParam,
   shiftMonth,
   toKstDateKey,
+  todayKstKey,
+  WEEKDAY_LABELS,
 } from '@/lib/calendar-utils';
 import { itemColors } from '@/lib/calendar-styles';
 import { cn } from '@/lib/cn';
@@ -14,7 +16,6 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { useCalendarAdmin } from './calendar-admin';
 
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 const navButton = cn(
   'flex h-11 w-11 items-center justify-center rounded-xl',
@@ -68,7 +69,7 @@ export function CalendarView({
   // ISR HTML과 어긋나지 않도록 '오늘'은 마운트 후에 계산
   const [todayKey, setTodayKey] = useState<string | null>(null);
   useEffect(() => {
-    setTodayKey(toKstDateKey(new Date().toISOString()));
+    setTodayKey(todayKstKey());
   }, []);
 
   return (
@@ -109,7 +110,7 @@ export function CalendarView({
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
         <div className="grid grid-cols-7 border-b border-white/10">
-          {WEEKDAYS.map((day, i) => (
+          {WEEKDAY_LABELS.map((day, i) => (
             <div
               key={day}
               className={cn(

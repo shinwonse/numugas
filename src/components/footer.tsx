@@ -73,7 +73,7 @@ export function Footer() {
           <div className="mt-16 pt-8 border-t border-white/5">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-xs text-gray-600">
-                © 2026 담장NUMUGAS. All rights reserved.
+                © {new Date().getFullYear()} 담장NUMUGAS. All rights reserved.
               </p>
             </div>
           </div>

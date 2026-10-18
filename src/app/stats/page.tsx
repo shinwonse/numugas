@@ -1,3 +1,4 @@
+import { getCurrentSeason } from '@/lib/seasons';
 import type { Metadata } from 'next/types';
 import { redirect } from 'next/navigation';
 
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function StatsPage() {
-  redirect('/stats/batter/2026');
+  redirect(`/stats/batter/${getCurrentSeason()}`);
 }

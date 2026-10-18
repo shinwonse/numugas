@@ -1,6 +1,5 @@
 import { OVERALL_LEAGUE } from '@/lib/leagues';
 import {
-  createFallbackStats,
   extractTopPlayers,
   groupByField,
   sumNumericFields,
@@ -70,25 +69,16 @@ function aggregateCareerStats(data: Record<string, any>[]) {
 }
 
 export async function fetchBattingCareerStats(): Promise<Stat[]> {
-  try {
-    const { data, error } = await supabase
-      .from('batter_stats')
-      .select('*')
-      .eq('league', OVERALL_LEAGUE);
+  const { data, error } = await supabase
+    .from('batter_stats')
+    .select('*')
+    .eq('league', OVERALL_LEAGUE);
 
-    if (error) {
-      console.error(
-        'Failed to fetch batting career stats from Supabase:',
-        error,
-      );
-      throw new Error('통산 기록을 불러오지 못했습니다.');
-    }
-
-    const careerStats = aggregateCareerStats(data ?? []);
-
-    return extractTopPlayers(careerStats, CAREER_CATEGORIES);
-  } catch (error) {
-    console.error('Failed to fetch batting career stats:', error);
-    return createFallbackStats(CAREER_CATEGORIES.map((c) => c.category));
+  if (error) {
+    throw new Error('통산 기록을 불러오지 못했습니다.');
   }
+
+  const careerStats = aggregateCareerStats(data ?? []);
+
+  return extractTopPlayers(careerStats, CAREER_CATEGORIES);
 }
