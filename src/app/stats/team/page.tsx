@@ -56,7 +56,9 @@ function StatGroup({
   return (
     <div className={CARD}>
       <h3 className={SUB_TITLE}>{title}</h3>
-      <dl className="grid grid-cols-4 gap-x-3 gap-y-4 p-4 text-center md:p-5">
+      <dl
+        className={`grid ${stats.length < 4 ? 'grid-cols-2' : 'grid-cols-4'} gap-x-3 gap-y-4 p-4 text-center md:p-5`}
+      >
         {stats.map((stat) => (
           <Stat key={stat.label} label={stat.label} value={stat.value} />
         ))}
@@ -121,8 +123,8 @@ export default async function TeamStatsPage() {
     { label: '볼넷', value: career.walks.toLocaleString() },
   ];
   const pitchingStats = [
-    { label: '평균자책', value: career.era },
-    { label: 'WHIP', value: career.whip },
+    { label: '승리', value: career.wins.toLocaleString() },
+    { label: '세이브', value: career.saves.toLocaleString() },
     { label: '이닝', value: career.innings },
     { label: '탈삼진', value: career.strikeouts.toLocaleString() },
   ];
@@ -149,8 +151,6 @@ export default async function TeamStatsPage() {
           />
           <Stat label="상대 팀" value={opponents.length} />
         </dl>
-        <StatGroup title="타격" stats={battingStats} />
-        <StatGroup title="투구" stats={pitchingStats} />
         {games.games > 0 && (
           <div className={CARD}>
             <h3 className={SUB_TITLE}>경기</h3>
@@ -178,6 +178,8 @@ export default async function TeamStatsPage() {
                 ))}
               </ul>
             )}
+        <StatGroup title="타격" stats={battingStats} />
+        <StatGroup title="투구" stats={pitchingStats} />
           </div>
         )}
       </Section>

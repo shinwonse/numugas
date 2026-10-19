@@ -43,6 +43,7 @@ async function StatsSectionData() {
       }}
       teamCareerStats={teamCareerStats}
       longestWinStreak={teamGameRecords.longestWinStreak}
+      runsFor={teamGameRecords.runsFor}
     />
   );
 }

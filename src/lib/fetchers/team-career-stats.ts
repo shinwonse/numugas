@@ -18,7 +18,7 @@ const BATTER_FIELDS = [
   'sacrificeflies',
 ] as const;
 
-const PITCHER_FIELDS = ['strikeouts', 'earnedruns', 'hits', 'walks'] as const;
+const PITCHER_FIELDS = ['wins', 'saves', 'strikeouts'] as const;
 
 function sumFields<K extends string>(
   rows: Record<string, unknown>[],
@@ -75,9 +75,9 @@ export async function fetchTeamCareerStats(): Promise<TeamCareerStats> {
     obp: rate(obp, 3),
     slg: rate(slg, 3),
     ops: rate(obp + slg, 3),
+    wins: pitch.wins,
+    saves: pitch.saves,
     strikeouts: pitch.strikeouts,
     innings: formatInning(innings),
-    era: rate(innings ? (pitch.earnedruns * 9) / innings : 0, 2),
-    whip: rate(innings ? (pitch.hits + pitch.walks) / innings : 0, 2),
   };
 }

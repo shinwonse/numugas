@@ -21,6 +21,8 @@ interface StatsSectionProps {
   };
   teamCareerStats: TeamCareerStats;
   longestWinStreak: number;
+  /** 경기 점수 합계 */
+  runsFor: number;
 }
 
 interface StatCardProps {
@@ -84,6 +86,7 @@ export function StatsSection({
   teamTotalStats,
   teamCareerStats,
   longestWinStreak,
+  runsFor,
 }: StatsSectionProps) {
   const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
 
@@ -96,7 +99,7 @@ export function StatsSection({
     { name: '팀 OPS', value: teamCareerStats.ops },
     { name: '안타', value: teamCareerStats.hits },
     { name: '홈런', value: teamCareerStats.homeruns },
-    { name: '평균자책점', value: teamCareerStats.era },
+    { name: '득점', value: runsFor },
     { name: '탈삼진', value: teamCareerStats.strikeouts },
     { name: '도루', value: teamCareerStats.stolenbases },
     { name: '최다 연승', value: longestWinStreak },

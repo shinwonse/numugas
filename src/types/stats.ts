@@ -35,11 +35,11 @@ export interface TeamCareerStats {
   obp: string;
   slg: string;
   ops: string;
+  wins: number;
+  saves: number;
   strikeouts: number;
   /** "312.1" */
   innings: string;
-  era: string;
-  whip: string;
 }
 
 export interface PitcherStat {
