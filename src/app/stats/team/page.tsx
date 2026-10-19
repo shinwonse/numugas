@@ -1,14 +1,8 @@
 import { fetchOpponentRecords } from '@/lib/fetchers/opponents';
 import { fetchTeamCareerStats } from '@/lib/fetchers/team-career-stats';
-import {
-  fetchTeamGameRecords,
-  type TeamGameHighlight,
-} from '@/lib/fetchers/team-game-records';
+import { fetchTeamGameRecords } from '@/lib/fetchers/team-game-records';
 import { fetchTeamSeasonRecords } from '@/lib/fetchers/team-stats';
-import { toKstDateKey } from '@/lib/calendar-utils';
 import { formatWinLoss, formatWinRate } from '@/lib/opponents';
-import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 import type { Metadata } from 'next/types';
 import { Suspense, type ReactNode } from 'react';
 import { OpponentList, OpponentListFromParams } from './opponent-list';
@@ -67,30 +61,6 @@ function StatGroup({
   );
 }
 
-/** 최다 점수차 승리 같은 기록 경기 한 줄 (경기 상세로 이동) */
-function HighlightRow({ label, game }: { label: string; game: TeamGameHighlight }) {
-  return (
-    <li>
-      <Link
-        href={`/calendar/event/${game.id}`}
-        className="flex items-center gap-3 px-4 py-3 text-sm transition-colors hover:bg-white/[0.04] md:px-5"
-      >
-        <span className="w-28 shrink-0 text-white/50">{label}</span>
-        <span className="min-w-0 flex-1 truncate text-white/80">
-          <span className="tabular-nums text-white/40">
-            {toKstDateKey(game.startsAt).replaceAll('-', '.')}
-          </span>{' '}
-          vs {game.opponent}
-        </span>
-        <span className="shrink-0 font-semibold tabular-nums text-white">
-          {game.ours}:{game.theirs}
-        </span>
-        <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-white/30" />
-      </Link>
-    </li>
-  );
-}
-
 const perGame = (runs: number, games: number) => (games ? (runs / games).toFixed(1) : '-');
 
 export default async function TeamStatsPage() {
@@ -129,16 +99,6 @@ export default async function TeamStatsPage() {
     { label: '탈삼진', value: career.strikeouts.toLocaleString() },
   ];
 
-  // 최다 점수차 승리와 최다 득점이 같은 경기면 한 줄로 합친다
-  const { biggestWin, mostRuns } = games;
-  const highlights =
-    biggestWin && mostRuns && biggestWin.id === mostRuns.id
-      ? [{ label: '최다 득점·점수차', game: biggestWin }]
-      : [
-          ...(biggestWin ? [{ label: '최다 점수차 승리', game: biggestWin }] : []),
-          ...(mostRuns ? [{ label: '한 경기 최다 득점', game: mostRuns }] : []),
-        ];
-
   return (
     <div className="w-full space-y-8">
       <Section title="통산 기록">
@@ -171,13 +131,6 @@ export default async function TeamStatsPage() {
               />
               <Stat label="최다 연승" value={games.longestWinStreak} />
             </dl>
-            {highlights.length > 0 && (
-              <ul className="divide-y divide-white/[0.06] border-t border-white/[0.06]">
-                {highlights.map((h) => (
-                  <HighlightRow key={h.game.id} label={h.label} game={h.game} />
-                ))}
-              </ul>
-            )}
         <StatGroup title="타격" stats={battingStats} />
         <StatGroup title="투구" stats={pitchingStats} />
           </div>
