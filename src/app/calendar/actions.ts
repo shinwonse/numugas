@@ -50,7 +50,7 @@ export async function saveClubEventAction(
   if (error) return { ok: false, status: 500, error: error.message };
 
   revalidatePath('/calendar', 'layout');
-  revalidatePath('/stats/opponents');
+  revalidatePath('/stats/team');
   return { ok: true };
 }
 
@@ -66,6 +66,6 @@ export async function deleteClubEventAction(
   if (error) return { ok: false, status: 500, error: error.message };
 
   revalidatePath('/calendar', 'layout');
-  revalidatePath('/stats/opponents');
+  revalidatePath('/stats/team');
   return { ok: true };
 }

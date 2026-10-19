@@ -15,6 +15,7 @@ export interface TeamTotalStats {
   lose: number;
   draw: number;
   total_games: number;
+  /** 승 / (승 + 패), 0~1 */
   win_rate: number;
 }
 

@@ -7,7 +7,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useCountAnimation } from '@/hooks/use-count-animation';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { cn } from '@/lib/cn';
+import { TEAM_STATS_HREF } from '@/lib/opponents';
 import type { TeamCareerStats } from '@/types/stats';
+import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 
 interface StatsSectionProps {
   teamTotalStats: {
@@ -121,6 +124,15 @@ export function StatsSection({
               isInView={isInView}
             />
           ))}
+        </div>
+        <div className="mt-8 flex justify-center">
+          <Link
+            href={TEAM_STATS_HREF}
+            className="inline-flex items-center gap-1 rounded-xl px-4 py-2 text-sm font-medium text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60"
+          >
+            시즌별 성적·상대 전적 보기
+            <ChevronRight aria-hidden className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>

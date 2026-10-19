@@ -32,10 +32,9 @@ export async function fetchTeamTotalStats(): Promise<TeamTotalStats> {
   );
 
   const total_games = total.win + total.lose + total.draw;
-  const win_rate =
-    total_games > 0
-      ? Number(((total.win / total_games) * 100).toFixed(1))
-      : 0;
+  // 무승부는 승률 계산에서 뺀다 (팀 기록·상대 전적·투수 승률과 같은 기준)
+  const decided = total.win + total.lose;
+  const win_rate = decided > 0 ? total.win / decided : 0;
 
   return {
     win: total.win,
@@ -44,4 +43,30 @@ export async function fetchTeamTotalStats(): Promise<TeamTotalStats> {
     total_games,
     win_rate,
   };
+}
+
+export interface TeamSeasonRecord {
+  season: number;
+  win: number;
+  lose: number;
+  draw: number;
+}
+
+/** 시즌별 팀 성적, 최근 시즌부터. 실패 시 throw. */
+export async function fetchTeamSeasonRecords(): Promise<TeamSeasonRecord[]> {
+  const { data, error } = await supabase
+    .from('team_records')
+    .select('season, win, lose, draw')
+    .order('season', { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return data.map((row) => ({
+    season: Number(row.season),
+    win: row.win || 0,
+    lose: row.lose || 0,
+    draw: row.draw || 0,
+  }));
 }

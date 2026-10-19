@@ -1,6 +1,6 @@
 'use client';
 
-import { OPPONENTS_HREF } from '@/lib/opponents';
+import { TEAM_STATS_HREF } from '@/lib/opponents';
 import { getCurrentSeason } from '@/lib/seasons';
 import { useParams, usePathname } from 'next/navigation';
 import { StatsPageHeader } from './stats-page-header';
@@ -11,15 +11,15 @@ const PLAYER_TYPES = [
 ];
 
 /**
- * 레이아웃에 두는 헤더(제목 + 타자/투수/상대 전적 탭).
+ * 레이아웃에 두는 헤더(제목 + 타자/투수/팀 기록 탭).
  * 타입·시즌이 바뀌어도 리마운트되지 않아 등장 애니메이션이 다시 재생되지 않는다.
  */
 export function StatsShellHeader() {
   const params = useParams<{ type?: string; season?: string }>();
   const pathname = usePathname();
-  const isOpponents = pathname.startsWith(OPPONENTS_HREF);
-  const type = isOpponents
-    ? 'opponents'
+  const isTeam = pathname.startsWith(TEAM_STATS_HREF);
+  const type = isTeam
+    ? 'team'
     : params.type
       ? decodeURIComponent(params.type)
       : 'batter';
@@ -32,13 +32,13 @@ export function StatsShellHeader() {
       href: `/stats/${encodeURIComponent(t.key)}/${encodeURIComponent(season)}`,
       prefetch: true,
     })),
-    { key: 'opponents', label: '상대 전적', href: OPPONENTS_HREF, prefetch: true },
+    { key: 'team', label: '팀 기록', href: TEAM_STATS_HREF, prefetch: true },
   ];
 
   return (
     <StatsPageHeader
-      eyebrow={isOpponents ? 'Head to Head' : 'Player Statistics'}
-      title={isOpponents ? '상대 전적' : '선수 기록'}
+      eyebrow={isTeam ? 'Team Statistics' : 'Player Statistics'}
+      title={isTeam ? '팀 기록' : '선수 기록'}
       tabList={tabList}
       currentType={type}
     />

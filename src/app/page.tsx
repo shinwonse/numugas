@@ -37,7 +37,7 @@ async function StatsSectionData() {
         win: teamTotalStats.win,
         lose: teamTotalStats.lose,
         draw: teamTotalStats.draw,
-        win_rate: teamTotalStats.win_rate.toFixed(1),
+        win_rate: teamTotalStats.win_rate.toFixed(3),
       }}
       teamCareerStats={teamCareerStats}
     />

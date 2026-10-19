@@ -23,6 +23,12 @@ const nextConfig = {
         destination: '/stats/:type/:season/:league',
         permanent: true,
       },
+      // 상대 전적이 팀 기록 페이지로 합쳐졌다 (?team= 은 그대로 넘어간다)
+      {
+        source: '/stats/opponents',
+        destination: '/stats/team',
+        permanent: true,
+      },
     ];
   },
   experimental: {

@@ -63,13 +63,13 @@ export async function POST(req: NextRequest) {
   revalidatePath('/');
   revalidatePath('/players');
   revalidatePath('/calendar', 'layout');
-  revalidatePath('/stats/opponents');
+  revalidatePath('/stats/team');
 
   const allSuccess = Object.values(results).every((r) => r.success);
 
   return NextResponse.json({
     success: allSuccess,
     results,
-    revalidated: ['/', '/players', '/calendar', '/stats/opponents'],
+    revalidated: ['/', '/players', '/calendar', '/stats/team'],
   });
 }
