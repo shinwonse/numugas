@@ -5,20 +5,38 @@ import { TEAM_HUB_HREF, TEAM_ITEMS } from '@/lib/team-menu';
 import {
   BarChart3,
   CalendarDays,
-  ClipboardList,
   Home,
-  Shield,
-  Users,
+  LayoutGrid,
+  type LucideProps,
+  Shirt,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+// ABOUT 탭은 팀 엠블럼을 쓴다. 선 아이콘이 아니라서 비활성일 땐 흑백·반투명으로 다른 탭과 톤을 맞춘다
+function TeamEmblem({
+  size,
+  className,
+  highlighted,
+}: LucideProps & { highlighted?: boolean }) {
+  return (
+    <Image
+      src="/logo.webp"
+      alt=""
+      width={Number(size)}
+      height={Number(size)}
+      className={cn(className, !highlighted && 'grayscale opacity-50')}
+    />
+  );
+}
+
 const NAV_ITEMS = [
   { label: 'HOME', href: '/', icon: Home, match: ['/'] },
-  { label: 'ABOUT', href: '/about', icon: Shield, match: ['/about'] },
+  { label: 'ABOUT', href: '/about', icon: TeamEmblem, match: ['/about'] },
   { label: 'STATS', href: '/stats', icon: BarChart3, match: ['/stats'] },
-  { label: 'ROSTER', href: '/players', icon: Users, match: ['/players'] },
+  { label: 'ROSTER', href: '/players', icon: Shirt, match: ['/players'] },
   {
     label: 'CALENDAR',
     href: '/calendar',
@@ -28,7 +46,7 @@ const NAV_ITEMS = [
   {
     label: 'TEAM',
     href: TEAM_HUB_HREF,
-    icon: ClipboardList,
+    icon: LayoutGrid,
     match: [TEAM_HUB_HREF, ...TEAM_ITEMS.map((item) => item.href)],
   },
 ] as const;
@@ -220,12 +238,20 @@ export function FloatingNav() {
                 isActive || isHovered ? 'text-white' : 'text-white/40',
               )}
             >
-              <item.icon
-                size={22}
-                strokeWidth={isActive ? 2 : 1.5}
-                aria-hidden
-                className="transition-all duration-200"
-              />
+              {item.icon === TeamEmblem ? (
+                <TeamEmblem
+                  size={26}
+                  highlighted={isActive || isHovered}
+                  className="transition-all duration-200"
+                />
+              ) : (
+                <item.icon
+                  size={22}
+                  strokeWidth={isActive ? 2 : 1.5}
+                  aria-hidden
+                  className="transition-all duration-200"
+                />
+              )}
             </Link>
           );
         })}
