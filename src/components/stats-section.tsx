@@ -20,6 +20,7 @@ interface StatsSectionProps {
     draw: number;
   };
   teamCareerStats: TeamCareerStats;
+  longestWinStreak: number;
 }
 
 interface StatCardProps {
@@ -82,18 +83,23 @@ function StatCard({ name, value, index, isInView }: StatCardProps) {
 export function StatsSection({
   teamTotalStats,
   teamCareerStats,
+  longestWinStreak,
 }: StatsSectionProps) {
   const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
 
   const teamStats = [
-    { name: '승률', value: teamTotalStats.win_rate, description: '' },
-    { name: '승', value: teamTotalStats.win, description: '' },
-    { name: '패', value: teamTotalStats.lose, description: '' },
-    { name: '무', value: teamTotalStats.draw, description: '' },
-    { name: '팀통산홈런', value: teamCareerStats.homeruns, description: '' },
-    { name: '팀통산루타', value: teamCareerStats.totalbases, description: '' },
-    { name: '팀통산안타', value: teamCareerStats.hits, description: '' },
-    { name: '팀통산탈삼진', value: teamCareerStats.strikeouts, description: '' },
+    { name: '승률', value: teamTotalStats.win_rate },
+    { name: '승', value: teamTotalStats.win },
+    { name: '패', value: teamTotalStats.lose },
+    { name: '무', value: teamTotalStats.draw },
+    { name: '팀 타율', value: teamCareerStats.avg },
+    { name: '팀 OPS', value: teamCareerStats.ops },
+    { name: '안타', value: teamCareerStats.hits },
+    { name: '홈런', value: teamCareerStats.homeruns },
+    { name: '평균자책점', value: teamCareerStats.era },
+    { name: '탈삼진', value: teamCareerStats.strikeouts },
+    { name: '도루', value: teamCareerStats.stolenbases },
+    { name: '최다 연승', value: longestWinStreak },
   ];
 
   return (

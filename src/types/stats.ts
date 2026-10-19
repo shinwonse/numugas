@@ -19,11 +19,27 @@ export interface TeamTotalStats {
   win_rate: number;
 }
 
+/** 선수 기록을 합친 팀 통산 기록. 비율 기록은 표시용 문자열 */
 export interface TeamCareerStats {
+  hits: number;
+  doubles: number;
+  triples: number;
   homeruns: number;
   totalbases: number;
-  hits: number;
+  rbi: number;
+  runs: number;
+  stolenbases: number;
+  walks: number;
+  /** 타율 / 출루율 / 장타율 / OPS (".287") */
+  avg: string;
+  obp: string;
+  slg: string;
+  ops: string;
   strikeouts: number;
+  /** "312.1" */
+  innings: string;
+  era: string;
+  whip: string;
 }
 
 export interface PitcherStat {

@@ -18,6 +18,7 @@ import {
   fetchTeamCareerStats,
   fetchTeamTotalStats,
 } from '@/lib/fetchers';
+import { fetchTeamGameRecords } from '@/lib/fetchers/team-game-records';
 import { fetchLatestYouTubeVideo } from '@/lib/fetchers/youtube';
 import { getCurrentSeason } from '@/lib/seasons';
 import { Suspense } from 'react';
@@ -26,9 +27,10 @@ import { Suspense } from 'react';
 export const revalidate = false;
 
 async function StatsSectionData() {
-  const [teamTotalStats, teamCareerStats] = await Promise.all([
+  const [teamTotalStats, teamCareerStats, teamGameRecords] = await Promise.all([
     fetchTeamTotalStats(),
     fetchTeamCareerStats(),
+    fetchTeamGameRecords(),
   ]);
 
   return (
@@ -40,6 +42,7 @@ async function StatsSectionData() {
         win_rate: teamTotalStats.win_rate.toFixed(3),
       }}
       teamCareerStats={teamCareerStats}
+      longestWinStreak={teamGameRecords.longestWinStreak}
     />
   );
 }

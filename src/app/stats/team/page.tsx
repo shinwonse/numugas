@@ -1,7 +1,14 @@
 import { fetchOpponentRecords } from '@/lib/fetchers/opponents';
 import { fetchTeamCareerStats } from '@/lib/fetchers/team-career-stats';
+import {
+  fetchTeamGameRecords,
+  type TeamGameHighlight,
+} from '@/lib/fetchers/team-game-records';
 import { fetchTeamSeasonRecords } from '@/lib/fetchers/team-stats';
+import { toKstDateKey } from '@/lib/calendar-utils';
 import { formatWinLoss, formatWinRate } from '@/lib/opponents';
+import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 import type { Metadata } from 'next/types';
 import { Suspense, type ReactNode } from 'react';
 import { OpponentList, OpponentListFromParams } from './opponent-list';
@@ -36,11 +43,60 @@ function Stat({ label, value, sub }: { label: string; value: ReactNode; sub?: st
   );
 }
 
+const SUB_TITLE = 'px-4 pt-4 text-xs font-semibold text-white/50 md:px-5';
+
+/** 한 줄에 4개씩 놓는 기록 묶음 */
+function StatGroup({
+  title,
+  stats,
+}: {
+  title: string;
+  stats: Array<{ label: string; value: ReactNode }>;
+}) {
+  return (
+    <div className={CARD}>
+      <h3 className={SUB_TITLE}>{title}</h3>
+      <dl className="grid grid-cols-4 gap-x-3 gap-y-4 p-4 text-center md:p-5">
+        {stats.map((stat) => (
+          <Stat key={stat.label} label={stat.label} value={stat.value} />
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+/** 최다 점수차 승리 같은 기록 경기 한 줄 (경기 상세로 이동) */
+function HighlightRow({ label, game }: { label: string; game: TeamGameHighlight }) {
+  return (
+    <li>
+      <Link
+        href={`/calendar/event/${game.id}`}
+        className="flex items-center gap-3 px-4 py-3 text-sm transition-colors hover:bg-white/[0.04] md:px-5"
+      >
+        <span className="w-28 shrink-0 text-white/50">{label}</span>
+        <span className="min-w-0 flex-1 truncate text-white/80">
+          <span className="tabular-nums text-white/40">
+            {toKstDateKey(game.startsAt).replaceAll('-', '.')}
+          </span>{' '}
+          vs {game.opponent}
+        </span>
+        <span className="shrink-0 font-semibold tabular-nums text-white">
+          {game.ours}:{game.theirs}
+        </span>
+        <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-white/30" />
+      </Link>
+    </li>
+  );
+}
+
+const perGame = (runs: number, games: number) => (games ? (runs / games).toFixed(1) : '-');
+
 export default async function TeamStatsPage() {
   // 실패는 throw → error.tsx. 빈 결과가 ISR 캐시에 남지 않는다.
-  const [seasons, career, opponents] = await Promise.all([
+  const [seasons, career, games, opponents] = await Promise.all([
     fetchTeamSeasonRecords(),
     fetchTeamCareerStats(),
+    fetchTeamGameRecords(),
     fetchOpponentRecords(),
   ]);
 
@@ -49,6 +105,37 @@ export default async function TeamStatsPage() {
     { win: 0, lose: 0, draw: 0 },
   );
   const winRate = formatWinRate(total);
+
+  const battingStats = [
+    { label: '타율', value: career.avg },
+    { label: '출루율', value: career.obp },
+    { label: '장타율', value: career.slg },
+    { label: 'OPS', value: career.ops },
+    { label: '안타', value: career.hits.toLocaleString() },
+    { label: '2루타', value: career.doubles.toLocaleString() },
+    { label: '3루타', value: career.triples.toLocaleString() },
+    { label: '홈런', value: career.homeruns.toLocaleString() },
+    { label: '타점', value: career.rbi.toLocaleString() },
+    { label: '루타', value: career.totalbases.toLocaleString() },
+    { label: '도루', value: career.stolenbases.toLocaleString() },
+    { label: '볼넷', value: career.walks.toLocaleString() },
+  ];
+  const pitchingStats = [
+    { label: '평균자책', value: career.era },
+    { label: 'WHIP', value: career.whip },
+    { label: '이닝', value: career.innings },
+    { label: '탈삼진', value: career.strikeouts.toLocaleString() },
+  ];
+
+  // 최다 점수차 승리와 최다 득점이 같은 경기면 한 줄로 합친다
+  const { biggestWin, mostRuns } = games;
+  const highlights =
+    biggestWin && mostRuns && biggestWin.id === mostRuns.id
+      ? [{ label: '최다 득점·점수차', game: biggestWin }]
+      : [
+          ...(biggestWin ? [{ label: '최다 점수차 승리', game: biggestWin }] : []),
+          ...(mostRuns ? [{ label: '한 경기 최다 득점', game: mostRuns }] : []),
+        ];
 
   return (
     <div className="w-full space-y-8">
@@ -62,12 +149,37 @@ export default async function TeamStatsPage() {
           />
           <Stat label="상대 팀" value={opponents.length} />
         </dl>
-        <dl className={`${CARD} grid grid-cols-4 gap-3 p-4 text-center md:p-5`}>
-          <Stat label="안타" value={career.hits.toLocaleString()} />
-          <Stat label="홈런" value={career.homeruns.toLocaleString()} />
-          <Stat label="루타" value={career.totalbases.toLocaleString()} />
-          <Stat label="탈삼진" value={career.strikeouts.toLocaleString()} />
-        </dl>
+        <StatGroup title="타격" stats={battingStats} />
+        <StatGroup title="투구" stats={pitchingStats} />
+        {games.games > 0 && (
+          <div className={CARD}>
+            <h3 className={SUB_TITLE}>경기</h3>
+            <dl className="grid grid-cols-4 gap-x-3 gap-y-4 p-4 text-center md:p-5">
+              <Stat
+                label="득점"
+                value={games.runsFor.toLocaleString()}
+                sub={`경기당 ${perGame(games.runsFor, games.games)}`}
+              />
+              <Stat
+                label="실점"
+                value={games.runsAgainst.toLocaleString()}
+                sub={`경기당 ${perGame(games.runsAgainst, games.games)}`}
+              />
+              <Stat
+                label="득실차"
+                value={`${games.runsFor >= games.runsAgainst ? '+' : ''}${String(games.runsFor - games.runsAgainst)}`}
+              />
+              <Stat label="최다 연승" value={games.longestWinStreak} />
+            </dl>
+            {highlights.length > 0 && (
+              <ul className="divide-y divide-white/[0.06] border-t border-white/[0.06]">
+                {highlights.map((h) => (
+                  <HighlightRow key={h.game.id} label={h.label} game={h.game} />
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
       </Section>
 
       {seasons.length > 0 && (
