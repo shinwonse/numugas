@@ -211,21 +211,21 @@ export function FloatingNav() {
                 itemRefs.current[i] = el;
               }}
               aria-current={isActive ? 'page' : undefined}
+              aria-label={item.label}
+              title={item.label}
               className={cn(
-                'relative z-10 flex flex-col items-center justify-center',
-                'w-[3.25rem] min-[380px]:w-14 md:w-20 py-1.5 rounded-xl',
+                'relative z-10 flex items-center justify-center',
+                'w-[3.25rem] min-[380px]:w-14 md:w-20 h-11 rounded-xl',
                 'transition-colors duration-200',
                 isActive || isHovered ? 'text-white' : 'text-white/40',
               )}
             >
               <item.icon
-                size={20}
+                size={22}
                 strokeWidth={isActive ? 2 : 1.5}
+                aria-hidden
                 className="transition-all duration-200"
               />
-              <span className="text-[9px] font-medium mt-0.5 leading-none tracking-wide">
-                {item.label}
-              </span>
             </Link>
           );
         })}
