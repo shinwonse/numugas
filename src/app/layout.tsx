@@ -115,7 +115,7 @@ const jsonLd = {
       url: baseUrl,
       logo: {
         '@type': 'ImageObject',
-        url: `${baseUrl}/opengraph.png`,
+        url: `${baseUrl}/logo.png`,
       },
       sport: '야구',
     },
