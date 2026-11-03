@@ -164,13 +164,29 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/*
+          서비스 워커는 /_next/static/ 파일을 캐시 우선으로 내준다. 개발 서버는 파일명이 그대로인 채
+          내용이 바뀌어서 옛 JS가 실행되고 하이드레이션이 깨지므로, 개발 중에는 등록을 해제하고 캐시를 비운다.
+        */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `
+            __html:
+              process.env.NODE_ENV === 'production'
+                ? `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                   navigator.serviceWorker.register('/sw.js');
                 });
+              }
+            `
+                : `
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then((registrations) => {
+                  registrations.forEach((registration) => registration.unregister());
+                });
+              }
+              if ('caches' in window) {
+                caches.keys().then((keys) => keys.forEach((key) => caches.delete(key)));
               }
             `,
           }}
