@@ -53,20 +53,18 @@ export function StatsLeaders({ type, rows }: { type: StatsType; rows: Row[] }) {
   if (leaders.length === 0) return null;
 
   return (
-    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.08] lg:grid-cols-4">
+    // 상자 배경 없이 페이지 위에 바로 놓고, 부문 사이는 왼쪽 세로선으로만 나눈다
+    <div className="grid grid-cols-2 gap-y-6 lg:grid-cols-4">
       {leaders.map((leader) => (
         <div
           key={leader.key}
-          className="group flex flex-col justify-between gap-3 bg-[#08080b] p-4 transition-colors hover:bg-[#120709] md:p-5"
+          className="flex flex-col gap-2 border-l border-white/10 pl-4 md:pl-5"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-red-400">
-              {leader.label}
-            </span>
-            <span className="text-[11px] font-semibold text-white/40">1위</span>
-          </div>
+          <span className="text-xs font-semibold text-red-400">
+            {leader.label} 1위
+          </span>
           <LeaderValue value={leader.value} />
-          <p className="truncate text-sm font-semibold text-white/80 transition-colors group-hover:text-white">
+          <p className="truncate text-sm font-semibold text-white/80">
             {leader.name}
           </p>
         </div>
