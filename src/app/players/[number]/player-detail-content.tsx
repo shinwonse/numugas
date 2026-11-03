@@ -126,7 +126,7 @@ export function PlayerDetailContent({
           </button>
         </div>
 
-        <div className="-mt-28 px-4 pb-16 sm:px-8 lg:ml-[36%] lg:mt-0 lg:px-12 lg:pt-20 xl:px-16">
+        <div className="-mt-28 px-5 pb-16 sm:px-8 md:px-10 lg:ml-[36%] lg:mt-0 lg:px-12 lg:pt-20 xl:px-16">
           {/* 이름 / 포지션 / 타자·투수 전환 */}
           <section className="relative mb-8">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-400">

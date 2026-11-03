@@ -10,7 +10,7 @@ export default function Loading() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#050508] via-transparent to-transparent" />
         </div>
 
-        <div className="-mt-28 px-4 pb-16 sm:px-8 lg:ml-[36%] lg:mt-0 lg:px-12 lg:pt-20 xl:px-16">
+        <div className="-mt-28 px-5 pb-16 sm:px-8 md:px-10 lg:ml-[36%] lg:mt-0 lg:px-12 lg:pt-20 xl:px-16">
           <div className="relative mb-8 space-y-3">
             <div className="h-3 w-32 animate-pulse rounded bg-white/[0.08]" />
             <div className="h-10 w-48 animate-pulse rounded-lg bg-white/[0.1] md:h-12" />

@@ -121,6 +121,9 @@
   body {
     @apply bg-background text-foreground;
     min-height: 100vh;
+    /* 한글이 글자 중간에서 줄바꿈되지 않고 어절 단위로 넘어가게 한다 */
+    word-break: keep-all;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -132,7 +135,7 @@ html {
 
 /* 모든 페이지 공통 콘텐츠 영역: 최대 너비와 좌우 여백을 한곳에서 맞춘다 */
 .page-container {
-  @apply mx-auto w-full max-w-6xl px-4 md:px-6;
+  @apply mx-auto w-full max-w-6xl px-5 sm:px-8 md:px-10;
 }
 
 /*

@@ -71,23 +71,13 @@ export function HeroSection() {
           />
         </div>
 
-        <p className="mt-8 overflow-hidden text-center text-sm font-medium tracking-wide text-white/60 md:text-base">
-          <span
-            className="block"
-            style={{
-              animation: 'rise-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both',
-            }}
-          >
-            나는 내가 생각한 것보다 훨씬 강하다
-          </span>
-        </p>
-
+        {/* 글자 없이 선만 흘러 아래에 내용이 있음을 알린다 */}
         <a
           href="#통계"
-          className="mt-14 flex flex-col items-center gap-3 text-xs font-medium text-white/50 transition-colors hover:text-red-400"
+          aria-label="팀 기록으로 이동"
+          className="mt-16 flex flex-col items-center p-2"
           style={{ animation: 'fade-in-only 1s ease-out 1.6s both' }}
         >
-          기록 보기
           <span className="relative h-12 w-px overflow-hidden bg-white/15">
             <span className="absolute inset-x-0 top-0 h-1/3 bg-red-500 animate-[scroll-cue_1.8s_cubic-bezier(0.65,0,0.35,1)_infinite] motion-reduce:animate-none" />
           </span>

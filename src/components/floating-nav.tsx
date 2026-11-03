@@ -61,12 +61,19 @@ export function FloatingNav() {
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  // 이동을 시작했지만 주소가 아직 안 바뀐 탭. 이게 없으면 손을 떼는 순간 표시가
+  // 이전 탭으로 되돌아갔다가 페이지가 바뀐 뒤 다시 날아간다.
+  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
 
   const activeIndex = NAV_ITEMS.findIndex((item) =>
     item.match.some((href) => isMatch(pathname, href)),
   );
 
-  const displayIndex = hoverIndex ?? activeIndex;
+  useEffect(() => {
+    setPendingIndex(null);
+  }, [pathname]);
+
+  const displayIndex = hoverIndex ?? pendingIndex ?? activeIndex;
 
   // null이면 아직 측정 전 → blob을 그리지 않고, 첫 측정 위치에 애니메이션 없이 놓는다
   const [blobPos, setBlobPos] = useState<{ x: number; width: number } | null>(
@@ -151,6 +158,7 @@ export function FloatingNav() {
     (e: React.TouchEvent) => {
       if (hoverIndex !== null && hoverIndex !== activeIndex) {
         e.preventDefault();
+        setPendingIndex(hoverIndex);
         router.push(NAV_ITEMS[hoverIndex].href);
       }
       setIsDragging(false);
@@ -164,15 +172,19 @@ export function FloatingNav() {
     setHoverIndex(null);
   }, []);
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
+  // 실제 마우스만 호버로 친다. 터치 뒤 브라우저가 흉내 내는 마우스 이벤트까지 받으면
+  // mouseleave가 오지 않아 표시가 마지막으로 누른 탭에 붙어 버린다.
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
       const idx = getIndexFromPosition(e.clientX);
       if (idx !== null) setHoverIndex(idx);
     },
     [getIndexFromPosition],
   );
 
-  const handleMouseLeave = useCallback(() => {
+  const handlePointerLeave = useCallback((e: React.PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
     setHoverIndex(null);
   }, []);
 
@@ -198,8 +210,8 @@ export function FloatingNav() {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchCancel}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
       >
         {/* Animated blob indicator */}
         {displayIndex >= 0 && blobPos && (
@@ -221,7 +233,8 @@ export function FloatingNav() {
 
         {NAV_ITEMS.map((item, i) => {
           const isActive = i === activeIndex;
-          const isHovered = i === hoverIndex;
+          // 아이콘 강조는 표시(blob)가 놓인 탭 하나만: 이동 중에 두 탭이 함께 밝아지지 않게 한다
+          const isHighlighted = i === displayIndex;
 
           return (
             <Link
@@ -231,25 +244,30 @@ export function FloatingNav() {
                 itemRefs.current[i] = el;
               }}
               aria-current={isActive ? 'page' : undefined}
+              onClick={(e) => {
+                // 새 탭 열기(⌘/Ctrl 클릭 등)는 이 화면을 떠나지 않는다
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                if (i !== activeIndex) setPendingIndex(i);
+              }}
               aria-label={item.label}
               title={item.label}
               className={cn(
                 'relative z-10 flex items-center justify-center',
                 'w-[3.25rem] min-[380px]:w-14 md:w-20 h-11 rounded-full',
                 'transition-colors duration-200',
-                isActive || isHovered ? 'text-white' : 'text-white/40',
+                isHighlighted ? 'text-white' : 'text-white/40',
               )}
             >
               {item.icon === TeamEmblem ? (
                 <TeamEmblem
                   size={26}
-                  highlighted={isActive || isHovered}
+                  highlighted={isHighlighted}
                   className="transition-all duration-200"
                 />
               ) : (
                 <item.icon
                   size={22}
-                  strokeWidth={isActive ? 2 : 1.5}
+                  strokeWidth={isHighlighted ? 2 : 1.5}
                   aria-hidden
                   className="transition-all duration-200"
                 />

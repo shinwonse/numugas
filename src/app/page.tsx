@@ -1,5 +1,6 @@
 import { Footer } from '@/components/footer';
 import { HeroSection } from '@/components/hero-section';
+import { InstallPrompt } from '@/components/install-prompt';
 import { PlayerStatsSection } from '@/components/player-stats-section';
 import {
   PlayerStatsSectionSkeleton,
@@ -110,6 +111,7 @@ export default function Home() {
       </Suspense>
 
       <Footer />
+      <InstallPrompt />
     </main>
   );
 }

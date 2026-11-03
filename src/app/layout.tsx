@@ -168,6 +168,21 @@ export default function RootLayout({
           서비스 워커는 /_next/static/ 파일을 캐시 우선으로 내준다. 개발 서버는 파일명이 그대로인 채
           내용이 바뀌어서 옛 JS가 실행되고 하이드레이션이 깨지므로, 개발 중에는 등록을 해제하고 캐시를 비운다.
         */}
+        {/*
+          설치 가능 이벤트는 페이지가 뜨자마자 한 번만 온다. 홈의 설치 안내가 나중에 마운트돼도
+          쓸 수 있도록 미리 받아 둔다 (브라우저 기본 설치 배너 대신 우리 안내를 띄운다).
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('beforeinstallprompt', (event) => {
+                event.preventDefault();
+                window.__installPrompt = event;
+                window.dispatchEvent(new Event('installpromptready'));
+              });
+            `,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html:

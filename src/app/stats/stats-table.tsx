@@ -164,10 +164,11 @@ export function StatsTable({
 
       <div
         className={cn(
-          'rounded-lg overflow-hidden transition-opacity duration-200',
+          // 모바일은 가로로 넘기는 표라 좌우 여백(20px)까지 펼쳐 한 열이라도 더 보이게 한다
+          '-mx-5 sm:mx-0 sm:rounded-lg overflow-hidden transition-opacity duration-200',
           isPending && !showSkeleton && 'opacity-60',
           'bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-150',
-          'border border-white/[0.06]',
+          'border-y border-white/[0.06] sm:border-x',
           'shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.04)]',
         )}
       >

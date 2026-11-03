@@ -3,7 +3,7 @@ import { TEAM_HUB_HREF } from '@/lib/team-menu';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 
-/** 팀 하위 페이지 상단의 `TEAM` 허브로 돌아가는 버튼 */
+/** 팀 하위 페이지 상단의 팀 메뉴 허브로 돌아가는 버튼 */
 export function TeamNav() {
   return (
     <nav
@@ -19,10 +19,10 @@ export function TeamNav() {
     >
       <Link
         href={TEAM_HUB_HREF}
-        className="flex min-h-11 items-center gap-0.5 rounded-md pl-2 pr-4 text-xs font-medium tracking-wide text-white/70 transition-colors duration-200 hover:text-white"
+        className="flex min-h-11 items-center gap-0.5 rounded-md pl-2 pr-4 text-xs font-medium text-white/70 transition-colors duration-200 hover:text-white"
       >
         <ChevronLeft className="h-4 w-4" />
-        TEAM
+        팀 메뉴
       </Link>
     </nav>
   );
