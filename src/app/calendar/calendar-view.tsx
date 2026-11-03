@@ -18,7 +18,7 @@ import { useCalendarAdmin } from './calendar-admin';
 
 
 const navButton = cn(
-  'flex h-11 w-11 items-center justify-center rounded-xl',
+  'flex h-11 w-11 items-center justify-center rounded-md',
   'bg-white/5 border border-white/10 text-white/70',
   'hover:bg-white/10 hover:text-white transition-colors',
 );
@@ -108,7 +108,7 @@ export function CalendarView({
         </Link>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
+      <div className="rounded-lg border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden">
         <div className="grid grid-cols-7 border-b border-white/10">
           {WEEKDAY_LABELS.map((day, i) => (
             <div

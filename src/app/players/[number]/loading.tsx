@@ -14,11 +14,11 @@ export default function Loading() {
           <div className="relative mb-8 space-y-3">
             <div className="h-3 w-32 animate-pulse rounded bg-white/[0.08]" />
             <div className="h-10 w-48 animate-pulse rounded-lg bg-white/[0.1] md:h-12" />
-            <div className="mt-6 h-11 w-40 animate-pulse rounded-2xl bg-white/[0.05]" />
+            <div className="mt-6 h-11 w-40 animate-pulse rounded-lg bg-white/[0.05]" />
           </div>
           <div className="space-y-5">
-            <div className="h-36 animate-pulse rounded-2xl border border-white/[0.08] bg-white/[0.03]" />
-            <div className="h-14 animate-pulse rounded-2xl border border-white/[0.08] bg-white/[0.03]" />
+            <div className="h-36 animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.03]" />
+            <div className="h-14 animate-pulse rounded-lg border border-white/[0.08] bg-white/[0.03]" />
           </div>
         </div>
       </div>

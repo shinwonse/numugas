@@ -20,7 +20,7 @@ export default function AboutPage() {
         <SectionBackground variant="gradient" />
 
         <div className="relative z-10 page-container">
-          <PageHeader eyebrow="History" title="담장NUMUGAS" className="mb-0" />
+          <PageHeader title="담장NUMUGAS" className="mb-0" />
         </div>
       </section>
 

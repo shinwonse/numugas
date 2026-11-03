@@ -15,15 +15,15 @@ export default function TeamHubPage() {
     <div className="bg-under-nav relative min-h-screen bg-[#050508] overflow-hidden">
       <MeshGradientBackground />
       <main className="relative z-10 page-container pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16 text-white">
-        <PageHeader eyebrow="Team Only" title="팀 메뉴" />
+        <PageHeader eyebrow="팀원 전용" title="팀 메뉴" />
         <ul className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2">
           {TEAM_ITEMS.map((item) => (
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="group flex h-full items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition-colors duration-200 hover:border-white/20 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60"
+                className="group flex h-full items-center gap-4 rounded-lg border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition-colors duration-200 hover:border-white/20 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60"
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-400">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-red-500/10 text-red-400">
                   <item.icon className="h-6 w-6" strokeWidth={1.75} />
                 </span>
                 <span className="min-w-0 flex-1">

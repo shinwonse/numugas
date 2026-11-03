@@ -36,7 +36,7 @@ export function EventDetailModal({
             'fixed z-50 flex flex-col bg-[#0c0c10] text-white',
             'inset-0',
             'md:inset-x-0 md:top-[12vh] md:bottom-auto md:mx-auto md:w-full md:max-w-lg',
-            'md:max-h-[76vh] md:rounded-2xl md:border md:border-white/10 md:shadow-2xl',
+            'md:max-h-[76vh] md:rounded-lg md:border md:border-white/10 md:shadow-2xl',
             'duration-200 data-[state=open]:animate-in data-[state=open]:fade-in-0',
             'max-md:data-[state=open]:slide-in-from-right-full md:data-[state=open]:zoom-in-95',
             'focus:outline-none',
@@ -46,7 +46,7 @@ export function EventDetailModal({
 
           {/* 모바일: 페이지형 상단 바 */}
           <div className="flex items-center gap-1 border-b border-white/10 px-2 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] md:hidden">
-            <DialogPrimitive.Close className="flex h-11 cursor-pointer items-center gap-0.5 rounded-xl pl-1 pr-3 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-white">
+            <DialogPrimitive.Close className="flex h-11 cursor-pointer items-center gap-0.5 rounded-md pl-1 pr-3 text-sm text-white/70 transition-colors hover:bg-white/5 hover:text-white">
               <ChevronLeft className="h-5 w-5" />
               캘린더
             </DialogPrimitive.Close>

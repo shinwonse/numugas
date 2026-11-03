@@ -10,7 +10,7 @@ export default function NotFound() {
         <PageHeader eyebrow="404" title="페이지를 찾을 수 없어요" />
         <Link
           href="/"
-          className="flex min-h-11 items-center rounded-xl bg-red-500 px-5 text-sm font-medium transition-colors hover:bg-red-600"
+          className="flex min-h-11 items-center rounded-md bg-red-500 px-5 text-sm font-medium transition-colors hover:bg-red-600"
         >
           홈으로
         </Link>

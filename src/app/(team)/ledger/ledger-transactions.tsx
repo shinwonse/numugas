@@ -37,10 +37,10 @@ type ActionResult =
   | { ok: false; status: number; error: string };
 
 const dialogClass =
-  'max-h-[90dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border-white/10 bg-[#0c0c10] text-white sm:rounded-2xl [&>button]:text-white/60';
+  'max-h-[90dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-lg border-white/10 bg-[#0c0c10] text-white sm:rounded-lg [&>button]:text-white/60';
 
 const inputClass =
-  'w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/20';
+  'w-full rounded-md border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/20';
 
 export function LedgerTransactions({
   session,
@@ -85,19 +85,19 @@ export function LedgerTransactions({
   return (
     <div className="space-y-6">
       <section className="grid grid-cols-2 gap-3 md:grid-cols-3">
-        <div className="col-span-2 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-xl md:col-span-1">
+        <div className="col-span-2 rounded-lg border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-xl md:col-span-1">
           <p className="text-xs text-white/50">현재 잔액</p>
           <p className="mt-1 text-2xl font-bold tabular-nums md:text-3xl">
             {formatWon(balance)}
           </p>
         </div>
-        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-xl">
+        <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-xl">
           <p className="text-xs text-white/50">이번 달 입금</p>
           <p className="mt-1 text-lg font-semibold tabular-nums text-emerald-300">
             {formatWon(monthSummary.income)}
           </p>
         </div>
-        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-xl">
+        <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-xl">
           <p className="text-xs text-white/50">이번 달 출금</p>
           <p className="mt-1 text-lg font-semibold tabular-nums text-rose-300">
             {formatWon(monthSummary.expense)}
@@ -120,7 +120,7 @@ export function LedgerTransactions({
           <button
             type="button"
             onClick={() => setEditing('new')}
-            className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-red-600"
+            className="flex shrink-0 cursor-pointer items-center gap-1.5 rounded-md bg-red-500 px-4 py-2.5 text-sm font-medium transition-colors hover:bg-red-600"
           >
             <Plus className="h-4 w-4" />
             내역 추가
@@ -129,7 +129,7 @@ export function LedgerTransactions({
       </div>
 
       {months.length === 0 ? (
-        <p className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-10 text-center text-sm text-white/40">
+        <p className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-10 text-center text-sm text-white/40">
           {query ? '검색 결과가 없습니다' : '거래 내역이 없습니다'}
         </p>
       ) : (
@@ -148,7 +148,7 @@ export function LedgerTransactions({
                     <span className="text-rose-300/80">-{s.expense.toLocaleString('ko-KR')}</span>
                   </p>
                 </div>
-                <ul className="divide-y divide-white/[0.05] overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
+                <ul className="divide-y divide-white/[0.05] overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
                   {monthRows.map((row) => {
                     const content = (
                       <>
@@ -285,7 +285,7 @@ function EntryDialog({
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={(e) => void submit(e)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-white/5 p-1">
+            <div className="grid grid-cols-2 gap-1 rounded-md border border-white/10 bg-white/5 p-1">
               {(
                 [
                   ['income', '입금'],
@@ -368,7 +368,7 @@ function EntryDialog({
                   type="button"
                   onClick={() => setConfirmDelete(true)}
                   disabled={saving}
-                  className="cursor-pointer rounded-xl border border-red-500/30 px-4 py-2.5 text-sm text-red-300 transition-colors hover:bg-red-500/10 disabled:opacity-50"
+                  className="cursor-pointer rounded-md border border-red-500/30 px-4 py-2.5 text-sm text-red-300 transition-colors hover:bg-red-500/10 disabled:opacity-50"
                 >
                   삭제
                 </button>
@@ -376,7 +376,7 @@ function EntryDialog({
               <button
                 type="submit"
                 disabled={saving}
-                className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-medium transition-colors hover:bg-red-600 disabled:opacity-50"
+                className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md bg-red-500 py-2.5 text-sm font-medium transition-colors hover:bg-red-600 disabled:opacity-50"
               >
                 {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                 {existing ? '수정' : '추가'}
@@ -399,7 +399,7 @@ function EntryDialog({
           <AlertDialogFooter className="gap-2">
             <AlertDialogCancel
               disabled={saving}
-              className="rounded-xl border-white/10 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+              className="rounded-md border-white/10 bg-white/5 text-white hover:bg-white/10 hover:text-white"
             >
               취소
             </AlertDialogCancel>
@@ -409,7 +409,7 @@ function EntryDialog({
                 e.preventDefault();
                 void remove();
               }}
-              className="rounded-xl bg-red-500 text-white hover:bg-red-600"
+              className="rounded-md bg-red-500 text-white hover:bg-red-600"
             >
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               삭제

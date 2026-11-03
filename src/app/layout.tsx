@@ -2,20 +2,11 @@ import { FloatingNav } from '@/components/floating-nav';
 import { QueryClientProviderWrapper } from '@/components/query-client-provider-wrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
-import { Montserrat, Orbitron } from 'next/font/google';
 import type { Metadata, Viewport } from 'next/types';
 import type React from 'react';
+// 한글·영문·숫자를 한 글꼴로 맞춘다. 쓰인 글자 범위의 조각만 내려받는 dynamic subset
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import './globals.css';
-
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  variable: '--font-montserrat',
-});
-
-const orbitron = Orbitron({
-  subsets: ['latin'],
-  variable: '--font-orbitron',
-});
 
 // iOS 홈 화면 앱(black-translucent)에서 safe-area-inset 값을 쓰기 위해 cover로 설정
 export const viewport: Viewport = {
@@ -186,7 +177,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${montserrat.variable} ${orbitron.variable} font-sans antialiased`}
+        className="font-sans antialiased"
       >
         <QueryClientProviderWrapper>
           <ThemeProvider

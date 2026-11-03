@@ -45,11 +45,11 @@ export function StatsContentSkeleton() {
   return (
     <div className="w-full space-y-4" aria-busy aria-label="기록을 불러오는 중">
       <div className="flex items-center justify-end gap-2">
-        <Skeleton className="h-9 w-28 rounded-xl bg-white/[0.05]" />
-        <Skeleton className="h-9 w-28 rounded-xl bg-white/[0.05]" />
-        <Skeleton className="h-9 w-44 rounded-xl bg-white/[0.05]" />
+        <Skeleton className="h-9 w-28 rounded-md bg-white/[0.05]" />
+        <Skeleton className="h-9 w-28 rounded-md bg-white/[0.05]" />
+        <Skeleton className="h-9 w-44 rounded-md bg-white/[0.05]" />
       </div>
-      <div className="rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06]">
+      <div className="rounded-lg overflow-hidden bg-white/[0.03] border border-white/[0.06]">
         <div className="h-10 border-b border-white/[0.04]" />
         <div className="divide-y divide-white/[0.03]">
           {Array.from({ length: SKELETON_ROWS }, (_, i) => (

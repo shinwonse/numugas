@@ -15,13 +15,16 @@ export const metadata: Metadata = {
     '담장NUMUGAS의 통산·시즌별 팀 성적과 상대팀별 승패, 득실점, 맞대결 기록을 확인하세요.',
 };
 
-const CARD = 'rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl';
-const LABEL = 'text-[11px] font-semibold uppercase tracking-[0.2em] text-white/40';
+const CARD = 'rounded-lg border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl';
+const LABEL = 'text-[11px] font-semibold text-white/40';
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-3">
-      <h2 className="px-1 text-sm font-semibold text-white/70">{title}</h2>
+      <h2 className="flex items-center gap-3 px-1 text-sm font-bold text-white">
+        <span aria-hidden className="h-3.5 w-1 bg-red-500" />
+        {title}
+      </h2>
       {children}
     </section>
   );
@@ -31,7 +34,7 @@ function Stat({ label, value, sub }: { label: string; value: ReactNode; sub?: st
   return (
     <div>
       <dt className={LABEL}>{label}</dt>
-      <dd className="mt-1 text-lg font-bold tabular-nums text-white md:text-2xl">{value}</dd>
+      <dd className="mt-1 text-lg font-black tabular-nums tracking-tight text-white md:text-2xl">{value}</dd>
       {sub && <dd className="text-xs tabular-nums text-white/50">{sub}</dd>}
     </div>
   );
@@ -57,6 +60,31 @@ function StatGroup({
           <Stat key={stat.label} label={stat.label} value={stat.value} />
         ))}
       </dl>
+    </div>
+  );
+}
+
+/** 시즌 승·무·패 비율 막대 (CSS 애니메이션으로 왼쪽부터 차오른다) */
+function SeasonBar({
+  win,
+  draw,
+  lose,
+  delay,
+}: {
+  win: number;
+  draw: number;
+  lose: number;
+  delay: number;
+}) {
+  const total = win + draw + lose || 1;
+  return (
+    <div
+      aria-hidden
+      className="flex h-1.5 w-full origin-left gap-px overflow-hidden bg-white/[0.06]"
+      style={{ animation: `scale-in-x 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${String(delay + 0.2)}s both` }}
+    >
+      <span className="bg-red-500" style={{ width: `${String((win / total) * 100)}%` }} />
+      <span className="bg-white/40" style={{ width: `${String((draw / total) * 100)}%` }} />
     </div>
   );
 }
@@ -131,10 +159,10 @@ export default async function TeamStatsPage() {
               />
               <Stat label="최다 연승" value={games.longestWinStreak} />
             </dl>
-        <StatGroup title="타격" stats={battingStats} />
-        <StatGroup title="투구" stats={pitchingStats} />
           </div>
         )}
+        <StatGroup title="타격" stats={battingStats} />
+        <StatGroup title="투구" stats={pitchingStats} />
       </Section>
 
       {seasons.length > 0 && (
@@ -153,11 +181,18 @@ export default async function TeamStatsPage() {
                   <th scope="col" className="px-4 py-3 text-right font-medium md:px-5">
                     승률
                   </th>
+                  <th scope="col" className="hidden w-1/4 px-4 py-3 md:table-cell md:px-5">
+                    <span className="sr-only">승률 막대</span>
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.06]">
-                {seasons.map((r) => (
-                  <tr key={r.season} className="text-white/80">
+                {seasons.map((r, i) => (
+                  <tr
+                    key={r.season}
+                    className="text-white/80 transition-colors hover:bg-red-500/[0.05]"
+                    style={{ animation: `row-in 0.4s ease-out ${String(i * 0.05)}s both` }}
+                  >
                     <th scope="row" className="px-4 py-3 text-left font-semibold text-white md:px-5">
                       {r.season}
                     </th>
@@ -165,7 +200,12 @@ export default async function TeamStatsPage() {
                     <td className="px-2 py-3 text-right">{r.win}</td>
                     <td className="px-2 py-3 text-right">{r.lose}</td>
                     <td className="px-2 py-3 text-right">{r.draw}</td>
-                    <td className="px-4 py-3 text-right md:px-5">{formatWinRate(r) ?? '-'}</td>
+                    <td className="px-4 py-3 text-right font-semibold text-white md:px-5">
+                      {formatWinRate(r) ?? '-'}
+                    </td>
+                    <td className="hidden px-4 py-3 md:table-cell md:px-5">
+                      <SeasonBar win={r.win} draw={r.draw} lose={r.lose} delay={i * 0.05} />
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -62,7 +62,7 @@ export function OpponentList({
           }}
           placeholder="팀 이름 검색"
           aria-label="팀 이름 검색"
-          className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] pl-10 pr-10 text-base text-white placeholder:text-white/30 focus:border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60 md:text-sm [&::-webkit-search-cancel-button]:hidden"
+          className="h-11 w-full rounded-md border border-white/10 bg-white/[0.04] pl-10 pr-10 text-base text-white placeholder:text-white/30 focus:border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60 md:text-sm [&::-webkit-search-cancel-button]:hidden"
         />
         {query && (
           <button
@@ -79,11 +79,11 @@ export function OpponentList({
       </div>
 
       {filtered.length === 0 ? (
-        <p className="rounded-2xl border border-white/[0.08] bg-white/[0.03] py-12 text-center text-sm text-white/50">
+        <p className="rounded-lg border border-white/[0.08] bg-white/[0.03] py-12 text-center text-sm text-white/50">
           {records.length === 0 ? '아직 끝난 경기가 없습니다.' : '검색 결과가 없습니다.'}
         </p>
       ) : (
-        <ul className="divide-y divide-white/[0.06] overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
+        <ul className="divide-y divide-white/[0.06] overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
           {filtered.map((record, index) => {
             const isOpen = openTeam === record.opponent;
             const panelId = `opponent-panel-${String(index)}`;
@@ -129,7 +129,7 @@ export function OpponentList({
                       <li key={match.id}>
                         <Link
                           href={`/calendar/event/${match.id}`}
-                          className="flex items-center gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-white/[0.05] md:px-3"
+                          className="flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors hover:bg-white/[0.05] md:px-3"
                         >
                           <span className="w-20 shrink-0 tabular-nums text-white/60">
                             {formatDate(match.startsAt)}

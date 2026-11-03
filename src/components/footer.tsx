@@ -44,7 +44,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  'inline-flex h-11 w-11 items-center justify-center rounded-xl text-white/60',
+                  'inline-flex h-11 w-11 items-center justify-center rounded-md text-white/60',
                   'transition-colors duration-300',
                   'hover:bg-white/5 hover:text-white',
                 )}
@@ -58,7 +58,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  'inline-flex h-11 w-11 items-center justify-center rounded-xl text-white/60',
+                  'inline-flex h-11 w-11 items-center justify-center rounded-md text-white/60',
                   'transition-colors duration-300',
                   'hover:bg-white/5 hover:text-white',
                 )}

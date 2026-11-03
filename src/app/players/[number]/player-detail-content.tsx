@@ -2,13 +2,15 @@
 
 import { cn } from '@/lib/cn';
 import Image from 'next/image';
+import StatsTabs from '@/components/stats-tabs';
+import { PlayerKeyStats } from './player-key-stats';
 import { PlayerPhotoGallery } from './player-photo-gallery';
 import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 // 차트(Recharts)는 접힌 '세부 기록' 안에서만 보이므로 필요할 때 불러온다
-const chartLoading = () => <div className="h-64 animate-pulse rounded-xl bg-white/[0.03]" />;
+const chartLoading = () => <div className="h-64 animate-pulse rounded-md bg-white/[0.03]" />;
 const BatterStatsChart = dynamic(
   () => import('./player-stats-chart').then((m) => m.BatterStatsChart),
   { ssr: false, loading: chartLoading },
@@ -19,6 +21,11 @@ const PitcherStatsChart = dynamic(
 );
 
 const PLACEHOLDER_PHOTO = '/logo.webp';
+
+const PLAYER_TABS = [
+  { key: 'batter', label: '타자' },
+  { key: 'pitcher', label: '투수' },
+];
 
 interface Player {
   id: number;
@@ -58,18 +65,11 @@ export function PlayerDetailContent({
   const batterError: Error | null = null;
   const pitcherError: Error | null = null;
 
-  const handleTabChange = (tab: 'batter' | 'pitcher') => {
-    setActiveTab(tab);
+  const handleTabClick = (key: string) => {
+    setActiveTab(key as 'batter' | 'pitcher');
   };
 
   const isPlaceholderPhoto = player.photo === PLACEHOLDER_PHOTO;
-  const tabClass = (active: boolean) =>
-    cn(
-      'px-5 py-2 rounded-xl text-sm font-semibold transition-colors duration-200 cursor-pointer',
-      active
-        ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]'
-        : 'text-white/40 hover:text-white/80',
-    );
 
   return (
     <main className="bg-under-nav relative min-h-screen bg-[#050508] text-white overflow-x-clip">
@@ -118,7 +118,8 @@ export function PlayerDetailContent({
             </div>
             <span
               aria-hidden
-              className="absolute bottom-8 left-8 hidden font-display text-[11rem] font-bold leading-none text-white/[0.08] lg:block"
+              className="absolute bottom-32 right-5 text-[7rem] font-black leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(239,68,68,0.6)] lg:bottom-8 lg:left-8 lg:right-auto lg:top-auto lg:text-[11rem] lg:[-webkit-text-stroke-color:rgba(255,255,255,0.15)]"
+              style={{ animation: 'slide-in-right 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both' }}
             >
               {player.number}
             </span>
@@ -133,27 +134,20 @@ export function PlayerDetailContent({
               <span className="mx-2 text-white/20">·</span>
               <span className="text-white/60">{player.position}</span>
             </p>
-            <h1 className="mt-2 text-4xl font-bold tracking-tight md:text-5xl">
-              {player.name}
+            <h1 className="mt-2 overflow-hidden pb-1">
+              <span
+                className="block text-5xl font-black tracking-tight md:text-6xl"
+                style={{ animation: 'rise-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both' }}
+              >
+                {player.name}
+              </span>
             </h1>
-            <div className="mt-6 inline-flex gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-1 backdrop-blur-xl">
-              <button
-                type="button"
-                aria-pressed={activeTab === 'batter'}
-                onClick={() => handleTabChange('batter')}
-                className={tabClass(activeTab === 'batter')}
-              >
-                타자
-              </button>
-              <button
-                type="button"
-                aria-pressed={activeTab === 'pitcher'}
-                onClick={() => handleTabChange('pitcher')}
-                className={tabClass(activeTab === 'pitcher')}
-              >
-                투수
-              </button>
-            </div>
+            <StatsTabs
+              tabs={PLAYER_TABS}
+              current={activeTab}
+              onTabClick={handleTabClick}
+              className="mx-0 mt-6 w-48"
+            />
           </section>
 
       <section aria-label="선수 기록" className="relative z-10 mb-8 w-full">
@@ -169,9 +163,20 @@ export function PlayerDetailContent({
                 </div>
               ) : (
                 <>
+                  {batterStats.careerStats && (
+                    <PlayerKeyStats
+                      key="batter"
+                      stats={[
+                        { label: '타율', value: batterStats.careerStats.avg },
+                        { label: '안타', value: batterStats.careerStats.hits },
+                        { label: '홈런', value: batterStats.careerStats.homeruns },
+                        { label: '타점', value: batterStats.careerStats.rbi },
+                      ]}
+                    />
+                  )}
                   {/* Career Stats Detailed Table */}
                   {batterStats && batterStats.careerStats && (
-                    <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+                    <section className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
                       <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                         통산 기록
                       </h2>
@@ -268,14 +273,14 @@ export function PlayerDetailContent({
                     </section>
                   )}
 
-                  <details className="group rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
+                  <details className="group rounded-lg border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
                     <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-4 md:px-8 text-sm font-semibold text-gray-300 hover:text-white [&::-webkit-details-marker]:hidden">
                       세부 기록
                       <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
                     </summary>
                     <div className="space-y-6 border-t border-white/[0.08] pt-4">
                       {/* Detailed Yearly Stats Table */}
-                      <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+                      <section className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
                         <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                           연도별 기록
                         </h2>
@@ -464,9 +469,20 @@ export function PlayerDetailContent({
                 </div>
               ) : (
                 <>
+                  {pitcherStats.careerStats && (
+                    <PlayerKeyStats
+                      key="pitcher"
+                      stats={[
+                        { label: '평균자책', value: pitcherStats.careerStats.era },
+                        { label: '승리', value: pitcherStats.careerStats.wins },
+                        { label: '탈삼진', value: pitcherStats.careerStats.strikeouts },
+                        { label: '이닝', value: pitcherStats.careerStats.innings },
+                      ]}
+                    />
+                  )}
                   {/* Pitcher Career Stats Table */}
                   {pitcherStats && pitcherStats.careerStats && (
-                    <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+                    <section className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
                       <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                         통산 기록
                       </h2>
@@ -557,14 +573,14 @@ export function PlayerDetailContent({
                     </section>
                   )}
 
-                  <details className="group rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
+                  <details className="group rounded-lg border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
                     <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-4 md:px-8 text-sm font-semibold text-gray-300 hover:text-white [&::-webkit-details-marker]:hidden">
                       세부 기록
                       <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
                     </summary>
                     <div className="space-y-6 border-t border-white/[0.08] pt-4">
                       {/* Detailed Yearly Pitcher Stats Table */}
-                      <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+                      <section className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
                         <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                           연도별 기록
                         </h2>

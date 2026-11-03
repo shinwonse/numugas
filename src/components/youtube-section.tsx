@@ -68,7 +68,7 @@ export function YoutubeSection({ video }: { video: YouTubeVideo }) {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="relative py-32 md:py-40 overflow-hidden"
+      className="relative py-20 md:py-28 overflow-hidden"
       style={{
         opacity: isInView ? 1 : 0,
         transform: isInView ? 'translateY(0)' : 'translateY(80px)',
@@ -77,8 +77,7 @@ export function YoutubeSection({ video }: { video: YouTubeVideo }) {
     >
       <div className="page-container relative z-10">
         <SectionTitle
-          subtitle="GAME HIGHLIGHTS"
-          title="경기 하이라이트"
+          title="경기 영상"
           isInView={isInView}
         />
         <div

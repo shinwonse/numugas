@@ -132,7 +132,7 @@ export function PlayerPhotoViewer({
           <span
             aria-live="polite"
             aria-atomic="true"
-            className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/40 px-3 py-1 text-[10px] tabular-nums text-white/70"
+            className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-sm bg-black/40 px-3 py-1 text-[10px] tabular-nums text-white/70"
           >
             {index + 1} / {photos.length}
           </span>

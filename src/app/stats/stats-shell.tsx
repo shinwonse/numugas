@@ -37,7 +37,6 @@ export function StatsShellHeader() {
 
   return (
     <StatsPageHeader
-      eyebrow={isTeam ? 'Team Statistics' : 'Player Statistics'}
       title={isTeam ? '팀 기록' : '선수 기록'}
       tabList={tabList}
       currentType={type}

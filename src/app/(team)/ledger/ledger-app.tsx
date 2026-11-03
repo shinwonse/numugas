@@ -69,7 +69,7 @@ export function LedgerApp() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="inline-flex gap-1 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-1">
+        <div className="inline-flex gap-1 rounded-lg border border-white/[0.08] bg-white/[0.04] p-1">
           {(
             [
               ['transactions', '거래내역'],
@@ -82,7 +82,7 @@ export function LedgerApp() {
               aria-pressed={tab === key}
               onClick={() => setTab(key)}
               className={cn(
-                'cursor-pointer rounded-xl px-5 py-2 text-sm font-semibold transition-colors',
+                'cursor-pointer rounded-md px-5 py-2 text-sm font-semibold transition-colors',
                 tab === key
                   ? 'bg-white/[0.12] text-white'
                   : 'text-white/40 hover:text-white/80',
@@ -124,7 +124,7 @@ function UnlockForm({
         e.preventDefault();
         if (value.trim()) void onSubmit(value.trim());
       }}
-      className="mx-auto max-w-sm space-y-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl"
+      className="mx-auto max-w-sm space-y-4 rounded-lg border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl"
     >
       <p className="text-center text-sm text-white/60">
         팀원 비밀번호를 입력하면 장부를 볼 수 있어요.
@@ -139,7 +139,7 @@ function UnlockForm({
           aria-label="비밀번호"
           autoComplete="off"
           autoFocus
-          className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-gray-600 focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/20"
+          className="w-full rounded-md border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder:text-gray-600 focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/20"
         />
       </div>
       {error && (
@@ -150,7 +150,7 @@ function UnlockForm({
       <button
         type="submit"
         disabled={checking || !value.trim()}
-        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-medium transition-colors hover:bg-red-600 disabled:opacity-50"
+        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-red-500 py-2.5 text-sm font-medium transition-colors hover:bg-red-600 disabled:opacity-50"
       >
         {checking && <Loader2 className="h-4 w-4 animate-spin" />}
         열기

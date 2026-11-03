@@ -112,7 +112,7 @@ export function LedgerDues({
           value={year}
           onChange={(e) => setYear(Number(e.target.value))}
           aria-label="연도"
-          className="cursor-pointer rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none"
+          className="cursor-pointer rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:outline-none"
         >
           {years.map((y) => (
             <option key={y} value={y} className="bg-black">
@@ -125,7 +125,7 @@ export function LedgerDues({
             type="button"
             onClick={() => void startYear()}
             disabled={busy}
-            className="ml-auto cursor-pointer rounded-xl px-3 py-2 text-xs text-white/50 transition-colors hover:bg-white/5 hover:text-white disabled:opacity-50"
+            className="ml-auto cursor-pointer rounded-md px-3 py-2 text-xs text-white/50 transition-colors hover:bg-white/5 hover:text-white disabled:opacity-50"
           >
             {nextYear}년 시작
           </button>
@@ -138,7 +138,7 @@ export function LedgerDues({
         </p>
       )}
 
-      <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
+      <div className="overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-white/[0.06] text-xs text-white/50">
@@ -214,12 +214,12 @@ export function LedgerDues({
             onChange={(e) => setNewName(e.target.value)}
             placeholder={`${year}년 명단에 추가할 이름`}
             aria-label="추가할 이름"
-            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-red-500/50 focus:outline-none"
+            className="flex-1 rounded-md border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-red-500/50 focus:outline-none"
           />
           <button
             type="submit"
             disabled={busy || !newName.trim()}
-            className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 text-sm transition-colors hover:bg-white/10 disabled:opacity-50"
+            className="flex cursor-pointer items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-4 text-sm transition-colors hover:bg-white/10 disabled:opacity-50"
           >
             <Plus className="h-4 w-4" />
             추가

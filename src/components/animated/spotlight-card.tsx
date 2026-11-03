@@ -45,7 +45,7 @@ export function SpotlightCard({
       className={`relative transition-transform duration-300 ease-out motion-reduce:transition-none ${className}`}
     >
       <div
-        className="absolute inset-0 rounded-xl bg-gradient-to-br from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+        className="absolute inset-0 rounded-md bg-gradient-to-br from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
         style={{ transform: 'translateZ(-50px)' }}
       />
       {children}

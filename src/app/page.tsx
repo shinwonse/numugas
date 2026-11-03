@@ -1,4 +1,3 @@
-import { SectionDivider } from '@/components/animated/section-divider';
 import { Footer } from '@/components/footer';
 import { HeroSection } from '@/components/hero-section';
 import { PlayerStatsSection } from '@/components/player-stats-section';
@@ -39,7 +38,8 @@ async function StatsSectionData() {
         win: teamTotalStats.win,
         lose: teamTotalStats.lose,
         draw: teamTotalStats.draw,
-        win_rate: teamTotalStats.win_rate.toFixed(3),
+        // 야구식 승률 표기 (".583")
+        win_rate: teamTotalStats.win_rate.toFixed(3).replace(/^0/, ''),
       }}
       teamCareerStats={teamCareerStats}
       longestWinStreak={teamGameRecords.longestWinStreak}
@@ -70,10 +70,7 @@ async function YoutubeSectionData() {
   if (!video) return null;
 
   return (
-    <>
-      <SectionDivider />
-      <YoutubeSection video={video} />
-    </>
+    <YoutubeSection video={video} />
   );
 }
 
@@ -96,17 +93,14 @@ export default function Home() {
     <main className="min-h-screen bg-black text-white overflow-hidden">
       <HeroSection />
 
-      <SectionDivider />
       <Suspense fallback={<StatsSectionSkeleton />}>
         <StatsSectionData />
       </Suspense>
 
-      <SectionDivider />
       <Suspense fallback={<PlayerStatsSectionSkeleton />}>
         <PlayerStatsSectionData />
       </Suspense>
 
-      <SectionDivider />
       <Suspense fallback={<TotalStatsSectionSkeleton />}>
         <TotalStatsSectionData />
       </Suspense>

@@ -67,14 +67,14 @@ const formatDate = (dateString: string): string => {
 const glassInput = cn(
   'bg-white/[0.04] backdrop-blur-xl',
   'border-white/[0.06] hover:border-white/[0.12] focus:border-red-500/40',
-  'rounded-xl transition-colors duration-200 text-white',
+  'rounded-md transition-colors duration-200 text-white',
 );
 
 // Glass select trigger style
 const glassSelect = cn(
   'bg-white/[0.04] backdrop-blur-xl',
   'border-white/[0.06] hover:border-white/[0.12]',
-  'rounded-xl transition-colors duration-200 text-white cursor-pointer',
+  'rounded-md transition-colors duration-200 text-white cursor-pointer',
 );
 
 const EMPTY_LINEUP: PlayerPosition[] = Array.from({ length: 9 }, (_, i) => ({
@@ -328,7 +328,7 @@ export default function LineupPage() {
         <MeshGradientBackground />
 
         <div className="relative z-10 page-container pt-[calc(5.5rem+env(safe-area-inset-top))] pb-16">
-          <PageHeader eyebrow="Lineup Generator" title="라인업" />
+          <PageHeader title="라인업" />
 
           {/* 반응형 레이아웃 - 모바일은 세로 스택, 데스크탑은 가로 정렬 */}
           <div
@@ -384,7 +384,7 @@ export default function LineupPage() {
             <div
               className={cn(
                 'flex-shrink-0 p-6 w-full max-w-[500px] md:w-[500px]',
-                'rounded-2xl',
+                'rounded-lg',
                 'bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-150',
                 'border border-white/[0.06]',
                 'shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.04)]',
@@ -438,7 +438,7 @@ export default function LineupPage() {
                     <CollapsibleTrigger
                       className={cn(
                         'flex items-center justify-between w-full px-4 py-2.5',
-                        'rounded-xl text-sm font-medium',
+                        'rounded-md text-sm font-medium',
                         'bg-violet-500/10 border border-violet-500/20',
                         'hover:bg-violet-500/15 transition-colors duration-200',
                         'text-violet-300 cursor-pointer',
@@ -458,7 +458,7 @@ export default function LineupPage() {
                     <CollapsibleContent>
                       <div
                         className={cn(
-                          'mt-2 p-4 rounded-xl text-sm leading-relaxed',
+                          'mt-2 p-4 rounded-md text-sm leading-relaxed',
                           'bg-white/[0.02] border border-white/[0.06]',
                           'text-gray-400',
                         )}
@@ -547,7 +547,7 @@ export default function LineupPage() {
                     <div className="relative group">
                       <div
                         className={cn(
-                          'relative h-48 rounded-xl overflow-hidden',
+                          'relative h-48 rounded-md overflow-hidden',
                           'bg-white/[0.04] border border-white/[0.06]',
                         )}
                       >
@@ -581,7 +581,7 @@ export default function LineupPage() {
                       onDrop={handleDrop}
                       onClick={() => fileInputRef.current?.click()}
                       className={cn(
-                        'relative block w-full h-48 rounded-xl border-2 border-dashed cursor-pointer transition-colors duration-200',
+                        'relative block w-full h-48 rounded-md border-2 border-dashed cursor-pointer transition-colors duration-200',
                         isDragging
                           ? 'border-red-500/50 bg-red-500/5'
                           : 'border-white/[0.08] bg-white/[0.02] hover:border-white/[0.15]',
@@ -657,7 +657,7 @@ export default function LineupPage() {
                     key={index}
                     className={cn(
                       'flex items-center gap-2 md:gap-3 p-2 md:p-2.5',
-                      'border border-white/[0.04] rounded-xl',
+                      'border border-white/[0.04] rounded-md',
                       'bg-white/[0.02]',
                       'hover:bg-white/[0.04] transition-colors duration-150',
                     )}
@@ -775,7 +775,7 @@ export default function LineupPage() {
                           <FolderOpen className="w-4 h-4 mr-2" />
                           불러오기
                           {storageLoaded && savedLineups.length > 0 && (
-                            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] rounded-full bg-blue-500/20 text-blue-300">
+                            <span className="ml-1.5 px-1.5 py-0.5 text-[10px] rounded-sm bg-blue-500/20 text-blue-300">
                               {savedLineups.length}
                             </span>
                           )}
@@ -796,7 +796,7 @@ export default function LineupPage() {
                               <div
                                 key={saved.id}
                                 className={cn(
-                                  'flex items-start gap-1 rounded-xl',
+                                  'flex items-start gap-1 rounded-md',
                                   'bg-white/[0.03] border border-white/[0.06]',
                                   'hover:bg-white/[0.06] transition-colors duration-150',
                                 )}

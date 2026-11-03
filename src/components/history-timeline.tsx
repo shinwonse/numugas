@@ -41,7 +41,7 @@ function TimelineYear({
         <div
           className={cn(
             'pl-14 md:pl-[calc(50%+1.5rem)]',
-            'font-orbitron text-3xl md:text-4xl font-bold',
+            'text-3xl md:text-4xl font-bold',
             'bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent',
           )}
         >
@@ -76,7 +76,7 @@ function TimelineYear({
               <div
                 className={cn(
                   'bg-black/40 backdrop-blur-xl',
-                  'border border-white/10 rounded-2xl',
+                  'border border-white/10 rounded-lg',
                   'p-5 md:p-6',
                   'transition-all duration-300',
                   'hover:border-red-500/30 hover:bg-black/50',

@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // 개발 서버(.next)를 띄운 채 검증용 빌드를 따로 돌릴 때 NEXT_DIST_DIR로 출력 폴더를 분리한다
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   eslint: {
     ignoreDuringBuilds: true,
   },

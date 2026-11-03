@@ -135,7 +135,7 @@ export function EventDetail({
       </dl>
 
       {item.description && (
-        <p className="whitespace-pre-line rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm leading-relaxed text-white/70">
+        <p className="whitespace-pre-line rounded-md border border-white/10 bg-white/[0.03] p-4 text-sm leading-relaxed text-white/70">
           {item.description}
         </p>
       )}
@@ -159,7 +159,7 @@ export function EventDetail({
             onClick={() => {
               admin.openEdit(record);
             }}
-            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/5 py-2.5 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-white/10 bg-white/5 py-2.5 text-sm text-white/80 transition-colors hover:bg-white/10 hover:text-white"
           >
             <Pencil className="h-4 w-4" />
             수정
@@ -172,7 +172,7 @@ export function EventDetail({
                 else router.back();
               });
             }}
-            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-red-500/20 bg-red-500/10 py-2.5 text-sm text-red-300 transition-colors hover:bg-red-500/20 hover:text-red-200"
+            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-red-500/20 bg-red-500/10 py-2.5 text-sm text-red-300 transition-colors hover:bg-red-500/20 hover:text-red-200"
           >
             <Trash2 className="h-4 w-4" />
             삭제

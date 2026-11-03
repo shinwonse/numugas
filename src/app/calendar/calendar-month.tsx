@@ -13,7 +13,7 @@ export async function CalendarMonth({
 
   return (
     <main className="page-container pt-20 pb-16 text-white">
-      <PageHeader eyebrow="Club Calendar" title="구단 캘린더" />
+      <PageHeader title="구단 캘린더" />
       <CalendarView
         key={`${year}-${month}`}
         year={year}

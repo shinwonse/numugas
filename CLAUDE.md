@@ -55,7 +55,7 @@ src/
 - Server Components are default; mark client components with `'use client'`
 - Path alias `@/*` maps to `./src/*`
 - shadcn/ui components use the default style with CSS variables
-- Custom fonts: Montserrat (sans), Orbitron (display), Aggravo (custom)
+- Fonts: Pretendard Variable (전체, `pretendard` 패키지 dynamic subset), SB 어그로(`font-aggravo`, 라인업 이미지 전용)
 
 ## Environment Variables
 

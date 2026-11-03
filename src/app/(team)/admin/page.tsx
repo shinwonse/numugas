@@ -94,13 +94,13 @@ export default function AdminPage() {
         <div className="w-full max-w-sm">
           <div
             className={cn(
-              'rounded-2xl p-8',
+              'rounded-lg p-8',
               'bg-white/5 backdrop-blur-xl',
               'border border-white/10',
             )}
           >
             <div className="flex flex-col items-center mb-8">
-              <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
+              <div className="w-14 h-14 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4">
                 <Shield className="w-7 h-7 text-red-400" />
               </div>
               <h1 className="text-xl font-bold">관리자 인증</h1>
@@ -119,7 +119,7 @@ export default function AdminPage() {
                   placeholder="관리자 키"
                   autoComplete="off"
                   className={cn(
-                    'w-full pl-10 pr-4 py-3 rounded-xl',
+                    'w-full pl-10 pr-4 py-3 rounded-md',
                     'bg-white/5 border border-white/10',
                     'text-white placeholder:text-gray-600',
                     'focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20',
@@ -136,7 +136,7 @@ export default function AdminPage() {
               <button
                 type="submit"
                 className={cn(
-                  'w-full py-3 rounded-xl font-medium',
+                  'w-full py-3 rounded-md font-medium',
                   'bg-red-500 hover:bg-red-600',
                   'transition-colors',
                 )}
@@ -154,14 +154,14 @@ export default function AdminPage() {
     <main className="min-h-screen bg-black text-white pt-20 pb-16">
       <div className="page-container">
         {/* Header */}
-        <PageHeader eyebrow="Admin" title="데이터 관리" className="mb-12" />
+        <PageHeader title="데이터 관리" className="mb-12" />
 
         {/* 전체 갱신 */}
         <button
           onClick={() => handleRefresh()}
           disabled={isLoading}
           className={cn(
-            'w-full mb-6 p-5 rounded-2xl font-medium',
+            'w-full mb-6 p-5 rounded-lg font-medium',
             'bg-gradient-to-r from-red-500 to-red-600',
             'hover:from-red-600 hover:to-red-700',
             'disabled:opacity-50 disabled:cursor-not-allowed',
@@ -194,7 +194,7 @@ export default function AdminPage() {
                 onClick={() => handleRefresh([target.key])}
                 disabled={isLoading}
                 className={cn(
-                  'p-4 rounded-xl text-left',
+                  'p-4 rounded-md text-left',
                   'bg-white/5 border border-white/10',
                   'hover:bg-white/10 hover:border-white/20',
                   'disabled:opacity-50 disabled:cursor-not-allowed',
@@ -234,7 +234,7 @@ export default function AdminPage() {
         {results && (
           <div
             className={cn(
-              'rounded-xl p-4',
+              'rounded-md p-4',
               'bg-white/5 border border-white/10',
             )}
           >
@@ -268,7 +268,7 @@ export default function AdminPage() {
         )}
 
         {error && !results && (
-          <div className="rounded-xl p-4 bg-red-500/10 border border-red-500/20 text-center">
+          <div className="rounded-md p-4 bg-red-500/10 border border-red-500/20 text-center">
             <p className="text-red-400 text-sm">{error}</p>
           </div>
         )}

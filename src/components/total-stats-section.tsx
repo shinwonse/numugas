@@ -1,13 +1,18 @@
 'use client';
 
 import { SectionTitle } from '@/components/animated/section-title';
-import { ShimmerCard } from '@/components/animated/shimmer-card';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { LeaderBoard } from '@/components/leader-board';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
-import { cn } from '@/lib/cn';
 import type { Stat } from '@/types/stats';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import StatsTabs from './stats-tabs';
+
+type StatsTabKey = 'batting' | 'pitching';
+
+const TABS = [
+  { key: 'batting', label: '타자' },
+  { key: 'pitching', label: '투수' },
+];
 
 interface TotalStatsSectionProps {
   battingStats: Stat[];
@@ -18,178 +23,36 @@ export function TotalStatsSection({
   battingStats,
   pitchingStats,
 }: TotalStatsSectionProps) {
-  const { ref, isInView } = useIntersectionObserver({ threshold: 0.2 });
+  const { ref, isInView } = useIntersectionObserver({ threshold: 0.1 });
 
-  const [currentTab, setCurrentTab] = useState<'batting' | 'pitching'>(
-    'batting',
-  );
-  const tabs = [
-    { key: 'batting', label: '타자 통산 기록' },
-    { key: 'pitching', label: '투수 통산 기록' },
-  ];
+  const [currentTab, setCurrentTab] = useState<StatsTabKey>('batting');
+  const handleTabClick = useCallback((key: string) => {
+    setCurrentTab(key as StatsTabKey);
+  }, []);
 
   return (
     <section
       id="통산기록"
       ref={ref as React.RefObject<HTMLElement>}
-      className="relative py-32 md:py-40 overflow-hidden"
-      style={{
-        opacity: isInView ? 1 : 0,
-        transform: isInView ? 'translateY(0)' : 'translateY(80px)',
-        transition: 'opacity 1s ease-out, transform 1s ease-out',
-      }}
+      className="relative py-20 md:py-28"
     >
-
       <div className="page-container relative z-10">
         <SectionTitle
-          subtitle="ALL-TIME LEADERS"
-          title="역대 통산 기록"
+          title="통산 선수 순위"
           isInView={isInView}
+          action={
+            <StatsTabs
+              tabs={TABS}
+              current={currentTab}
+              onTabClick={handleTabClick}
+              className="md:mx-0 md:w-56"
+            />
+          }
         />
-        <div
-          style={{
-            opacity: isInView ? 1 : 0,
-            transform: isInView ? 'translateY(0)' : 'translateY(50px)',
-            transition: 'opacity 0.8s, transform 0.8s',
-          }}
-        >
-          <StatsTabs
-            tabs={tabs}
-            current={currentTab}
-            onTabClick={(key) => setCurrentTab(key as 'batting' | 'pitching')}
-            className="mb-12"
-          />
-          {currentTab === 'batting' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-              {battingStats.map((stat, statIndex) => (
-                <ShimmerCard key={stat.category} delay={statIndex * 0.12}>
-                  <Card
-                    className={cn(
-                      'overflow-hidden rounded-2xl',
-                      'bg-white/5 backdrop-blur-xl backdrop-saturate-150',
-                      'border border-white/10',
-                      'transition-all duration-500',
-                      'hover:bg-white/10 hover:border-white/20',
-                      'hover:shadow-[0_8px_32px_rgba(239,68,68,0.1)]',
-                    )}
-                  >
-                    <CardHeader className="pb-4 border-b border-white/10">
-                      <CardTitle className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                        {stat.category}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      {stat.players.map((player, playerIndex) => (
-                        <div
-                          key={`${stat.category}-${player.name}-career-batting`}
-                          className={cn(
-                            'flex items-center justify-between px-6 py-5',
-                            'transition-colors duration-200',
-                            'hover:bg-white/5',
-                            playerIndex !== stat.players.length - 1 &&
-                              'border-b border-white/5',
-                            player.team === 'RED DRAGONS' && 'bg-red-500/5',
-                          )}
-                        >
-                          <div className="flex items-center gap-4">
-                            <div
-                              className={cn(
-                                'w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold',
-                                player.rank === 1
-                                  ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                                  : 'bg-white/10 text-gray-400',
-                              )}
-                            >
-                              {player.rank}
-                            </div>
-                            <div>
-                              <p className="text-sm font-semibold text-white mb-0.5">
-                                {player.name}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {player.team}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-lg font-bold text-white">
-                              {player.value}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </ShimmerCard>
-              ))}
-            </div>
-          )}
-          {currentTab === 'pitching' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-              {pitchingStats.map((stat, statIndex) => (
-                <ShimmerCard key={stat.category} delay={statIndex * 0.12}>
-                  <Card
-                    className={cn(
-                      'overflow-hidden rounded-2xl',
-                      'bg-white/5 backdrop-blur-xl backdrop-saturate-150',
-                      'border border-white/10',
-                      'transition-all duration-500',
-                      'hover:bg-white/10 hover:border-white/20',
-                      'hover:shadow-[0_8px_32px_rgba(239,68,68,0.1)]',
-                    )}
-                  >
-                    <CardHeader className="pb-4 border-b border-white/10">
-                      <CardTitle className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
-                        {stat.category}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      {stat.players.map((player, playerIndex) => (
-                        <div
-                          key={`${stat.category}-${player.name}-career-pitching`}
-                          className={cn(
-                            'flex items-center justify-between px-6 py-5',
-                            'transition-colors duration-200',
-                            'hover:bg-white/5',
-                            playerIndex !== stat.players.length - 1 &&
-                              'border-b border-white/5',
-                            player.team === 'RED DRAGONS' && 'bg-red-500/5',
-                          )}
-                        >
-                          <div className="flex items-center gap-4">
-                            <div
-                              className={cn(
-                                'w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold',
-                                player.rank === 1
-                                  ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                                  : 'bg-white/10 text-gray-400',
-                              )}
-                            >
-                              {player.rank}
-                            </div>
-                            <div>
-                              <p className="text-sm font-semibold text-white mb-0.5">
-                                {player.name}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {player.team}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-lg font-bold text-white">
-                              {player.value}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </ShimmerCard>
-              ))}
-            </div>
-          )}
-        </div>
+        <LeaderBoard
+          key={currentTab}
+          stats={currentTab === 'batting' ? battingStats : pitchingStats}
+        />
       </div>
     </section>
   );

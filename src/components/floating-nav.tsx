@@ -33,18 +33,18 @@ function TeamEmblem({
 }
 
 const NAV_ITEMS = [
-  { label: 'HOME', href: '/', icon: Home, match: ['/'] },
-  { label: 'ABOUT', href: '/about', icon: TeamEmblem, match: ['/about'] },
-  { label: 'STATS', href: '/stats', icon: BarChart3, match: ['/stats'] },
-  { label: 'ROSTER', href: '/players', icon: Shirt, match: ['/players'] },
+  { label: '홈', href: '/', icon: Home, match: ['/'] },
+  { label: '소개', href: '/about', icon: TeamEmblem, match: ['/about'] },
+  { label: '기록', href: '/stats', icon: BarChart3, match: ['/stats'] },
+  { label: '선수단', href: '/players', icon: Shirt, match: ['/players'] },
   {
-    label: 'CALENDAR',
+    label: '일정',
     href: '/calendar',
     icon: CalendarDays,
     match: ['/calendar'],
   },
   {
-    label: 'TEAM',
+    label: '팀',
     href: TEAM_HUB_HREF,
     icon: LayoutGrid,
     match: [TEAM_HUB_HREF, ...TEAM_ITEMS.map((item) => item.href)],
@@ -183,10 +183,12 @@ export function FloatingNav() {
         'fixed left-1/2 -translate-x-1/2 z-50',
         'bottom-[calc(1.25rem+env(safe-area-inset-bottom))]',
         'px-1.5 py-1.5',
-        'rounded-2xl',
-        'bg-black/50 backdrop-blur-xl backdrop-saturate-150',
-        'border border-white/[0.08]',
-        'shadow-[0_4px_24px_rgba(0,0,0,0.4)]',
+        // iOS 탭 바처럼 캡슐 모양: 바깥 캡슐 안에 선택 캡슐이 같은 중심으로 들어간다
+        'rounded-full',
+        'bg-black/40 backdrop-blur-2xl backdrop-saturate-[1.8]',
+        'border border-white/[0.1]',
+        // 유리 위쪽 가장자리의 반사광 + 떠 있는 그림자
+        'shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_32px_rgba(0,0,0,0.45)]',
       )}
     >
       <div
@@ -203,7 +205,7 @@ export function FloatingNav() {
         {displayIndex >= 0 && blobPos && (
           <div
             className={cn(
-              'absolute top-0 bottom-0 left-0 rounded-xl pointer-events-none',
+              'absolute top-0 bottom-0 left-0 rounded-full pointer-events-none',
               'shadow-[inset_0_0.5px_0_rgba(255,255,255,0.15),0_0_12px_rgba(255,255,255,0.04)]',
               isDragging ? 'bg-white/[0.22]' : 'bg-white/[0.12]',
               // 살짝 튀는 스프링 느낌의 곡선
@@ -233,7 +235,7 @@ export function FloatingNav() {
               title={item.label}
               className={cn(
                 'relative z-10 flex items-center justify-center',
-                'w-[3.25rem] min-[380px]:w-14 md:w-20 h-11 rounded-xl',
+                'w-[3.25rem] min-[380px]:w-14 md:w-20 h-11 rounded-full',
                 'transition-colors duration-200',
                 isActive || isHovered ? 'text-white' : 'text-white/40',
               )}

@@ -95,7 +95,7 @@ export function PlayerPhotoGallery({
           <p className="text-sm text-neutral-400">
             {folderQuery.isError
               ? '사진을 불러오지 못했어요.'
-              : '아직 담긴 순간이 없어요.'}
+              : '등록된 사진이 없습니다.'}
           </p>
           {hasDriveApiKey && (
             <button
@@ -152,7 +152,7 @@ export function PlayerPhotoGallery({
                 type="button"
                 disabled={query.isFetching}
                 onClick={loadMore}
-                className="rounded-full border border-white/15 px-7 py-2.5 text-xs text-neutral-300 transition-colors hover:bg-white hover:text-black disabled:opacity-40"
+                className="rounded-md border border-white/15 px-7 py-2.5 text-xs text-neutral-300 transition-colors hover:bg-white hover:text-black disabled:opacity-40"
               >
                 {query.isFetchingNextPage ? '불러오는 중…' : '사진 더 보기'}
               </button>

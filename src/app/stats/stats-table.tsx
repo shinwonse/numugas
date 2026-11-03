@@ -27,6 +27,7 @@ import { CAREER_SEASON, getStatsSeasons } from '@/lib/seasons';
 import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { STATS_TABLES, type StatsType } from './stats-columns';
+import { StatsLeaders } from './stats-leaders';
 import { StatsTableRowsSkeleton } from './stats-skeleton';
 import { useStatsNavigation } from './use-stats-navigation';
 
@@ -36,7 +37,7 @@ const selectTriggerClass = cn(
   'flex-1 sm:flex-none sm:w-28 h-10 text-sm',
   'bg-white/[0.04] backdrop-blur-xl',
   'border-white/[0.06] hover:border-white/[0.12]',
-  'rounded-xl transition-all duration-200',
+  'rounded-md transition-all duration-200',
   'cursor-pointer',
 );
 
@@ -105,8 +106,13 @@ export function StatsTable({
     }
   };
 
+  // 숫자 열을 내림차순으로 볼 때만 상위 3명을 순위 색으로 강조한다
+  const showPodium = sortBy !== 'name' && sortOrder === 'desc' && !search;
+
   return (
     <div className="w-full space-y-4">
+      {!showSkeleton && <StatsLeaders type={type} rows={initialData} />}
+
       {/* 모바일: 검색이 한 줄을 차지하고 아래에 시즌·리그 / sm 이상: 한 줄 */}
       <div className="flex flex-wrap items-center justify-end gap-2">
         <Select value={shownSeason} onValueChange={changeSeason}>
@@ -145,7 +151,7 @@ export function StatsTable({
               'w-full h-10 text-sm pl-9',
               'bg-white/[0.04] backdrop-blur-xl',
               'border-white/[0.06] hover:border-white/[0.12] focus:border-red-500/40',
-              'rounded-xl transition-all duration-200',
+              'rounded-md transition-all duration-200',
               'placeholder:text-gray-500',
             )}
             placeholder="선수명 검색"
@@ -158,7 +164,7 @@ export function StatsTable({
 
       <div
         className={cn(
-          'rounded-2xl overflow-hidden transition-opacity duration-200',
+          'rounded-lg overflow-hidden transition-opacity duration-200',
           isPending && !showSkeleton && 'opacity-60',
           'bg-white/[0.03] backdrop-blur-2xl backdrop-saturate-150',
           'border border-white/[0.06]',
@@ -166,7 +172,7 @@ export function StatsTable({
         )}
       >
         <div className="overflow-x-auto w-full">
-          <Table className="min-w-[600px] w-full">
+          <Table className="min-w-[600px] w-full tabular-nums">
             <TableHeader>
               <TableRow className="border-b border-white/[0.04] hover:bg-transparent">
                 {columns.map((col, idx) => {
@@ -182,8 +188,9 @@ export function StatsTable({
                           : 'none'
                       }
                       className={cn(
-                        'h-10 p-0',
-                        idx === 0 && 'sticky left-0 z-10 bg-[#0a0a0f]/90 backdrop-blur-xl',
+                        'relative h-11 p-0 transition-colors duration-300',
+                        active && 'bg-red-500/[0.08]',
+                        idx === 0 && 'sticky left-0 z-10 bg-[#0a0a0f]',
                       )}
                     >
                       <button
@@ -194,11 +201,18 @@ export function StatsTable({
                         className={cn(
                           'flex h-full w-full cursor-pointer items-center justify-center gap-0.5 whitespace-nowrap px-3',
                           'text-[11px] uppercase tracking-wider font-semibold',
-                          active ? 'text-white' : 'text-white/50 hover:text-white',
+                          active ? 'text-red-300' : 'text-white/50 hover:text-white',
                           'transition-colors duration-200',
                         )}
                       >
                         {col.label}
+                        {active && (
+                          <span
+                            aria-hidden
+                            className="absolute inset-x-2 bottom-0 h-0.5 bg-red-500"
+                            style={{ animation: 'scale-in-x 0.4s cubic-bezier(0.16, 1, 0.3, 1) both' }}
+                          />
+                        )}
                         {active &&
                           (sortOrder === 'asc' ? (
                             <ChevronUp className="w-3.5 h-3.5 text-red-400" />
@@ -211,7 +225,8 @@ export function StatsTable({
                 })}
               </TableRow>
             </TableHeader>
-            <TableBody aria-busy={isPending}>
+            {/* 정렬이 바뀌면 본문을 다시 그려 행 등장 애니메이션을 재생한다 */}
+            <TableBody key={`${sortBy}-${sortOrder}`} aria-busy={isPending}>
               {showSkeleton ? (
                 <StatsTableRowsSkeleton columns={columns.length} />
               ) : filtered.length === 0 ? (
@@ -226,17 +241,21 @@ export function StatsTable({
               ) : (
                 filtered.map((row, i) => (
                   <TableRow
-                    key={`${String(row.name)}-${String(row.season)}-${i}`}
+                    key={`${String(row.name)}-${String(row.season)}-${String(i)}`}
                     className={cn(
-                      'border-b border-white/[0.03]',
+                      'group border-b border-white/[0.03]',
                       'transition-colors duration-150',
-                      'hover:bg-white/[0.03]',
-                      i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.01]',
+                      'hover:bg-red-500/[0.05]',
+                      i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.015]',
                     )}
+                    style={{
+                      animation: `row-in 0.35s ease-out ${String(Math.min(i, 15) * 0.025)}s both`,
+                    }}
                   >
                     {columns.map((col, idx) => {
                       const isName = col.value === 'name';
                       const value = row[col.value];
+                      const display = format ? format(col.value, value) : (value as string | number);
                       return (
                         <TableCell
                           key={col.value}
@@ -247,10 +266,26 @@ export function StatsTable({
                               : highlight.includes(col.value)
                                 ? 'text-gray-200 font-medium'
                                 : 'text-gray-400',
-                            idx === 0 && 'sticky left-0 z-10 bg-[#0a0a0f]/90 backdrop-blur-xl',
+                            sortBy === col.value && 'bg-red-500/[0.06] font-bold text-white',
+                            idx === 0 &&
+                              'sticky left-0 z-10 bg-[#0a0a0f] text-left group-hover:bg-[#140a0c]',
                           )}
                         >
-                          {format ? format(col.value, value) : (value as string | number)}
+                          {isName ? (
+                            <span className="flex items-center gap-2.5">
+                              <span
+                                className={cn(
+                                  'w-5 text-right text-[11px] font-bold',
+                                  showPodium && i < 3 ? 'text-red-400' : 'text-white/30',
+                                )}
+                              >
+                                {i + 1}
+                              </span>
+                              {display}
+                            </span>
+                          ) : (
+                            display
+                          )}
                         </TableCell>
                       );
                     })}

@@ -20,8 +20,14 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-montserrat)', 'sans-serif'],
-        display: ['var(--font-orbitron)', 'sans-serif'],
+        sans: [
+          '"Pretendard Variable"',
+          'Pretendard',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'system-ui',
+          'sans-serif',
+        ],
         aggravo: ['var(--font-aggravo)', 'sans-serif'],
       },
       colors: {

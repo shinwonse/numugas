@@ -24,15 +24,18 @@ export default function PlayerPositionSection({
 
   return (
     <div>
-      <div className="mb-8">
-        <PageHeader eyebrow="Team Roster" title="선수단" />
-        <div className="flex justify-center">
-          <PlayerPositionTabs
-            positions={positions}
-            selectedPosition={selectedPosition}
-            onSelect={setSelectedPosition}
-          />
-        </div>
+      <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <PageHeader
+          eyebrow={`${String(players.length)}명`}
+          title="선수단"
+          className="mb-0"
+        />
+        <PlayerPositionTabs
+          positions={positions}
+          selectedPosition={selectedPosition}
+          onSelect={setSelectedPosition}
+          className="md:mx-0"
+        />
       </div>
 
       {/* Player List */}

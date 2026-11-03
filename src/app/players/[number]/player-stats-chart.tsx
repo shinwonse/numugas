@@ -44,7 +44,7 @@ function TrendChart({ data, groups }: { data: Row[]; groups: MetricGroup[] }) {
   const keys = Object.keys(group.config);
 
   return (
-    <section className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
+    <section className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-xl md:p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
           시즌별 추이

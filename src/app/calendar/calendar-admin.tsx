@@ -60,7 +60,7 @@ export function useCalendarAdmin() {
 }
 
 const dialogClass =
-  'max-h-[90dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl border-white/10 bg-[#0c0c10] text-white sm:rounded-2xl [&>button]:text-white/60';
+  'max-h-[90dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-lg border-white/10 bg-[#0c0c10] text-white sm:rounded-lg [&>button]:text-white/60';
 
 type EditorState =
   | { mode: 'create'; date: string }
@@ -246,7 +246,7 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
           <AlertDialogFooter className="gap-2">
             <AlertDialogCancel
               disabled={isDeleting}
-              className="rounded-xl border-white/10 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+              className="rounded-md border-white/10 bg-white/5 text-white hover:bg-white/10 hover:text-white"
             >
               취소
             </AlertDialogCancel>
@@ -257,7 +257,7 @@ export function CalendarAdminProvider({ children }: { children: ReactNode }) {
                 e.preventDefault();
                 void confirmDelete();
               }}
-              className="rounded-xl bg-red-500 text-white hover:bg-red-600"
+              className="rounded-md bg-red-500 text-white hover:bg-red-600"
             >
               {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               삭제
@@ -328,7 +328,7 @@ function UnlockDialog({
               autoComplete="off"
               autoFocus
               className={cn(
-                'w-full rounded-xl py-2.5 pl-10 pr-4 text-sm',
+                'w-full rounded-md py-2.5 pl-10 pr-4 text-sm',
                 'border border-white/10 bg-white/5 text-white placeholder:text-gray-600',
                 'focus:border-red-500/50 focus:outline-none focus:ring-1 focus:ring-red-500/20',
               )}
@@ -342,7 +342,7 @@ function UnlockDialog({
           <button
             type="submit"
             disabled={isChecking || !value.trim()}
-            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-medium transition-colors hover:bg-red-600 disabled:opacity-50"
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-red-500 py-2.5 text-sm font-medium transition-colors hover:bg-red-600 disabled:opacity-50"
           >
             {isChecking && <Loader2 className="h-4 w-4 animate-spin" />}
             확인
